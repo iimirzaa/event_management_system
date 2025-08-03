@@ -6,14 +6,17 @@ class CustomButton extends StatefulWidget {
   final double height;
   final double width;
   final Color color;
+
   final VoidCallback? press;
+  final double border;
   const CustomButton({
     super.key,
     required this.text,
     required this.height,
     required this.width,
     required this.color,
-    required this.press
+    required this.press,
+    required this.border,
   });
 
   @override
@@ -27,10 +30,11 @@ class _CustomButtonState extends State<CustomButton> {
       onPressed: widget.press,
 
       style: ElevatedButton.styleFrom(
-        minimumSize: Size(widget.width, widget.height),
+        maximumSize: Size(widget.width, widget.height),
+        minimumSize: Size(widget.width,widget.height),
         backgroundColor: widget.color,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30.r),
+          borderRadius: BorderRadius.circular(widget.border.r),
         ),
       ),
       child: Text(

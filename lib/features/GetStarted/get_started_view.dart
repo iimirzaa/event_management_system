@@ -55,6 +55,7 @@ class _GetStartedViewState extends State<GetStartedView> {
                     height: 50.h,
                     width: 200.w,
                     color: Color(0xFFFF6F61),
+                    border: 30,
                     press: () {
                       Navigator.push(
                         context,
