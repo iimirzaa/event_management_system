@@ -10,13 +10,25 @@ class RoleButtonState extends AuthState{
     required this.role
 });
 }
+
 class EyeIconState extends AuthState{
 final bool visibilty;
 EyeIconState({
   required this.visibilty
 });
 }
+class EyeIconSignUpState extends AuthState{
+  final bool visibilty;
+  EyeIconSignUpState({
+    required this.visibilty
+  });
+}
+class LoginGestureState extends AuthState{}
 class SignUpState extends AuthState{}
-class LoginButtonState extends AuthState{
+class LoginErrorState extends AuthState{
+  final String? errorMsg;
+  LoginErrorState({
+    this.errorMsg
+});
 
 }

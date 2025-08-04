@@ -10,8 +10,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<EyeIconClicked>((event, emit) {
       emit(EyeIconState(visibilty: !event.visibilty));
     });
+    on<EyeIconSignUpClicked>((event, emit) {
+      emit(EyeIconSignUpState(visibilty: !event.visibilty));
+    });
     on<RoleButtonClicked>((event,emit){
       emit(RoleButtonState(role: event.role));
+    });
+    on<LoginGestureClicked>((event,emit){
+      emit(LoginGestureState());
     });
     on<SignUpClicked>((event,emit){
       emit(SignUpState());

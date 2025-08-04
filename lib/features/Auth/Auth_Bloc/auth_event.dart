@@ -14,7 +14,21 @@ EyeIconClicked({
   required this.visibilty
 });
 }
+class EyeIconSignUpClicked extends AuthEvent{
+  final bool visibilty;
+  EyeIconSignUpClicked({
+    required this.visibilty
+  });
+}
 class SignUpClicked extends AuthEvent{}
+class LoginGestureClicked extends AuthEvent{}
 class LoginButtonClicked extends AuthEvent{
+   final FormState key;
+   LoginButtonClicked({
+   required this.key
+});
+
+
+
 
 }
