@@ -28,7 +28,7 @@ class LoginButtonClicked extends AuthEvent{
    required this.key
 });
 
-
-
+}
+class SignUpButtonClicked extends AuthEvent{
 
 }

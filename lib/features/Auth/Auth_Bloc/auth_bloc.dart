@@ -22,5 +22,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<SignUpClicked>((event,emit){
       emit(SignUpState());
     });
+    on<SignUpButtonClicked>((event,emit){
+      emit(SignUpButtonState());
+    });
   }
 }

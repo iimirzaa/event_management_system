@@ -3,6 +3,7 @@ import 'package:event_management_system/CustomWidget/CustomText.dart';
 import 'package:event_management_system/CustomWidget/custominput.dart';
 import 'package:event_management_system/Scaffold_Theme/scaffold_gradient.dart';
 import 'package:event_management_system/features/Auth/Login/login_view.dart';
+import 'package:event_management_system/features/Auth/Otp/send_otp.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -40,6 +41,12 @@ class _SignupViewState extends State<SignupView> {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (_) => LoginView()),
+          );
+        }
+        if (state is SignUpButtonState) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => SendOtp()),
           );
         }
       },
@@ -142,7 +149,7 @@ class _SignupViewState extends State<SignupView> {
                                   obsecure: notvisiblesignup,
                                   onTap: () {
                                     context.read<AuthBloc>().add(
-                                      EyeIconClicked(
+                                      EyeIconSignUpClicked(
                                         visibilty: notvisiblesignup,
                                       ),
                                     );
@@ -157,7 +164,7 @@ class _SignupViewState extends State<SignupView> {
                                   obsecure: notvisiblesignup,
                                   onTap: () {
                                     context.read<AuthBloc>().add(
-                                      EyeIconClicked(
+                                      EyeIconSignUpClicked(
                                         visibilty: notvisiblesignup,
                                       ),
                                     );
@@ -170,7 +177,9 @@ class _SignupViewState extends State<SignupView> {
                                   width: 320.w,
                                   color: Color(0xFFFF6F61),
                                   border: 12,
-                                  press: () {},
+                                  press: () {
+                                    context.read<AuthBloc>().add(SignUpButtonClicked());
+                                  },
                                 ),
 
                                 SizedBox(height: 10.h),

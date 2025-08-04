@@ -32,3 +32,5 @@ class LoginErrorState extends AuthState{
 });
 
 }
+class SignUpButtonState extends AuthState{}
+

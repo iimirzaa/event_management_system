@@ -30,6 +30,7 @@ class _CustomButtonState extends State<CustomButton> {
       onPressed: widget.press,
 
       style: ElevatedButton.styleFrom(
+        elevation: 4,
         maximumSize: Size(widget.width, widget.height),
         minimumSize: Size(widget.width,widget.height),
         backgroundColor: widget.color,
