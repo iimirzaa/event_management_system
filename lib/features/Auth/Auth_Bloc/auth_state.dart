@@ -4,33 +4,33 @@ part of 'auth_bloc.dart';
 sealed class AuthState {}
 
 final class AuthInitial extends AuthState {}
-class RoleButtonState extends AuthState{
+
+class RoleButtonState extends AuthState {
   final String role;
-  RoleButtonState({
-    required this.role
-});
+  RoleButtonState({required this.role});
 }
 
-class EyeIconState extends AuthState{
-final bool visibilty;
-EyeIconState({
-  required this.visibilty
-});
-}
-class EyeIconSignUpState extends AuthState{
+class EyeIconState extends AuthState {
   final bool visibilty;
-  EyeIconSignUpState({
-    required this.visibilty
-  });
+  final String? role;
+  EyeIconState({required this.visibilty,required this.role});
 }
-class LoginGestureState extends AuthState{}
-class SignUpState extends AuthState{}
-class LoginErrorState extends AuthState{
+
+class EyeIconSignUpState extends AuthState {
+  final bool visibilty;
+
+  EyeIconSignUpState({required this.visibilty,});
+}
+
+class LoginErrorState extends AuthState {
   final String? errorMsg;
-  LoginErrorState({
-    this.errorMsg
-});
-
+  LoginErrorState({this.errorMsg});
 }
-class SignUpButtonState extends AuthState{}
+class LoginLoadingState extends AuthState{}
+class LoginSuccessfulState extends AuthState {}
 
+class LoginGestureState extends AuthState {}
+
+class SignUpState extends AuthState {}
+
+class SignUpButtonState extends AuthState {}

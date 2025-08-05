@@ -23,9 +23,13 @@ class EyeIconSignUpClicked extends AuthEvent{
 class SignUpClicked extends AuthEvent{}
 class LoginGestureClicked extends AuthEvent{}
 class LoginButtonClicked extends AuthEvent{
-   final FormState key;
+   final bool key;
+   final String email;
+   final String password;
    LoginButtonClicked({
-   required this.key
+   required this.key,
+     required this.email,
+     required this.password
 });
 
 }

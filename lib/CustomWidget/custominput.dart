@@ -6,12 +6,14 @@ class CustomInput extends StatefulWidget {
   final bool obsecure;
   final IconData? icon;
   final VoidCallback? onTap;
+  final TextEditingController? controller;
   const CustomInput({
     super.key,
     required this.hint,
+    this.controller,
     this.icon,
     this.obsecure = false,
-    this.onTap
+    this.onTap,
   });
 
   @override
@@ -22,6 +24,8 @@ class _State extends State<CustomInput> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      controller: widget.controller,
+      expands: false,
       obscureText: widget.obsecure,
 
       cursorColor: Colors.white,

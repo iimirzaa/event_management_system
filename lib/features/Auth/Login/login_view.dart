@@ -30,8 +30,11 @@ class _LoginViewState extends State<LoginView> {
             notvisible = state.visibilty;
           });
         }
-        if(state is SignUpState){
-          Navigator.push(context, MaterialPageRoute(builder: (_)=>SignupView()));
+        if (state is SignUpState) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => SignupView()),
+          );
         }
       },
       builder: (context, state) {
@@ -40,7 +43,7 @@ class _LoginViewState extends State<LoginView> {
             child: SafeArea(
               child: Center(
                 child: Padding(
-                  padding: const EdgeInsets.all(20.0),
+                  padding: EdgeInsets.all(20.0.r),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -91,7 +94,9 @@ class _LoginViewState extends State<LoginView> {
                                       width: 150.w,
                                       color:
                                           state is RoleButtonState &&
-                                              state.role == "Organizer"
+                                                  state.role == "Organizer" ||
+                                              state is EyeIconState &&
+                                                  state.role == 'Organizer'
                                           ? Color(0xFFFF6F61)
                                           : Colors.transparent,
                                       border: 30,
@@ -108,7 +113,9 @@ class _LoginViewState extends State<LoginView> {
                                       width: 150.w,
                                       color:
                                           state is RoleButtonState &&
-                                              state.role == "Attendee"
+                                                  state.role == "Attendee" ||
+                                              state is EyeIconState &&
+                                                  state.role == 'Attendee'
                                           ? Color(0xFFFF6F61)
                                           : Colors.transparent,
                                       border: 30,
@@ -121,10 +128,14 @@ class _LoginViewState extends State<LoginView> {
                                   ],
                                 ),
                                 SizedBox(height: 15.h),
-                                CustomInput(hint: "Enter your email"),
+                                CustomInput(
+                                  hint: "Enter your email",
+                                  controller: _email_controller,
+                                ),
                                 SizedBox(height: 15.h),
                                 CustomInput(
                                   hint: "Enter your password",
+                                  controller: _password_controller,
                                   icon: notvisible
                                       ? Icons.visibility_off
                                       : Icons.visibility,
@@ -135,14 +146,35 @@ class _LoginViewState extends State<LoginView> {
                                     );
                                   },
                                 ),
-                                SizedBox(height: 15.h),
+                                SizedBox(height: 5.h),
+                                if (state is LoginErrorState) ...[
+                                  Padding(
+                                    padding: EdgeInsets.only(left: 20.r),
+                                    child: CustomText(
+                                      color: Colors.redAccent,
+                                      weight: FontWeight.w500,
+                                      text: state.errorMsg ?? "",
+                                    ),
+                                  ),
+                                ],
+                                SizedBox(height: 10.h),
                                 CustomButton(
                                   text: "Login",
                                   height: 40.h,
                                   width: 320.w,
                                   color: Color(0xFFFF6F61),
                                   border: 12,
-                                  press: () {},
+                                  press: () {
+                                    context.read<AuthBloc>().add(
+                                      LoginButtonClicked(
+                                        key: _form_key.currentState!.validate(),
+                                        email: _email_controller.text,
+                                        password: _password_controller.text,
+                                      ),
+                                    );
+                                    _email_controller.clear();
+                                    _password_controller.clear();
+                                  },
                                 ),
                                 SizedBox(height: 15.h),
                                 GestureDetector(
@@ -157,8 +189,10 @@ class _LoginViewState extends State<LoginView> {
                                 ),
                                 SizedBox(height: 10.h),
                                 GestureDetector(
-                                  onTap: (){
-                                    context.read<AuthBloc>().add(SignUpClicked());
+                                  onTap: () {
+                                    context.read<AuthBloc>().add(
+                                      SignUpClicked(),
+                                    );
                                   },
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,

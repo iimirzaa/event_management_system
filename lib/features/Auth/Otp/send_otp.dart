@@ -2,11 +2,9 @@ import 'package:event_management_system/Scaffold_Theme/scaffold_gradient.dart';
 import 'package:flutter/material.dart';
 import 'package:event_management_system/CustomWidget/CustomButton.dart';
 import 'package:event_management_system/CustomWidget/CustomText.dart';
-import 'package:event_management_system/CustomWidget/custominput.dart';
-import 'package:event_management_system/Scaffold_Theme/scaffold_gradient.dart';
+
 import 'package:event_management_system/features/Auth/Login/login_view.dart';
-import 'package:event_management_system/features/Auth/Otp/send_otp.dart';
-import 'package:flutter/material.dart';
+
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../Auth_Bloc/auth_bloc.dart';
@@ -168,7 +166,7 @@ class _SendOtpState extends State<SendOtp> {
                                             12.r,
                                           ),
                                           borderSide: BorderSide(
-                                            color: Colors.orangeAccent,
+                                            color: Colors.redAccent,
                                             width: 2,
                                           ),
                                         ),
@@ -178,16 +176,14 @@ class _SendOtpState extends State<SendOtp> {
                                 ),
                                 SizedBox(height: 15.h),
                                 CustomButton(
-                                  text: "Verify Otp",
+                                  text: "Verify OTP",
                                   height: 40.h,
                                   width: 320.w,
                                   color: Color(0xFFFF6F61),
                                   press: () {},
                                   border: 12,
                                 ),
-                                SizedBox(
-                                  height: 15.h,
-                                )
+                                SizedBox(height: 15.h),
                               ],
                             ),
                           ),
