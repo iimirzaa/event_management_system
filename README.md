@@ -1,6 +1,6 @@
-# event_management_system
+#EventEase
 
-A new Flutter project.
+EventEase is an event management app built using following technologies:
 
 ## Getting Started
 
