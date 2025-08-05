@@ -18,15 +18,16 @@ class EyeIconState extends AuthState {
 
 class EyeIconSignUpState extends AuthState {
   final bool visibilty;
+  final String? role;
 
-  EyeIconSignUpState({required this.visibilty,});
+  EyeIconSignUpState({required this.visibilty,required this.role});
 }
 
-class LoginErrorState extends AuthState {
+class ErrorState extends AuthState {
   final String? errorMsg;
-  LoginErrorState({this.errorMsg});
+  ErrorState({this.errorMsg});
 }
-class LoginLoadingState extends AuthState{}
+class LoadingState extends AuthState{}
 class LoginSuccessfulState extends AuthState {}
 
 class LoginGestureState extends AuthState {}

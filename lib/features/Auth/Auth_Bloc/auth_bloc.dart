@@ -16,18 +16,21 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(EyeIconState(visibilty: !event.visibilty, role: role));
     });
     on<EyeIconSignUpClicked>((event, emit) {
-      emit(EyeIconSignUpState(visibilty: !event.visibilty));
+      emit(EyeIconSignUpState(visibilty: !event.visibilty,role: role));
     });
     on<LoginButtonClicked>((event, emit) {
       final email = event.email.trim();
       final password = event.password.trim();
-      if (event.key == true) {
-        emit(LoginLoadingState());
+      print(role);
+      if(role==null ||role!.isEmpty){
+        emit(ErrorState(errorMsg: "Please select a role"));
+        return;
       }
+
 
       final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
       if (!emailRegex.hasMatch(email)) {
-        emit(LoginErrorState(errorMsg: "Enter a valid email address"));
+        emit(ErrorState(errorMsg: "Enter a valid email address"));
         return;
       }
 
@@ -37,11 +40,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       );
       if (!passwordRegex.hasMatch(password)) {
         emit(
-          LoginErrorState(
+          ErrorState(
             errorMsg:
                 "Password must be 8+ characters with upper, lower, number",
           ),
         );
+        return;
+      }
+      if (event.key == true) {
+        emit(LoadingState());
         return;
       }
     });
@@ -53,7 +60,52 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(SignUpState());
     });
     on<SignUpButtonClicked>((event, emit) {
-      emit(SignUpButtonState());
+      final username=event.username;
+      final email = event.email.trim();
+      final password = event.password.trim();
+      final confirmpassword=event.cofirmpassword.trim();
+      print(role);
+      if(role==null ||role!.isEmpty){
+        emit(ErrorState(errorMsg: "Please select a role"));
+        return;
+      }
+      final nameRegex = RegExp(r"^[a-zA-Z]+(?: [a-zA-Z]+)+$");
+      if (!nameRegex.hasMatch(username)) {
+        emit(ErrorState(errorMsg: "Enter a valid full name (first and last)"));
+        return;
+      }
+      if(username.length<3 || username.length>30){
+        emit(ErrorState(errorMsg: "Username should have at least 3+ character"));
+      }
+      final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+      if (!emailRegex.hasMatch(email)) {
+        emit(ErrorState(errorMsg: "Enter a valid email address"));
+        return;
+      }
+
+      // Password validation
+      final passwordRegex = RegExp(
+        r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d]{8,16}$',
+      );
+      if (!passwordRegex.hasMatch(password)) {
+        emit(
+          ErrorState(
+            errorMsg:
+            "Password must have  8 to 16 characters with upper, lower, number",
+          ),
+        );
+        return;
+      }
+      if(password!=confirmpassword){
+        emit(ErrorState(errorMsg: "Password did not match!"));
+      }
+
+      if (event.key == true) {
+        emit(LoadingState());
+        return;
+      }
+
+
     });
   }
 }

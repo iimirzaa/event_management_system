@@ -34,5 +34,16 @@ class LoginButtonClicked extends AuthEvent{
 
 }
 class SignUpButtonClicked extends AuthEvent{
-
+  final bool key;
+  final String username;
+  final String email;
+  final String password;
+  final String cofirmpassword;
+  SignUpButtonClicked({
+    required this.key,
+    required this.username,
+    required this.email,
+    required this.password,
+    required this.cofirmpassword,
+});
 }
