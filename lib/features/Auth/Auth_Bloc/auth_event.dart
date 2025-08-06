@@ -47,3 +47,5 @@ class SignUpButtonClicked extends AuthEvent{
     required this.cofirmpassword,
 });
 }
+class SendOtpClicked extends AuthEvent{}
+class ForgetPasswordGestureClicked extends AuthEvent{}

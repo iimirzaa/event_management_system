@@ -16,17 +16,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(EyeIconState(visibilty: !event.visibilty, role: role));
     });
     on<EyeIconSignUpClicked>((event, emit) {
-      emit(EyeIconSignUpState(visibilty: !event.visibilty,role: role));
+      emit(EyeIconSignUpState(visibilty: !event.visibilty, role: role));
     });
     on<LoginButtonClicked>((event, emit) {
       final email = event.email.trim();
       final password = event.password.trim();
       print(role);
-      if(role==null ||role!.isEmpty){
+      if (role == null || role!.isEmpty) {
         emit(ErrorState(errorMsg: "Please select a role"));
         return;
       }
-
 
       final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
       if (!emailRegex.hasMatch(email)) {
@@ -60,12 +59,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(SignUpState());
     });
     on<SignUpButtonClicked>((event, emit) {
-      final username=event.username;
+      final username = event.username;
       final email = event.email.trim();
       final password = event.password.trim();
-      final confirmpassword=event.cofirmpassword.trim();
+      final confirmpassword = event.cofirmpassword.trim();
       print(role);
-      if(role==null ||role!.isEmpty){
+      if (role == null || role!.isEmpty) {
         emit(ErrorState(errorMsg: "Please select a role"));
         return;
       }
@@ -74,8 +73,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(ErrorState(errorMsg: "Enter a valid full name (first and last)"));
         return;
       }
-      if(username.length<3 || username.length>30){
-        emit(ErrorState(errorMsg: "Username should have at least 3+ character"));
+      if (username.length < 3 || username.length > 30) {
+        emit(
+          ErrorState(errorMsg: "Username should have at least 3+ character"),
+        );
       }
       final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
       if (!emailRegex.hasMatch(email)) {
@@ -91,12 +92,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(
           ErrorState(
             errorMsg:
-            "Password must have  8 to 16 characters with upper, lower, number",
+                "Password must have  8 to 16 characters with upper, lower, number",
           ),
         );
         return;
       }
-      if(password!=confirmpassword){
+      if (password != confirmpassword) {
         emit(ErrorState(errorMsg: "Password did not match!"));
       }
 
@@ -104,8 +105,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(LoadingState());
         return;
       }
-
-
+    });
+    on<ForgetPasswordGestureClicked>((event,emit){
+           emit(ForgetPasswordState());
     });
   }
+
 }
