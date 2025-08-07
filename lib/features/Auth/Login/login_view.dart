@@ -55,7 +55,19 @@ class _LoginViewState extends State<LoginView> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           SizedBox(height: 150.h),
-                          Padding(
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Color(0xFF928dab),
+                          backgroundBlendMode: BlendMode.softLight,
+                          borderRadius: BorderRadius.circular(16.r),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.2),
+                              blurRadius: 2,
+                              offset: Offset(2, 0),
+                            ),
+                          ],
+                        ),child: Padding(
                             padding: EdgeInsets.all(16.0.r),
                             child: Form(
                               key: _form_key,
@@ -227,6 +239,7 @@ class _LoginViewState extends State<LoginView> {
                               ),
                             ),
                           ),
+                      ),
                         ],
                       ),
                     ),
@@ -245,6 +258,7 @@ class _LoginViewState extends State<LoginView> {
                     ),
                   ),
                 ),
+
             ],
           ),
         );

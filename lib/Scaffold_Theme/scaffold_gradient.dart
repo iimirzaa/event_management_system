@@ -31,3 +31,5 @@ class GradientScaffold extends StatelessWidget {
     );
   }
 }
+// Color(0xFF1f1c2c),
+// Color(0xFF928dab)

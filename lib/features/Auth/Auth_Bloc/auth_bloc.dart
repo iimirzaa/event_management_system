@@ -1,3 +1,5 @@
+
+
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:meta/meta.dart';
@@ -109,6 +111,18 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<ForgetPasswordGestureClicked>((event,emit){
            emit(ForgetPasswordState());
     });
+    on<SendOtpClicked>((event,emit){
+        if(event.key==true){
+          emit(LoadingState());
+          return;
+        }
+        String email=event.email.trim();
+        final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+        if (!emailRegex.hasMatch(email)) {
+          emit(ErrorState(errorMsg: "Enter a valid email address"));
+          return;
+        }
+      });
   }
 
 }
