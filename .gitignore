@@ -4,6 +4,7 @@
 *.pyc
 *.swp
 .DS_Store
+.env
 .atom/
 .build/
 .buildlog/
@@ -18,7 +19,8 @@ migrate_working_dir/
 *.iws
 .idea/
 node_modules/
-
+package.json
+package-lock.json
 
 
 # The .vscode folder contains launch configuration and tasks you configure in
