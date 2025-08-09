@@ -6,7 +6,7 @@ import serviceAccount  from "../config/event-management-system-68a02-firebase-ad
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-//   databaseURL: "https://event-management-system-68a02-default-rtdb.firebaseio.com"
+
 });
 const auth = admin.auth();
 
