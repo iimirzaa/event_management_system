@@ -1,9 +1,13 @@
-const express=require('express')
+import express from 'express'
+import dotenv from "dotenv"
+import auth from './routes/auth.js'
+
 const app=express();
-const dotenv=require("dotenv")
 dotenv.config();
-app.use(express.urlencoded({extend:true}));
+app.use(express.urlencoded({extended:true}));
 app.use(express.json());
-app.listen(3000,(req,res)=>{
+app.use('api/auth',auth)
+app.listen(process.env,(req,res)=>{
     console.log("Server created Successfully!")
+   
 })

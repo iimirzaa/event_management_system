@@ -19,6 +19,7 @@ migrate_working_dir/
 *.iws
 .idea/
 node_modules/
+config/
 package.json
 package-lock.json
 
