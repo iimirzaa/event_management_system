@@ -27,8 +27,14 @@ class ErrorState extends AuthState {
   final String? errorMsg;
   ErrorState({this.errorMsg});
 }
+class BackendErrorState extends AuthState {
+  final String? errorMsg;
+  final IconData? icon;
+  BackendErrorState({this.errorMsg,this.icon});
+}
 class LoadingState extends AuthState{}
 class LoginSuccessfulState extends AuthState {}
+class SignUpSuccessfulState extends AuthState{}
 
 class LoginGestureState extends AuthState {}
 

@@ -1,5 +1,6 @@
 import 'package:event_management_system/CustomWidget/CustomButton.dart';
 import 'package:event_management_system/CustomWidget/CustomText.dart';
+import 'package:event_management_system/CustomWidget/Customdialogue.dart';
 import 'package:event_management_system/CustomWidget/custominput.dart';
 import 'package:event_management_system/Scaffold_Theme/scaffold_gradient.dart';
 import 'package:event_management_system/features/Auth/Login/login_view.dart';
@@ -48,7 +49,20 @@ class _SignupViewState extends State<SignupView> {
             MaterialPageRoute(builder: (_) => LoginView()),
           );
         }
-        if (state is SignUpButtonState) {
+        if (state is BackendErrorState) {
+          showDialog(
+            context: context,
+            builder: (_) =>
+                Customdialogue(icon: state.icon, text: state.errorMsg ?? ''),
+          );
+        }
+
+        if (state is SignUpSuccessfulState) {
+          _username_controller.clear();
+          _email_controller.clear();
+          _password_controller.clear();
+          _confirm_controller.clear();
+          _role_controller.clear();
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (_) => SendOtp()),
@@ -58,199 +72,219 @@ class _SignupViewState extends State<SignupView> {
       builder: (context, state) {
         return GradientScaffold(
           body: Stack(
-            children:[ SingleChildScrollView(
-              child: SafeArea(
-                child: Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(height: 100.h),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Color(0xFF928dab),
-                            backgroundBlendMode: BlendMode.softLight,
-                            borderRadius: BorderRadius.circular(16.r),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.2),
-                                blurRadius: 2,
-                                offset: Offset(2, 0),
-                              ),
-                            ],
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.all(16.0.r),
-                            child: Form(
-                              key: _form_key,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SingleChildScrollView(
+                child: SafeArea(
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(height: 100.h),
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Color(0xFF928dab),
+                              backgroundBlendMode: BlendMode.softLight,
+                              borderRadius: BorderRadius.circular(16.r),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.2),
+                                  blurRadius: 2,
+                                  offset: Offset(2, 0),
+                                ),
+                              ],
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.all(16.0.r),
+                              child: Form(
+                                key: _form_key,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
 
-                                children: [
-                                  SizedBox(height: 10.h),
-                                  CustomText(
-                                    text: "EventEase",
-                                    color: Color(0xFFFF6F61),
-                                    weight: FontWeight.w800,
-                                    size: 40.sp,
-                                  ),
-                                  SizedBox(height: 20.h),
-                                  CustomText(
-                                    text: "Select your role",
-                                    color: Colors.white,
-                                    weight: FontWeight.w600,
-                                    size: 22.sp,
-                                  ),
-                                  SizedBox(height: 10.h),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      CustomButton(
-                                        text: "Organizer",
-                                        height: 40.h,
-                                        width: 150.w,
-                                        color:
-                                            state is RoleButtonState &&
-                                                state.role == "Organizer" ||
-                                                state is EyeIconSignUpState &&
-                                                    state.role == 'Organizer'
-                                            ? Color(0xFFFF6F61)
-                                            : Colors.transparent,
-                                        border: 30,
-                                        press: () {
-                                          context.read<AuthBloc>().add(
-                                            RoleButtonClicked(role: "Organizer"),
-                                          );
-                                        },
-                                      ),
-                                      SizedBox(width: 10.w),
-                                      CustomButton(
-                                        text: "Attendee",
-                                        height: 40.h,
-                                        width: 150.w,
-                                        color:
-                                            state is RoleButtonState &&
-                                                state.role == "Attendee" ||
-                                                state is EyeIconSignUpState &&
-                                                    state.role == 'Attendee'
-                                            ? Color(0xFFFF6F61)
-                                            : Colors.transparent,
-                                        border: 30,
-                                        press: () {
-                                          context.read<AuthBloc>().add(
-                                            RoleButtonClicked(role: "Attendee"),
-                                          );
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 15.h),
-                                  CustomInput(hint: "Enter your full name",controller: _username_controller,),
-                                  SizedBox(height: 15.h),
-                                  CustomInput(hint: "Enter your email",controller: _email_controller,),
-                                  SizedBox(height: 15.h),
-                                  CustomInput(
-                                    hint: "Enter your password",
-                                    controller: _password_controller,
-                                    icon: notvisiblesignup
-                                        ? Icons.visibility_off
-                                        : Icons.visibility,
-                                    obsecure: notvisiblesignup,
-                                    onTap: () {
-                                      context.read<AuthBloc>().add(
-                                        EyeIconSignUpClicked(
-                                          visibilty: notvisiblesignup,
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                  SizedBox(height: 15.h),
-                                  CustomInput(
-                                    hint: "Confirm your password",
-                                    controller: _confirm_controller,
-                                    icon: notvisiblesignup
-                                        ? Icons.visibility_off
-                                        : Icons.visibility,
-                                    obsecure: notvisiblesignup,
-                                    onTap: () {
-                                      context.read<AuthBloc>().add(
-                                        EyeIconSignUpClicked(
-                                          visibilty: notvisiblesignup,
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                  SizedBox(height: 5.h),
-                                  if (state is ErrorState) ...[
-                                    Padding(
-                                      padding: EdgeInsets.only(left: 20.r),
-                                      child: CustomText(
-                                        color: Colors.redAccent,
-                                        weight: FontWeight.w500,
-                                        text: state.errorMsg ?? "",
-                                      ),
+                                  children: [
+                                    SizedBox(height: 10.h),
+                                    CustomText(
+                                      text: "EventEase",
+                                      color: Color(0xFFFF6F61),
+                                      weight: FontWeight.w800,
+                                      size: 40.sp,
                                     ),
-                                  ],
-                                  SizedBox(height: 10.h),
-                                  CustomButton(
-                                    text: "Sign Up",
-                                    height: 40.h,
-                                    width: 320.w,
-                                    color: Color(0xFFFF6F61),
-                                    border: 12,
-                                    press: () {
-                                      context.read<AuthBloc>().add(SignUpButtonClicked(key:_form_key.currentState!.validate(),
-                                      username: _username_controller.text,
-                                      email: _email_controller.text,
-                                      password: _password_controller.text,
-                                      cofirmpassword: _confirm_controller.text));
-                                    },
-                                  ),
-
-                                  SizedBox(height: 10.h),
-                                  GestureDetector(
-                                    onTap: () {
-                                      context.read<AuthBloc>().add(
-                                        LoginGestureClicked(),
-                                      );
-                                    },
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                    SizedBox(height: 20.h),
+                                    CustomText(
+                                      text: "Select your role",
+                                      color: Colors.white,
+                                      weight: FontWeight.w600,
+                                      size: 22.sp,
+                                    ),
+                                    SizedBox(height: 10.h),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
                                       children: [
-                                        Text(
-                                          "Already have account?",
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 20.sp,
-                                            fontWeight: FontWeight.w600,
-                                          ),
+                                        CustomButton(
+                                          text: "Organizer",
+                                          height: 40.h,
+                                          width: 150.w,
+                                          color:
+                                              state is RoleButtonState &&
+                                                      state.role ==
+                                                          "Organizer" ||
+                                                  state is EyeIconSignUpState &&
+                                                      state.role == 'Organizer'
+                                              ? Color(0xFFFF6F61)
+                                              : Colors.transparent,
+                                          border: 30,
+                                          press: () {
+                                            context.read<AuthBloc>().add(
+                                              RoleButtonClicked(
+                                                role: "Organizer",
+                                              ),
+                                            );
+                                          },
                                         ),
                                         SizedBox(width: 10.w),
-                                        Text(
-                                          "Login",
-                                          style: TextStyle(
-                                            color: Color(0xFFFF6F61),
-                                            fontSize: 20.sp,
-                                            fontWeight: FontWeight.w600,
-                                          ),
+                                        CustomButton(
+                                          text: "Attendee",
+                                          height: 40.h,
+                                          width: 150.w,
+                                          color:
+                                              state is RoleButtonState &&
+                                                      state.role ==
+                                                          "Attendee" ||
+                                                  state is EyeIconSignUpState &&
+                                                      state.role == 'Attendee'
+                                              ? Color(0xFFFF6F61)
+                                              : Colors.transparent,
+                                          border: 30,
+                                          press: () {
+                                            context.read<AuthBloc>().add(
+                                              RoleButtonClicked(
+                                                role: "Attendee",
+                                              ),
+                                            );
+                                          },
                                         ),
                                       ],
                                     ),
-                                  ),
-                                  SizedBox(height: 15.h),
-                                ],
+                                    SizedBox(height: 15.h),
+                                    CustomInput(
+                                      hint: "Enter your full name",
+                                      controller: _username_controller,
+                                    ),
+                                    SizedBox(height: 15.h),
+                                    CustomInput(
+                                      hint: "Enter your email",
+                                      controller: _email_controller,
+                                    ),
+                                    SizedBox(height: 15.h),
+                                    CustomInput(
+                                      hint: "Enter your password",
+                                      controller: _password_controller,
+                                      icon: notvisiblesignup
+                                          ? Icons.visibility_off
+                                          : Icons.visibility,
+                                      obsecure: notvisiblesignup,
+                                      onTap: () {
+                                        context.read<AuthBloc>().add(
+                                          EyeIconSignUpClicked(
+                                            visibilty: notvisiblesignup,
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                    SizedBox(height: 15.h),
+                                    CustomInput(
+                                      hint: "Confirm your password",
+                                      controller: _confirm_controller,
+                                      icon: notvisiblesignup
+                                          ? Icons.visibility_off
+                                          : Icons.visibility,
+                                      obsecure: notvisiblesignup,
+                                      onTap: () {
+                                        context.read<AuthBloc>().add(
+                                          EyeIconSignUpClicked(
+                                            visibilty: notvisiblesignup,
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                    SizedBox(height: 5.h),
+                                    if (state is ErrorState) ...[
+                                      Padding(
+                                        padding: EdgeInsets.only(left: 20.r),
+                                        child: CustomText(
+                                          color: Colors.redAccent,
+                                          weight: FontWeight.w500,
+                                          text: state.errorMsg ?? "",
+                                        ),
+                                      ),
+                                    ],
+                                    SizedBox(height: 10.h),
+                                    CustomButton(
+                                      text: "Sign Up",
+                                      height: 40.h,
+                                      width: 320.w,
+                                      color: Color(0xFFFF6F61),
+                                      border: 12,
+                                      press: () {
+                                        context.read<AuthBloc>().add(
+                                          SignUpButtonClicked(
+                                            key: _form_key.currentState!
+                                                .validate(),
+                                            username: _username_controller.text,
+                                            email: _email_controller.text,
+                                            password: _password_controller.text,
+                                            cofirmpassword:
+                                                _confirm_controller.text,
+                                          ),
+                                        );
+                                      },
+                                    ),
+
+                                    SizedBox(height: 10.h),
+                                    GestureDetector(
+                                      onTap: () {
+                                        context.read<AuthBloc>().add(
+                                          LoginGestureClicked(),
+                                        );
+                                      },
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            "Already have account?",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 20.sp,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                          SizedBox(width: 10.w),
+                                          Text(
+                                            "Login",
+                                            style: TextStyle(
+                                              color: Color(0xFFFF6F61),
+                                              fontSize: 20.sp,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(height: 15.h),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
               if (state is LoadingState)
                 Container(
                   color: Colors.black.withOpacity(
@@ -263,7 +297,7 @@ class _SignupViewState extends State<SignupView> {
                     ),
                   ),
                 ),
-                ]
+            ],
           ),
         );
       },

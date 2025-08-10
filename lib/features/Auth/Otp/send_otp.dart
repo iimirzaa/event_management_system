@@ -2,9 +2,7 @@ import 'package:event_management_system/Scaffold_Theme/scaffold_gradient.dart';
 import 'package:flutter/material.dart';
 import 'package:event_management_system/CustomWidget/CustomButton.dart';
 import 'package:event_management_system/CustomWidget/CustomText.dart';
-
 import 'package:event_management_system/features/Auth/Login/login_view.dart';
-
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../Auth_Bloc/auth_bloc.dart';
@@ -122,6 +120,7 @@ class _SendOtpState extends State<SendOtp> {
                                         color: Colors.white,
                                         fontWeight: FontWeight.w600,
                                         fontSize: 25.sp,
+
                                       ),
                                       onChanged: (value) => _onChanged(
                                         index,

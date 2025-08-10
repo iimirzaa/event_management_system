@@ -1,14 +1,21 @@
-
-
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
+import '../../../providers/Auth_Provider/auth_provider.dart';
+import '../../../services/validator.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';
+part 'handler.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   String? role;
+  List<IconData> icon = [
+    Icons.wifi_off,
+    Icons.error_outline, // 400 - Bad Request
+    Icons.warning_amber_rounded, // 500 - Internal Server Error
+  ];
   AuthBloc() : super(AuthInitial()) {
     on<RoleButtonClicked>((event, emit) {
       role = event.role;
@@ -60,12 +67,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<SignUpClicked>((event, emit) {
       emit(SignUpState());
     });
-    on<SignUpButtonClicked>((event, emit) {
+    on<SignUpButtonClicked>((event, emit) async {
       final username = event.username;
       final email = event.email.trim();
       final password = event.password.trim();
       final confirmpassword = event.cofirmpassword.trim();
-      print(role);
       if (role == null || role!.isEmpty) {
         emit(ErrorState(errorMsg: "Please select a role"));
         return;
@@ -80,49 +86,54 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           ErrorState(errorMsg: "Username should have at least 3+ character"),
         );
       }
+      final emailError = AuthValidator.validateEmail(email);
+      if (emailError != null) {
+        emit(ErrorState(errorMsg: emailError));
+        return;
+      }
+
+      // Password validation
+      final passwordError = AuthValidator.validatePassword(password);
+      if (emailError != null) {
+        emit(ErrorState(errorMsg: passwordError));
+        return;
+      }
+      if (password != confirmpassword) {
+        emit(ErrorState(errorMsg: "Password did not match!"));
+        return;
+      }
+
+      if (event.key == true) {
+        emit(LoadingState());
+        Map<String, dynamic> response = await AuthProvider().sendSignUpOTP({
+          "username": username,
+          "email": email,
+          "password": password,
+          "role": role,
+        });
+        final handler = Handler();
+        handler.handleSignUpResponse(
+          response: response,
+          emit: emit,
+          icons: icon,
+        );
+      }
+    });
+    on<ForgetPasswordGestureClicked>((event, emit) {
+      emit(ForgetPasswordState());
+    });
+    on<SendOtpClicked>((event, emit) async {
+      String email = event.email.trim();
+      if (event.key == true) {
+        emit(LoadingState());
+        await AuthProvider().sendOTP({"email": email});
+      }
+
       final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
       if (!emailRegex.hasMatch(email)) {
         emit(ErrorState(errorMsg: "Enter a valid email address"));
         return;
       }
-
-      // Password validation
-      final passwordRegex = RegExp(
-        r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d]{8,16}$',
-      );
-      if (!passwordRegex.hasMatch(password)) {
-        emit(
-          ErrorState(
-            errorMsg:
-                "Password must have  8 to 16 characters with upper, lower, number",
-          ),
-        );
-        return;
-      }
-      if (password != confirmpassword) {
-        emit(ErrorState(errorMsg: "Password did not match!"));
-      }
-
-      if (event.key == true) {
-        emit(LoadingState());
-        return;
-      }
     });
-    on<ForgetPasswordGestureClicked>((event,emit){
-           emit(ForgetPasswordState());
-    });
-    on<SendOtpClicked>((event,emit){
-        if(event.key==true){
-          emit(LoadingState());
-          return;
-        }
-        String email=event.email.trim();
-        final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-        if (!emailRegex.hasMatch(email)) {
-          emit(ErrorState(errorMsg: "Enter a valid email address"));
-          return;
-        }
-      });
   }
-
 }
