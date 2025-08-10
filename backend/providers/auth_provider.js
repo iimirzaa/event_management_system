@@ -1,0 +1,58 @@
+
+import { v4 as uuidv4 } from "uuid";
+import {firestore,auth} from '../firebase/firebase_admin.js';
+import { sendmail } from '../providers/email_provider.js'
+import bcrypt from "bcrypt";
+async function SignUp(username, email, password, role) {
+    try {
+        const existinguser = await firestore.collection('user').where('email', '==', email).get();
+        if (!existinguser.empty) {
+            const userDoc=existinguser.docs[0];
+            const userData=userDoc.data();
+            if(userData.isverified){
+            return ({ success: false, message: "User already exists with that email address." })
+            }else if(!userData.isverified){
+                const otp=await sendmail(userData.email);
+                const hashedpassword = await bcrypt.hash(password, 12);
+                await firestore.collection('user').doc(userDoc.id).update({
+                    fullname:username,
+                    role:role,
+                    hashedpassword:hashedpassword,
+                    otp:otp,
+                    otp_expires_at: new Date(Date.now() + 5 * 60 * 1000)
+            });
+              return ({ success: true, message: "sign up successful" })
+            }
+        }
+        const hashedpassword = await bcrypt.hash(password, 12);
+        const otpExpiresAt = new Date(Date.now() + 5 * 60 * 1000);
+        const otp = await sendmail(email);
+        const userId = uuidv4();
+        await firestore.collection('user').doc(userId).set({
+            fullname: username,
+            email: email,
+            role:role,
+            hashedpassword: hashedpassword,
+            otp: otp,
+            isverified: false,
+            otp_expires_at: otpExpiresAt,
+            created_at: new Date().toISOString(),
+            
+        })
+        return ({ success: true, message: "sign up successful" })
+
+    } catch (e) {
+        console.log(e)
+        return ({ success: false, message: "Sign Up failed!" })
+    }
+
+}
+async function sendotp(email) {
+    try {
+        await sendmail(email);
+        return ({ success: true, message: "OTP sent successfully" })
+    } catch (e) {
+        return ({ success: false, message: "There was error while sending otp" })
+    }
+}
+export { SignUp, sendotp }
