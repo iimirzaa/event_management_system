@@ -47,6 +47,19 @@ class SignUpButtonClicked extends AuthEvent{
     required this.cofirmpassword,
 });
 }
+class VerifyOtpClicked extends AuthEvent{
+  final bool key;
+  final String email;
+  final String otp;
+  VerifyOtpClicked({
+    required this.email,
+    required this.key,
+    required this.otp
+
+
+});
+
+}
 class SendOtpClicked extends AuthEvent{
   final bool key;
   final String email;

@@ -1,4 +1,5 @@
-import {SignUp,sendotp} from '../providers/auth_provider.js'
+
+import {SignUp,sendotp, verifyotp} from '../providers/auth_provider.js'
 import express from 'express';
 
 const auth=express.Router();
@@ -38,10 +39,27 @@ auth.post('/sendOtp',async (req,res)=>{
        }
       
     }catch(e){
-        res.status(500).send({success:false,message:"Error while sending otp"})
+        res.status(500).send({success:false,message:"Error while sending OTP"})
        }
   }
 
+})
+auth.post('/verifyOtp',async(req,res)=>{
+  const {email,otp}=req.body;
+  if(email===''||otp===''){
+    res.status(400).send({success:false,message:"Please Provide a valid OTP"})
+  }
+  try{
+    const response=await verifyotp(email,otp);
+    if(response.success){
+      res.status(200).send({success:response.success,message:response.message});
+    }else{
+      res.status(401).send({success:response.success,message:response.message})
+    }
+
+  }catch(e){
+    res.status(500).send({success:false,message:"There was error while verifying OTP"})
+  }
 })
 export default auth;
 

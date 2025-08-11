@@ -116,8 +116,34 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           response: response,
           emit: emit,
           icons: icon,
+          email: email
         );
       }
+    });
+    on<VerifyOtpClicked>((event,emit)async{
+      final email=event.email;
+      final otp=event.otp;
+      emit(LoadingState());
+      final emailError = AuthValidator.validateEmail(email);
+      if (emailError != null) {
+        emit(ErrorState(errorMsg: emailError));
+        return;
+      }
+
+      if(event.key==true) {
+        Map<String, dynamic> response = await AuthProvider().verifyOtp({
+          "email": email,
+          "otp": otp,
+        });
+        final handler = Handler();
+        handler.handleVerifyOtp(
+          response: response,
+          emit: emit,
+          icons: icon,
+        );
+      }
+
+
     });
     on<ForgetPasswordGestureClicked>((event, emit) {
       emit(ForgetPasswordState());

@@ -4,11 +4,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class Customdialogue extends StatefulWidget {
   final IconData? icon;
   final String text;
+  final Color? color;
 
   const Customdialogue({
     super.key,
     required this.icon,
     required this.text,
+    this.color
   });
 
   @override
@@ -25,8 +27,13 @@ class _CustomdialogueState extends State<Customdialogue> {
       ),
       backgroundColor: Colors.transparent,
       child: Container(
-        height: 250.h,
-        width: 300.w,
+        constraints: BoxConstraints(
+          maxHeight: 300.h,
+          maxWidth: 300.w,
+
+        ),
+
+
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12.r),
           color: Color(0xFFFAFAF5),
@@ -41,18 +48,19 @@ class _CustomdialogueState extends State<Customdialogue> {
         child: Padding(
           padding: EdgeInsets.all(20.0.r),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               SizedBox(height: 15.h),
               Icon(
                 widget.icon,
-                color: Color(0xffE53935),
+                color: widget.color??Color(0xffE53935),
                 size: 80.sp,
               ),
               SizedBox(height: 20.h),
               Text(
                 widget.text,
                 style: TextStyle(
-                  color: Color(0xffE53935),
+                  color: widget.color??Color(0xffE53935),
                   fontSize: 20.sp,
                   fontWeight: FontWeight.w500,
                 ),
@@ -64,7 +72,7 @@ class _CustomdialogueState extends State<Customdialogue> {
                 text: "OK",
                 height: 30.h,
                 width: 100.w,
-                color:Color(0xffE53935),
+                color:widget.color??Color(0xffE53935),
                 press: () {
                   Navigator.of(context, rootNavigator: true).pop();
                 },

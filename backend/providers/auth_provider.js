@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import {firestore,auth} from '../firebase/firebase_admin.js';
 import { sendmail } from '../providers/email_provider.js'
 import bcrypt from "bcrypt";
+import firebase from "firebase/compat/app";
 async function SignUp(username, email, password, role) {
     try {
         const existinguser = await firestore.collection('user').where('email', '==', email).get();
@@ -55,4 +56,28 @@ async function sendotp(email) {
         return ({ success: false, message: "There was error while sending otp" })
     }
 }
-export { SignUp, sendotp }
+async function verifyotp(email,otp){
+    try{
+    const existinguser=await firestore.collection('user').where('email','==',email).get();
+    if(existinguser.empty){
+        return ({success:false,message:"User not found"})
+    }
+   const userDoc=existinguser.docs[0];
+    const userData=userDoc.data();
+    const now=new Date();
+    if(userData.otp==otp&& userData.otp_expires_at.toDate()>now){
+        await firestore.collection('user').doc(userDoc.id).update({
+            isverified:true
+        });
+        return ({success:true,message:"OTP verified successfully!\nLogin to access your Account"})
+    }else{
+        console.log('failed')
+        return ({success:false,message:"Incorrect OTP!\nor Timeout"})
+    }
+}catch(e){
+    console.log(e);
+    return ({success:false,message:"OTP verification failed"})
+}
+
+}
+export { SignUp, sendotp,verifyotp }

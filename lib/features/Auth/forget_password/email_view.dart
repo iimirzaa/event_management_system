@@ -28,7 +28,7 @@ class _EmailViewState extends State<EmailView> {
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is SendOtpSuccessfulState) {
-          Navigator.push(context, MaterialPageRoute(builder: (_) => SendOtp()));
+          Navigator.push(context, MaterialPageRoute(builder: (_) => SendOtp(email: _emailcontroller.text.trim(),)));
         }
       },
       builder: (context, state) {

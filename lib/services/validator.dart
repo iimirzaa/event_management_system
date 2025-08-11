@@ -1,6 +1,6 @@
 class AuthValidator {
   static String? validateUsername(String username) {
-    final regex = RegExp(r"^[A-Za-z]{2,}(?: [A-Za-z]{2,})+$");
+    final regex = RegExp(r"^[A-Za-z]{2,}(?: [A-Za-z]{2,})+\s?$");
     if (!regex.hasMatch(username)) {
       return "Enter your full name (first and last, letters only, each at least 2 characters)";
     }

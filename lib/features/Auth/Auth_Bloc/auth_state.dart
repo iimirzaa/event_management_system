@@ -34,7 +34,13 @@ class BackendErrorState extends AuthState {
 }
 class LoadingState extends AuthState{}
 class LoginSuccessfulState extends AuthState {}
-class SignUpSuccessfulState extends AuthState{}
+class SignUpSuccessfulState extends AuthState{
+  final String? email;
+  SignUpSuccessfulState({
+    required this.email
+});
+}
+class VerificationSuccessful extends AuthState{}
 
 class LoginGestureState extends AuthState {}
 

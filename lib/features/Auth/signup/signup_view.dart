@@ -58,14 +58,10 @@ class _SignupViewState extends State<SignupView> {
         }
 
         if (state is SignUpSuccessfulState) {
-          _username_controller.clear();
-          _email_controller.clear();
-          _password_controller.clear();
-          _confirm_controller.clear();
-          _role_controller.clear();
+
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (_) => SendOtp()),
+            MaterialPageRoute(builder: (_) => SendOtp(email: state.email??'',)),
           );
         }
       },
