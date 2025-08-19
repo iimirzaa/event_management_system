@@ -58,7 +58,7 @@ class _SendOtpState extends State<SendOtp> {
             context: context,
             builder: (_) => Customdialogue(
               icon: Icons.check_circle,
-              text: "Sign up Successful!\nKindly Login to access your account",
+              text: "Sign up Successful!",
               color: Colors.green,
             ),
           );

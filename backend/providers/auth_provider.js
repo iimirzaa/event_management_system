@@ -48,6 +48,14 @@ async function SignUp(username, email, password, role) {
     }
 
 }
+async function login(email,password,role){
+    try{
+
+    }catch(e){
+        
+    }
+
+}
 async function sendotp(email) {
     try {
         await sendmail(email);
@@ -80,4 +88,4 @@ async function verifyotp(email,otp){
 }
 
 }
-export { SignUp, sendotp,verifyotp }
+export { SignUp, sendotp,verifyotp,login }
