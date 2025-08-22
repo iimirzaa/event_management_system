@@ -29,12 +29,38 @@ class AuthProvider {
         final statusCode = e.response?.statusCode ?? 0;
         final message = e.response?.data?['message'] ?? 'Unexpected error';
         return {'success': false, 'message': '[$statusCode] $message'};
-      } else if (e.type == DioExceptionType.connectionError ||e.type == DioExceptionType.unknown) {
+      } else if (e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.unknown) {
         return {'success': false, 'message': 'No internet connection'};
       }
       return {'success': false, 'message': 'Unexpected error occurred'};
     } catch (e) {
       // Any other unhandled error
+      return {'success': false, 'message': 'Something went wrong'};
+    }
+  }
+
+  Future<Map<String, dynamic>> Login(Map<String, dynamic> data) async {
+    try {
+      final response = await dio.post('/login', data: data);
+      return {
+        'success': response.data['success'],
+        'message': response.data['message'],
+      };
+    } on DioException catch (e) {
+      if (e.type == DioExceptionType.connectionTimeout) {
+        return {'success': false, 'message': 'Connection timeout'};
+      } else if (e.type == DioExceptionType.receiveTimeout) {
+        return {'success': false, 'message': 'Receive timeout'};
+      } else if (e.type == DioExceptionType.badResponse) {
+        final statusCode = e.response?.statusCode ?? 0;
+        final message = e.response?.data?['message'] ?? 'Unexpected error';
+        return {'success': false, 'message': '$message'};
+      } else if (e.type == DioExceptionType.unknown) {
+        return {'success': false, 'message': 'No internet connection'};
+      }
+      return {'success': false, 'message': 'Unexpected error occurred'};
+    } catch (e) {
       return {'success': false, 'message': 'Something went wrong'};
     }
   }
@@ -63,7 +89,8 @@ class AuthProvider {
       return {'success': false, 'message': 'Something went wrong'};
     }
   }
-  Future <Map<String,dynamic>> verifyOtp(Map<String,dynamic> data)async{
+
+  Future<Map<String, dynamic>> verifyOtp(Map<String, dynamic> data) async {
     try {
       print(data);
       final response = await dio.post('/verifyOtp', data: data);
@@ -81,7 +108,8 @@ class AuthProvider {
         final statusCode = e.response?.statusCode ?? 0;
         final message = e.response?.data?['message'] ?? 'Unexpected error';
         return {'success': false, 'message': '$message'};
-      } else if (e.type == DioExceptionType.connectionError ||e.type == DioExceptionType.unknown) {
+      } else if (e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.unknown) {
         return {'success': false, 'message': 'No internet connection'};
       }
       return {'success': false, 'message': 'Unexpected error occurred'};
@@ -90,4 +118,3 @@ class AuthProvider {
     }
   }
 }
-

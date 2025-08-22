@@ -1,4 +1,6 @@
 import 'package:event_management_system/features/Auth/Auth_Bloc/auth_bloc.dart';
+import 'package:event_management_system/features/Dashboard/attendee_dashboard.dart';
+import 'package:event_management_system/features/Dashboard/organizer_dashboard.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:event_management_system/features/GetStarted/get_started_view.dart';
 import 'package:flutter/material.dart';
@@ -39,7 +41,7 @@ class _MyAppState extends State<MyApp> {
       designSize: Size(411, 731),
       minTextAdapt: true,
       splitScreenMode: true,
-      child: GetStartedView(),
+      child: AttendeeDashboard(),
     );
   }
 }

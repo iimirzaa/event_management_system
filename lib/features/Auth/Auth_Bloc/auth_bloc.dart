@@ -27,36 +27,35 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<EyeIconSignUpClicked>((event, emit) {
       emit(EyeIconSignUpState(visibilty: !event.visibilty, role: role));
     });
-    on<LoginButtonClicked>((event, emit) {
+    on<LoginButtonClicked>((event, emit)async {
       final email = event.email.trim();
       final password = event.password.trim();
-      print(role);
       if (role == null || role!.isEmpty) {
         emit(ErrorState(errorMsg: "Please select a role"));
         return;
       }
 
-      final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-      if (!emailRegex.hasMatch(email)) {
-        emit(ErrorState(errorMsg: "Enter a valid email address"));
+      final emailError = AuthValidator.validateEmail(email);
+      if (emailError != null) {
+        emit(ErrorState(errorMsg: emailError));
         return;
       }
 
       // Password validation
-      final passwordRegex = RegExp(
-        r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d]{8,}$',
-      );
-      if (!passwordRegex.hasMatch(password)) {
-        emit(
-          ErrorState(
-            errorMsg:
-                "Password must be 8+ characters with upper, lower, number",
-          ),
-        );
+      final passwordError = AuthValidator.validatePassword(password);
+      if (passwordError != null) {
+        emit(ErrorState(errorMsg: passwordError));
         return;
       }
       if (event.key == true) {
         emit(LoadingState());
+        Map<String,dynamic> response=await AuthProvider().Login({
+          'email':email,
+          'password':password,
+          'role':role,
+        });
+        final handler= Handler();
+        handler.handleUserLogin(response: response, emit: emit, icons: icon);
         return;
       }
     });
@@ -94,7 +93,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
       // Password validation
       final passwordError = AuthValidator.validatePassword(password);
-      if (emailError != null) {
+      if (passwordError != null) {
         emit(ErrorState(errorMsg: passwordError));
         return;
       }

@@ -1,6 +1,6 @@
 
 import { v4 as uuidv4 } from "uuid";
-import {firestore,auth} from '../firebase/firebase_admin.js';
+import { firestore, auth } from '../firebase/firebase_admin.js';
 import { sendmail } from '../providers/email_provider.js'
 import bcrypt from "bcrypt";
 import firebase from "firebase/compat/app";
@@ -8,21 +8,21 @@ async function SignUp(username, email, password, role) {
     try {
         const existinguser = await firestore.collection('user').where('email', '==', email).get();
         if (!existinguser.empty) {
-            const userDoc=existinguser.docs[0];
-            const userData=userDoc.data();
-            if(userData.isverified){
-            return ({ success: false, message: "User already exists with that email address." })
-            }else if(!userData.isverified){
-                const otp=await sendmail(userData.email);
+            const userDoc = existinguser.docs[0];
+            const userData = userDoc.data();
+            if (userData.isverified) {
+                return ({ success: false, message: "User already exists with that email address." })
+            } else if (!userData.isverified) {
+                const otp = await sendmail(userData.email);
                 const hashedpassword = await bcrypt.hash(password, 12);
                 await firestore.collection('user').doc(userDoc.id).update({
-                    fullname:username,
-                    role:role,
-                    hashedpassword:hashedpassword,
-                    otp:otp,
+                    fullname: username,
+                    role: role,
+                    hashedpassword: hashedpassword,
+                    otp: otp,
                     otp_expires_at: new Date(Date.now() + 5 * 60 * 1000)
-            });
-              return ({ success: true, message: "sign up successful" })
+                });
+                return ({ success: true, message: "Sign up successful" })
             }
         }
         const hashedpassword = await bcrypt.hash(password, 12);
@@ -32,13 +32,13 @@ async function SignUp(username, email, password, role) {
         await firestore.collection('user').doc(userId).set({
             fullname: username,
             email: email,
-            role:role,
+            role: role,
             hashedpassword: hashedpassword,
             otp: otp,
             isverified: false,
             otp_expires_at: otpExpiresAt,
             created_at: new Date().toISOString(),
-            
+
         })
         return ({ success: true, message: "sign up successful" })
 
@@ -48,11 +48,22 @@ async function SignUp(username, email, password, role) {
     }
 
 }
-async function login(email,password,role){
-    try{
+async function login(email, password, role) {
+    try {
+        const user = await firestore.collection('user').where('email', '==', email).get();
+        if (!user.empty) {
+            const userDoc = user.docs[0];
+            const userData = userDoc.data();
+            if(userData.email==email&&userData.hashedpassword==password&&userData.role==role&&userData.isverified==true){
+                return({success:true,message:"Login Successful!"})
+            }else if(userData.isverified==false){
+                return ({success:false,message:"Kindly verify your email via OTP"})
+            }
+            return ({success:false,message:"Login Failed!"})
+        }
+    } catch (e) {
+        return ({success:false,message:"There was error wile logging in!"})
 
-    }catch(e){
-        
     }
 
 }
@@ -64,28 +75,28 @@ async function sendotp(email) {
         return ({ success: false, message: "There was error while sending otp" })
     }
 }
-async function verifyotp(email,otp){
-    try{
-    const existinguser=await firestore.collection('user').where('email','==',email).get();
-    if(existinguser.empty){
-        return ({success:false,message:"User not found"})
+async function verifyotp(email, otp) {
+    try {
+        const existinguser = await firestore.collection('user').where('email', '==', email).get();
+        if (existinguser.empty) {
+            return ({ success: false, message: "User not found" })
+        }
+        const userDoc = existinguser.docs[0];
+        const userData = userDoc.data();
+        const now = new Date();
+        if (userData.otp == otp && userData.otp_expires_at.toDate() > now) {
+            await firestore.collection('user').doc(userDoc.id).update({
+                isverified: true
+            });
+            return ({ success: true, message: "OTP verified successfully!\nLogin to access your Account" })
+        } else {
+            console.log('failed')
+            return ({ success: false, message: "Incorrect OTP!\nor Timeout" })
+        }
+    } catch (e) {
+        console.log(e);
+        return ({ success: false, message: "OTP verification failed" })
     }
-   const userDoc=existinguser.docs[0];
-    const userData=userDoc.data();
-    const now=new Date();
-    if(userData.otp==otp&& userData.otp_expires_at.toDate()>now){
-        await firestore.collection('user').doc(userDoc.id).update({
-            isverified:true
-        });
-        return ({success:true,message:"OTP verified successfully!\nLogin to access your Account"})
-    }else{
-        console.log('failed')
-        return ({success:false,message:"Incorrect OTP!\nor Timeout"})
-    }
-}catch(e){
-    console.log(e);
-    return ({success:false,message:"OTP verification failed"})
-}
 
 }
-export { SignUp, sendotp,verifyotp,login }
+export { SignUp, sendotp, verifyotp, login }
