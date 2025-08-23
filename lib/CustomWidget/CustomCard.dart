@@ -4,13 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomCard extends StatelessWidget {
-  const CustomCard({super.key});
+  final String title;
+  final String textButton1;
+  final String textButton2;
+  const CustomCard({super.key,
+  required this.title,
+  required this.textButton1,
+  required this.textButton2});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: 400.w,
-      margin: EdgeInsets.symmetric(vertical: 12.h, horizontal: 8.w),
+      margin: EdgeInsets.symmetric(vertical: 12.h,),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16.r),
         gradient: LinearGradient(
@@ -31,7 +37,9 @@ class CustomCard extends StatelessWidget {
               topLeft: Radius.circular(16.r),
               topRight: Radius.circular(16.r),
             ),
-            child: Image.asset("assets/images/sunset.jpeg")
+            child: Image.asset("assets/images/img.png",
+            fit: BoxFit.contain,
+            width: 400.w,)
           ),
 
           /// Card Content
@@ -41,7 +49,7 @@ class CustomCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 CustomText(
-                  text: "Sunset Marquee",
+                  text:title,
                   color: Color(0xFF1F1C2C),
                   weight: FontWeight.w700,
                   size: 20.sp,
@@ -54,7 +62,7 @@ class CustomCard extends StatelessWidget {
                     SizedBox(width: 6.w),
                     CustomText(
                       text: "Birthday Party",
-                      color: Colors.grey[700]!,
+                      color: Colors.grey[800]!,
                       weight: FontWeight.w500,
                       size: 16.sp,
                     ),
@@ -68,7 +76,7 @@ class CustomCard extends StatelessWidget {
                     SizedBox(width: 6.w),
                     CustomText(
                       text: "Edinburgh, Australia",
-                      color: Colors.grey[700]!,
+                      color: Colors.grey[800]!,
                       weight: FontWeight.w400,
                       size: 16.sp,
                     ),
@@ -84,7 +92,7 @@ class CustomCard extends StatelessWidget {
                       onPressed: () {},
                       icon: Icon(Icons.info_outline, color: Color(0xFFFF6F61)),
                       label: Text(
-                        "View Details",
+                        textButton1,
                         style: TextStyle(color: Color(0xFFFF6F61)),
                       ),
 
@@ -104,7 +112,7 @@ class CustomCard extends StatelessWidget {
                         ),
                       ),
                       child: Text(
-                        "Book Now",
+                        textButton2,
                         style: TextStyle(color: Colors.white),
                       ),
                     ),
