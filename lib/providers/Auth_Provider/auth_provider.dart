@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import '../../constants/routes.dart';
 
+
 final dio = Dio(
   BaseOptions(
     baseUrl: auth_base_url,
@@ -41,11 +42,13 @@ class AuthProvider {
   }
 
   Future<Map<String, dynamic>> Login(Map<String, dynamic> data) async {
+
     try {
       final response = await dio.post('/login', data: data);
       return {
         'success': response.data['success'],
         'message': response.data['message'],
+        'token':response.data['token']
       };
     } on DioException catch (e) {
       if (e.type == DioExceptionType.connectionTimeout) {

@@ -1,5 +1,6 @@
 
 import { v4 as uuidv4 } from "uuid";
+import jwt from "jsonwebtoken";
 import { firestore, auth } from '../firebase/firebase_admin.js';
 import { sendmail } from '../providers/email_provider.js'
 import bcrypt from "bcrypt";
@@ -54,15 +55,27 @@ async function login(email, password, role) {
         if (!user.empty) {
             const userDoc = user.docs[0];
             const userData = userDoc.data();
-            if(userData.email==email&&userData.hashedpassword==password&&userData.role==role&&userData.isverified==true){
-                return({success:true,message:"Login Successful!"})
-            }else if(userData.isverified==false){
-                return ({success:false,message:"Kindly verify your email via OTP"})
+            console.log(userData);
+            const isMatch = await bcrypt.compare(password, userData.hashedpassword);
+            if (isMatch && userData.role == role && userData.isverified == true) {
+                const payload = {
+                    uid: userDoc.id,
+                    role:userData.role,
+
+                }
+                const token =  jwt.sign(payload, process.env.SECRETKEY, {
+                    algorithm: "HS512",
+                    expiresIn: "7d",
+
+                })
+                return ({ success: true, message: "Login Successful!" ,token:token})
+            } else if (userData.isverified == false) {
+                return ({ success: false, message: "Kindly verify your email via OTP" })
             }
-            return ({success:false,message:"Login Failed!"})
+            return ({ success: false, message: "Login Failed!" })
         }
     } catch (e) {
-        return ({success:false,message:"There was error wile logging in!"})
+        return ({ success: false, message: "There was error wile logging in!" })
 
     }
 

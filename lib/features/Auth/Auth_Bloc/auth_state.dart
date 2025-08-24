@@ -33,14 +33,18 @@ class BackendErrorState extends AuthState {
   BackendErrorState({this.errorMsg,this.icon});
 }
 class LoadingState extends AuthState{}
-class LoginSuccessfulState extends AuthState {}
 class SignUpSuccessfulState extends AuthState{
   final String? email;
   SignUpSuccessfulState({
     required this.email
 });
 }
-class VerificationSuccessful extends AuthState{}
+class LoginSuccessful extends AuthState{
+}
+class VerificationSuccessful extends AuthState{
+
+
+}
 
 class LoginGestureState extends AuthState {}
 

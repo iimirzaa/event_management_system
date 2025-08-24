@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import '../../../providers/Auth_Provider/auth_provider.dart';
+import '../../../services/token_storage.dart';
 import '../../../services/validator.dart';
 
 part 'auth_event.dart';
@@ -49,7 +50,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       }
       if (event.key == true) {
         emit(LoadingState());
-        Map<String,dynamic> response=await AuthProvider().Login({
+        Map<String,dynamic> response= await AuthProvider().Login({
           'email':email,
           'password':password,
           'role':role,
@@ -75,8 +76,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(ErrorState(errorMsg: "Please select a role"));
         return;
       }
-      final nameRegex = RegExp(r"^[a-zA-Z]+(?: [a-zA-Z]+)+$");
-      if (!nameRegex.hasMatch(username)) {
+      final nameerror= AuthValidator.validateUsername(username);
+      if (nameerror!=null) {
         emit(ErrorState(errorMsg: "Enter a valid full name (first and last)"));
         return;
       }

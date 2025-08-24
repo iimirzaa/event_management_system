@@ -1,5 +1,4 @@
 
-import { messaging } from 'firebase-admin';
 import { SignUp, sendotp, verifyotp, login } from '../providers/auth_provider.js'
 import express from 'express';
 
@@ -28,12 +27,13 @@ auth.post('/signUp', async (req, res) => {
 })
 auth.post('/login', async (req, res) => {
   const { email, password, role } = req.body;
+  console.log(req.body);
   if (email === '', password === '', role === '') {
     res.status(400).send({ success: false, message: "Invalid Credentials" })
   } try {
     const response = await login(email, password, role);
     if (response.success) {
-      res.status(200).send({ success: true, message: response.message })
+      res.status(200).send({ success: true, message: response.message,token:response.token });
     } else {
       res.status(401).send({ success: false, message: response.message })
     }

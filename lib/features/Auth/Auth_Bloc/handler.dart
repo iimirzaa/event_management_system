@@ -1,5 +1,6 @@
 part of 'auth_bloc.dart';
 
+
 class Handler {
   void handleSignUpResponse({
     required Map<String, dynamic> response,
@@ -50,13 +51,14 @@ class Handler {
       emit(BackendErrorState(errorMsg: msg, icon: icons[1]));
     }
   }
-  void handleUserLogin({
+  void handleUserLogin ({
     required Map<String, dynamic> response,
     required Emitter<AuthState> emit,
     required List<IconData> icons,
-  }) {
+  }) async{
     if (response['success']) {
-      emit(VerificationSuccessful());
+      TokenStorage.saveToken(response['token']);
+      emit(LoginSuccessful());
       return;
     }
 

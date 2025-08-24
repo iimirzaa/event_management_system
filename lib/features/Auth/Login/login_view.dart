@@ -4,11 +4,15 @@ import 'package:event_management_system/CustomWidget/custominput.dart';
 import 'package:event_management_system/Scaffold_Theme/scaffold_gradient.dart';
 import 'package:event_management_system/features/Auth/forget_password/email_view.dart';
 import 'package:event_management_system/features/Auth/signup/signup_view.dart';
+import 'package:event_management_system/features/Dashboard/attendee_dashboard.dart';
+import 'package:event_management_system/features/Dashboard/organizer_dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import '../Auth_Bloc/auth_bloc.dart';
+import'../../../CustomWidget/Customdialogue.dart';
+import '../../../services/token_storage.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -25,7 +29,7 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AuthBloc, AuthState>(
-      listener: (context, state) {
+      listener: (context, state) async{
         if (state is EyeIconState) {
           setState(() {
             notvisible = state.visibilty;
@@ -35,6 +39,29 @@ class _LoginViewState extends State<LoginView> {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (_) => SignupView()),
+          );
+        }
+        if(state is LoginSuccessful){
+         final String? role= await TokenStorage.getRole();
+         if(role=='Attendee') {
+           Navigator.pushAndRemoveUntil(
+             context,
+             MaterialPageRoute(builder: (_) => const AttendeeDashboard()),
+                 (Route<dynamic> route) => false,
+           );
+         }else if(role=='Organizer'){
+           Navigator.pushAndRemoveUntil(
+             context,
+             MaterialPageRoute(builder: (_) => const OrganizerDashboard()),
+                 (Route<dynamic> route) => false,
+           );
+         }
+        }
+        if (state is BackendErrorState) {
+          showDialog(
+            context: context,
+            builder: (_) =>
+                Customdialogue(icon: state.icon, text: state.errorMsg ?? ''),
           );
         }
         if(state is ForgetPasswordState){
@@ -185,8 +212,6 @@ class _LoginViewState extends State<LoginView> {
                                           password: _password_controller.text,
                                         ),
                                       );
-                                      _email_controller.clear();
-                                      _password_controller.clear();
                                     },
                                   ),
                                   SizedBox(height: 15.h),
