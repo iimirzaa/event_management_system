@@ -6,8 +6,9 @@ part 'dashboard_state.dart';
 
 class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   DashboardBloc() : super(DashboardInitial()) {
-    on<DashboardEvent>((event, emit) {
-      // TODO: implement event handler
+    on<ViewDetailButtonClicked>((event, emit) {
+      emit(ViewDetailButtonClickedState());
+
     });
   }
 }

@@ -1,7 +1,7 @@
 import 'package:event_management_system/CustomWidget/CustomButton.dart';
 import 'package:event_management_system/CustomWidget/CustomCard.dart';
 import 'package:event_management_system/CustomWidget/CustomText.dart';
-import 'package:event_management_system/CustomWidget/custominput.dart';
+import 'package:event_management_system/services/token_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -29,10 +29,27 @@ class _AttendeeDashboardState extends State<AttendeeDashboard> {
         appBar: AppBar(
           centerTitle: true,
           backgroundColor: Colors.blueGrey,
-          title: Text(
-            "Welcome ",
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-          ),
+          title: FutureBuilder<String?>(future: TokenStorage.getName(), builder: (context,snapshot){
+            if(snapshot.connectionState==ConnectionState.waiting){
+              return Text("Welcome ...",
+                   style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),);
+            }
+            else if (snapshot.hasError) {
+              return Text(
+                "Error",
+                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              );
+            }else{
+              return Text(
+                "Welcome ${snapshot.data}",
+                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              );
+            }
+
+
+          })
+
+          ,
           flexibleSpace: Container(
             decoration: const BoxDecoration(
               gradient: LinearGradient(
@@ -201,33 +218,33 @@ class _AttendeeDashboardState extends State<AttendeeDashboard> {
                       ),
                     ),
 
-                    // SizedBox(height: 10.h),
-                    // CustomText(
-                    //   text: "Recommended Venue",
-                    //   color: Color(0xFFFF6F61),
-                    //   weight: FontWeight.w500,
-                    //   size: 20.sp,
-                    // ),
-                    // SizedBox(height: 5.h),
-                    // CustomCard(
-                    //   title: "Sunset Marquee",
-                    //   textButton1: "View Detail",
-                    //   textButton2: "Book Now",
-                    // ),
-                    // SizedBox(height: 5.h),
-                    //
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.center,
-                    //   children: [
-                    //     CustomText(
-                    //       text: "See all",
-                    //       color: Color(0xFF1F1C2C),
-                    //       weight: FontWeight.w500,
-                    //       size: 20.sp,
-                    //     ),
-                    //     Icon(Icons.arrow_forward_ios),
-                    //   ],
-                    // ),
+                    SizedBox(height: 10.h),
+                    CustomText(
+                      text: "Recommended Venue",
+                      color: Color(0xFFFF6F61),
+                      weight: FontWeight.w500,
+                      size: 20.sp,
+                    ),
+                    SizedBox(height: 5.h),
+                    CustomCard(
+                      title: "Sunset Marquee",
+                      textButton1: "View Detail",
+                      textButton2: "Book Now",
+                    ),
+                    SizedBox(height: 5.h),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CustomText(
+                          text: "See all",
+                          color: Color(0xFF1F1C2C),
+                          weight: FontWeight.w500,
+                          size: 20.sp,
+                        ),
+                        Icon(Icons.arrow_forward_ios),
+                      ],
+                    ),
                     SizedBox(height: 5.h),
                     CustomText(
                       text: "My Events",

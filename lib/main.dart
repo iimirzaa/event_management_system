@@ -1,4 +1,5 @@
 import 'package:event_management_system/features/Auth/Auth_Bloc/auth_bloc.dart';
+import 'package:event_management_system/features/Dashboard/Dashboard_bloc/dashboard_bloc.dart';
 import 'package:event_management_system/features/Dashboard/attendee_dashboard.dart';
 import 'package:event_management_system/features/Dashboard/organizer_dashboard.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -7,14 +8,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../services/token_storage.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:flutter/services.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  SystemChrome.setSystemUIOverlayStyle(
+    SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,       // transparent background
+      statusBarIconBrightness: Brightness.dark, // dark icons for light bg
+      statusBarBrightness: Brightness.light,    // iOS compatibility
+    ),
+  );
   runApp(
     MultiBlocProvider(
       providers: [
         BlocProvider<AuthBloc>(
           create: (context) => AuthBloc(),
         ),
+        BlocProvider(create: (context)=>DashboardBloc()),
       ],
       child: const MyApp(),
     ),
@@ -58,7 +70,7 @@ class _MyAppState extends State<MyApp> {
             debugShowCheckedModeBanner: false, home: FutureBuilder(future: _getInitialScreen(), builder: (context,snapshot){
               if(snapshot.connectionState==ConnectionState.waiting){
                 return Container(
-                  color: Colors.black.withOpacity(
+                  color: Colors.white.withOpacity(
                     0.3,
                   ), // semi-transparent background
                   child: Center(

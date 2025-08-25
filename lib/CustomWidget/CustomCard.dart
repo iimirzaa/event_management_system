@@ -1,6 +1,9 @@
 import 'package:event_management_system/CustomWidget/CustomButton.dart';
 import 'package:event_management_system/CustomWidget/CustomText.dart';
+import 'package:event_management_system/features/Dashboard/Dashboard_bloc/dashboard_bloc.dart';
+import 'package:event_management_system/features/event/eventdetail.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomCard extends StatelessWidget {
@@ -14,6 +17,13 @@ class CustomCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return BlocConsumer<DashboardBloc, DashboardState>(
+  listener: (context, state) {
+    if(state is ViewDetailButtonClickedState){
+      Navigator.push(context, MaterialPageRoute(builder: (_)=>EventDetail()));
+    }
+  },
+  builder: (context, state) {
     return Container(
       width: 400.w,
       margin: EdgeInsets.symmetric(vertical: 12.h,),
@@ -89,7 +99,9 @@ class CustomCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     OutlinedButton.icon(
-                      onPressed: () {},
+                      onPressed: () {
+                        context.read<DashboardBloc>().add(ViewDetailButtonClicked());
+                      },
                       icon: Icon(Icons.info_outline, color: Color(0xFFFF6F61)),
                       label: Text(
                         textButton1,
@@ -124,5 +136,7 @@ class CustomCard extends StatelessWidget {
         ],
       ),
     );
+  },
+);
   }
 }

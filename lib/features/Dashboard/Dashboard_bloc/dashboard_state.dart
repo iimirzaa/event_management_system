@@ -4,3 +4,6 @@ part of 'dashboard_bloc.dart';
 sealed class DashboardState {}
 
 final class DashboardInitial extends DashboardState {}
+class ViewDetailButtonClickedState extends DashboardState{
+
+}
