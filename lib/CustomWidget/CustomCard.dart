@@ -35,7 +35,7 @@ class CustomCard extends StatelessWidget {
           end: Alignment.bottomRight,
         ),
         boxShadow: [
-          BoxShadow(color: Colors.black12, offset: Offset(3, 3), blurRadius: 6),
+          BoxShadow(color: Colors.black12, offset: Offset(0, 3), blurRadius: 6),
         ],
       ),
       child: Column(

@@ -31,27 +31,26 @@ class _EventDetailState extends State<EventDetail> {
 
                 SizedBox(height: 16.h),
 
-                // 🔹 Image Carousel with Buttons (kept same as before)
+                // 🔹 Image Carousel with Buttons
                 Stack(
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(12.r),
                       child: CarouselSlider(
-                        items:
-                            [
-                                  "assets/images/img.png",
-                                  "assets/images/img_1.png",
-                                  "assets/images/img_2.png",
-                                  "assets/images/img_3.png",
-                                ]
-                                .map(
-                                  (img) => Image.asset(
-                                    img,
-                                    fit: BoxFit.cover,
-                                    width: double.infinity,
-                                  ),
-                                )
-                                .toList(),
+                        items: [
+                          "assets/images/img.png",
+                          "assets/images/img_1.png",
+                          "assets/images/img_2.png",
+                          "assets/images/img_3.png",
+                        ]
+                            .map(
+                              (img) => Image.asset(
+                            img,
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                          ),
+                        )
+                            .toList(),
                         options: CarouselOptions(
                           height: 300.h,
                           viewportFraction: 1,
@@ -61,7 +60,7 @@ class _EventDetailState extends State<EventDetail> {
                       ),
                     ),
 
-                    // Buttons
+                    // Buttons (prev/next/fullscreen)
                     Positioned(
                       left: 8,
                       top: 120.h,
@@ -156,6 +155,58 @@ class _EventDetailState extends State<EventDetail> {
                       _buildChip("Music"),
                     ],
                   ),
+                ),
+
+                SizedBox(height: 30.h),
+
+                // 🔹 Action Buttons (Book / Customize)
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: () {
+                          // Navigate to booking screen
+                          Navigator.pushNamed(context, "/booking");
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFFF6F61),
+                          padding: EdgeInsets.symmetric(vertical: 14.h),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.r),
+                          ),
+                        ),
+                        icon: const Icon(Icons.event_available, color: Colors.white),
+                        label: Text(
+                          "Book Venue",
+                          style: TextStyle(fontSize: 16.sp, color: Colors.white),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 12.w),
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        onPressed: () {
+                          // Navigate to customization screen
+                          Navigator.pushNamed(context, "/customize");
+                        },
+                        style: OutlinedButton.styleFrom(
+                          padding: EdgeInsets.symmetric(vertical: 14.h),
+                          side: const BorderSide(color: Color(0xFFFF6F61)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.r),
+                          ),
+                        ),
+                        icon: const Icon(Icons.build, color: Color(0xFFFF6F61)),
+                        label: Text(
+                          "Customize",
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                            color: const Color(0xFFFF6F61),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

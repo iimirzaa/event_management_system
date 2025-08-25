@@ -219,11 +219,23 @@ class _AttendeeDashboardState extends State<AttendeeDashboard> {
                     ),
 
                     SizedBox(height: 10.h),
-                    CustomText(
-                      text: "Recommended Venue",
-                      color: Color(0xFFFF6F61),
-                      weight: FontWeight.w500,
-                      size: 20.sp,
+                    Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 16,
+                          backgroundColor: const Color(0xFFFF6F61).withOpacity(0.2),
+                          child: Icon(Icons.recommend, color: const Color(0xFFFF6F61), size: 20),
+                        ),
+                        SizedBox(
+                          width: 10.w,
+                        ),
+                        CustomText(
+                          text: "Recommended Venue",
+                          color: Color(0xFFFF6F61),
+                          weight: FontWeight.w500,
+                          size: 20.sp,
+                        ),
+                      ],
                     ),
                     SizedBox(height: 5.h),
                     CustomCard(
@@ -246,11 +258,23 @@ class _AttendeeDashboardState extends State<AttendeeDashboard> {
                       ],
                     ),
                     SizedBox(height: 5.h),
-                    CustomText(
-                      text: "My Events",
-                      color: Color(0xFFFF6F61),
-                      weight: FontWeight.w500,
-                      size: 20.sp,
+                    Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 16,
+                          backgroundColor: const Color(0xFFFF6F61).withOpacity(0.2),
+                          child: Icon(Icons.event, color: const Color(0xFFFF6F61), size: 20),
+                        ),
+                        SizedBox(
+                          width: 10.w,
+                        ),
+                        CustomText(
+                          text: "My Events",
+                          color: Color(0xFFFF6F61),
+                          weight: FontWeight.w500,
+                          size: 20.sp,
+                        ),
+                      ],
                     ),
 
                     SizedBox(height: 5.h),
@@ -258,6 +282,140 @@ class _AttendeeDashboardState extends State<AttendeeDashboard> {
                       title: "Sunset Marquee",
                       textButton1: "View Detail",
                       textButton2: "Cancel",
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CustomText(
+                          text: "See all",
+                          color: Color(0xFF1F1C2C),
+                          weight: FontWeight.w500,
+                          size: 20.sp,
+                        ),
+                        Icon(Icons.arrow_forward_ios),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10.h,
+                    ),
+
+                    Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 16,
+                          backgroundColor: const Color(0xFFFF6F61).withOpacity(0.2),
+                          child: Icon(Icons.payments, color: const Color(0xFFFF6F61), size: 20),
+                        ),
+                        SizedBox(
+                          width: 10.w,
+                        ),
+                        CustomText(
+                          text: "Payments",
+                          color: Color(0xFFFF6F61),
+                          weight: FontWeight.w500,
+                          size: 20.sp,
+                        ),
+                      ],
+                    ),
+                    Container(
+                      height: 150.h,
+                      width: 400.w,
+                      margin: EdgeInsets.symmetric(vertical: 12.h),
+                      padding: EdgeInsets.all(16.r),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16.r),
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black12,
+                            offset: Offset(0, 3),
+                            blurRadius: 6,
+                          ),
+                        ],
+                      ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Booking Status
+                            Container(
+                              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                              decoration: BoxDecoration(
+                                color: Colors.orange.shade100,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Text(
+                                "Pending",   // or "Paid 80%"
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.orange.shade800,
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 12),
+
+                            // Venue Name
+                            Text(
+                              "Royal Palace Banquet Hall",   // dynamic venue name
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black87,
+                              ),
+                            ),
+                            SizedBox(height: 6),
+
+                            // Venue Details
+                            Row(
+                              children: [
+                                Icon(Icons.location_on, size: 18, color: Colors.redAccent),
+                                SizedBox(width: 6.w),
+                                CustomText(
+                                  text: "Edinburgh, Australia",
+                                  color: Colors.grey[800]!,
+                                  weight: FontWeight.w400,
+                                  size: 16.sp,
+                                ),
+                              ],
+                            ),
+                            OutlinedButton.icon(
+                              onPressed: () {
+                                // Navigate to customization screen
+                                Navigator.pushNamed(context, "/customize");
+                              },
+                              style: OutlinedButton.styleFrom(
+
+
+                                side: const BorderSide(color: Color(0xFFFF6F61)),
+                                shape: StadiumBorder(),
+                              ),
+                              icon: const Icon(Icons.money, color: Color(0xFFFF6F61)),
+                              label: Text(
+                                "Pay Now",
+                                style: TextStyle(
+                                  fontSize: 16.sp,
+                                  color: const Color(0xFFFF6F61),
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+
+                    ),
+                    SizedBox(
+                      height: 5.h,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CustomText(
+                          text: "See all",
+                          color: Color(0xFF1F1C2C),
+                          weight: FontWeight.w500,
+                          size: 20.sp,
+                        ),
+                        Icon(Icons.arrow_forward_ios),
+                      ],
                     ),
                   ],
                 ),
