@@ -1,7 +1,9 @@
+import 'dart:io';
 import 'package:event_management_system/CustomWidget/CustomText.dart';
 import 'package:event_management_system/CustomWidget/custominput.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:image_picker/image_picker.dart';
 
 class CreateEventView extends StatefulWidget {
   const CreateEventView({super.key});
@@ -15,6 +17,7 @@ class _CreateEventViewState extends State<CreateEventView> {
   final TextEditingController _eventNameController = TextEditingController();
   final TextEditingController _capacityController = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
+  final ImagePicker picker = ImagePicker();
 
   // Dropdown values
   final List<String> categories = [
@@ -34,6 +37,18 @@ class _CreateEventViewState extends State<CreateEventView> {
     "Decoration",
   ];
   List<String> selectedServices = [];
+  List<XFile> selectedImage = [];
+  Future<void> pickImages() async {
+    final List<XFile> images = await picker.pickMultiImage(
+      imageQuality: 85, // Compress images
+    );
+
+    if (images.isNotEmpty) {
+      setState(() {
+        selectedImage.addAll(images);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -88,10 +103,7 @@ class _CreateEventViewState extends State<CreateEventView> {
                         categories,
                       );
                       return FilterChip(
-                        side: BorderSide(
-                            color: Color(0xFFFF6F61)
-
-                        ),
+                        side: BorderSide(color: Color(0xFFFF6F61)),
                         label: Text(categories),
                         selected: isSelected,
                         onSelected: (selected) {
@@ -111,23 +123,181 @@ class _CreateEventViewState extends State<CreateEventView> {
                 ),
 
                 SizedBox(height: 16.h),
+                _buildSectionCard(
+                  icon: Icons.image,
+                  title: "Event Images",
+                  child: Column(
+                    children: [
+                      OutlinedButton.icon(
+                        onPressed: pickImages,
+                        label: Text(
+                          "Add Images",
+                          style: TextStyle(color: Color(0xFFFF6F61)),
+                        ),
+                        icon: Icon(
+                          Icons.add_photo_alternate_outlined,
+                          color: Color(0xFFFF6F61),
+                        ),
+                        style: OutlinedButton.styleFrom(
+                          maximumSize: Size(150.w, 40.h),
+                          side: BorderSide(color: Color(0xFFFF6F61)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.r),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 5.h),
+                      Wrap(
+                        spacing: 8.w,
+                        runSpacing: 8.h,
+                        children: selectedImage.map((images) {
+                          return ClipRRect(
+                            borderRadius: BorderRadius.circular(12.r),
+                            child: Image.file(
+                              File(images.path),
+                              width: 100.w,
+                              height: 100.w,
+                              fit: BoxFit.cover,
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 16.h),
 
                 // Capacity
                 _buildInputCard(
                   icon: Icons.group,
                   title: "Capacity",
                   hinttext: "Enter Capacity",
-                  context: context
+                  context: context,
                 ),
                 SizedBox(height: 16.h),
-
-                // Location
-                _buildInputCard(
+                _buildSectionCard(
                   icon: Icons.location_on,
                   title: "Location",
-                  hinttext: "Enter event Location",
-                  context: context
+                  child: Column(
+                    children: [
+                      TextFormField(
+                        cursorColor: Color(0xFFFF6F61),
+                        onTapOutside: (event) {
+                          Focus.of(context).unfocus();
+                        },
+                        decoration: InputDecoration(
+                          hintText: "Street No#",
+                          hintStyle: TextStyle(
+                            color: Colors.grey.shade800,
+                            fontSize: 14.sp,
+                          ),
+
+                          contentPadding: EdgeInsets.symmetric(
+                            vertical: 14.h,
+                            horizontal: 14.w,
+                          ),
+                          filled: true,
+                          fillColor: Colors.grey.shade50,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12.r),
+                            borderSide: BorderSide.none,
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12.r),
+                            borderSide: BorderSide(color: Colors.grey.shade300),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12.r),
+                            borderSide: const BorderSide(
+                              color: Color(0xFFFF6F61),
+                              width: 2,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 6.h),
+                      TextFormField(
+                        cursorColor: Color(0xFFFF6F61),
+                        onTapOutside: (event) {
+                          Focus.of(context).unfocus();
+                        },
+                        decoration: InputDecoration(
+                          hintText: "Town...",
+                          hintStyle: TextStyle(
+                            color: Colors.grey.shade800,
+                            fontSize: 14.sp,
+                          ),
+
+                          contentPadding: EdgeInsets.symmetric(
+                            vertical: 14.h,
+                            horizontal: 14.w,
+                          ),
+                          filled: true,
+                          fillColor: Colors.grey.shade50,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12.r),
+                            borderSide: BorderSide.none,
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12.r),
+                            borderSide: BorderSide(color: Colors.grey.shade300),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12.r),
+                            borderSide: const BorderSide(
+                              color: Color(0xFFFF6F61),
+                              width: 2,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 6.h),
+                      TextFormField(
+                        cursorColor: Color(0xFFFF6F61),
+                        onTapOutside: (event) {
+                          Focus.of(context).unfocus();
+                        },
+                        decoration: InputDecoration(
+                          hintText: "City*",
+                          hintStyle: TextStyle(
+                            color: Colors.grey.shade800,
+                            fontSize: 14.sp,
+                          ),
+
+                          contentPadding: EdgeInsets.symmetric(
+                            vertical: 14.h,
+                            horizontal: 14.w,
+                          ),
+                          filled: true,
+                          fillColor: Colors.grey.shade50,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12.r),
+                            borderSide: BorderSide.none,
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12.r),
+                            borderSide: BorderSide(color: Colors.grey.shade300),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12.r),
+                            borderSide: const BorderSide(
+                              color: Color(0xFFFF6F61),
+                              width: 2,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
+
+                // // Location
+                // _buildInputCard(
+                //   icon: Icons.location_on,
+                //   title: "Location",
+                //   hinttext: "Enter event Location",
+                //   context: context,
+                // ),
                 SizedBox(height: 16.h),
 
                 // Services Offered
@@ -140,10 +310,7 @@ class _CreateEventViewState extends State<CreateEventView> {
                     children: services.map((service) {
                       final isSelected = selectedServices.contains(service);
                       return FilterChip(
-                        side: BorderSide(
-                          color: Color(0xFFFF6F61)
-
-                        ),
+                        side: BorderSide(color: Color(0xFFFF6F61)),
                         label: Text(service),
                         selected: isSelected,
                         onSelected: (selected) {
@@ -280,15 +447,14 @@ Widget _buildInputCard({
         ),
         SizedBox(height: 10.h),
         TextFormField(
-          onTapOutside: (event){
+          cursorColor: Color(0xFFFF6F61),
+          onTapOutside: (event) {
             Focus.of(context).unfocus();
           },
           decoration: InputDecoration(
+            constraints: BoxConstraints(maxHeight: 40.h, minHeight: 40.h),
             hintText: hinttext,
-            hintStyle: TextStyle(
-              color: Colors.grey.shade800,
-              fontSize: 14.sp,
-            ),
+            hintStyle: TextStyle(color: Colors.grey.shade800, fontSize: 14.sp),
 
             contentPadding: EdgeInsets.symmetric(
               vertical: 14.h,
@@ -309,7 +475,7 @@ Widget _buildInputCard({
               borderSide: const BorderSide(color: Color(0xFFFF6F61), width: 2),
             ),
           ),
-        )
+        ),
       ],
     ),
   );

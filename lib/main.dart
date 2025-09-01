@@ -2,6 +2,7 @@ import 'package:event_management_system/features/Auth/Auth_Bloc/auth_bloc.dart';
 import 'package:event_management_system/features/Dashboard/Dashboard_bloc/dashboard_bloc.dart';
 import 'package:event_management_system/features/Dashboard/attendee_dashboard.dart';
 import 'package:event_management_system/features/Dashboard/organizer_dashboard.dart';
+import 'package:event_management_system/features/event/createevent_presentation.dart';
 import 'package:event_management_system/features/event/event_bloc/event_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:event_management_system/features/GetStarted/get_started_view.dart';
@@ -45,14 +46,14 @@ class _MyAppState extends State<MyApp> {
     Map<String, dynamic>? token = await TokenStorage.getDecodedToken();
 
     if (token == null) {
-      return const GetStartedView(); // not logged in
+      return const CreateEventView(); // not logged in
     } else {
       if (token['role'] == 'Attendee') {
         return const AttendeeDashboard();
       } else if (token['role'] == 'Organizer') {
         return const OrganizerDashboard();
       } else {
-        return const GetStartedView(); // fallback
+        return const CreateEventView(); // fallback
       }
     }
   }
