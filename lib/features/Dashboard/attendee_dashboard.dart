@@ -417,6 +417,10 @@ class _AttendeeDashboardState extends State<AttendeeDashboard> {
                         Icon(Icons.arrow_forward_ios),
                       ],
                     ),
+                    SizedBox(
+                      height: 10.h,
+                    ),
+                    BottomAppBar()
                   ],
                 ),
               ),

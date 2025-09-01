@@ -2,6 +2,7 @@ import 'package:event_management_system/features/Auth/Auth_Bloc/auth_bloc.dart';
 import 'package:event_management_system/features/Dashboard/Dashboard_bloc/dashboard_bloc.dart';
 import 'package:event_management_system/features/Dashboard/attendee_dashboard.dart';
 import 'package:event_management_system/features/Dashboard/organizer_dashboard.dart';
+import 'package:event_management_system/features/event/event_bloc/event_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:event_management_system/features/GetStarted/get_started_view.dart';
 import 'package:flutter/material.dart';
@@ -15,23 +16,21 @@ void main() {
 
   SystemChrome.setSystemUIOverlayStyle(
     SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,       // transparent background
+      statusBarColor: Colors.transparent, // transparent background
       statusBarIconBrightness: Brightness.dark, // dark icons for light bg
-      statusBarBrightness: Brightness.light,    // iOS compatibility
+      statusBarBrightness: Brightness.light, // iOS compatibility
     ),
   );
   runApp(
     MultiBlocProvider(
       providers: [
-        BlocProvider<AuthBloc>(
-          create: (context) => AuthBloc(),
-        ),
-        BlocProvider(create: (context)=>DashboardBloc()),
+        BlocProvider<AuthBloc>(create: (context) => AuthBloc()),
+        BlocProvider<DashboardBloc>(create: (context) => DashboardBloc()),
+        BlocProvider<EventBloc>(create: (context) => EventBloc()),
       ],
       child: const MyApp(),
     ),
   );
-
 }
 
 class MyApp extends StatefulWidget {
@@ -58,17 +57,17 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
-    return ScreenUtilInit (
+    return ScreenUtilInit(
       builder: (context, child) {
         return MaterialApp(
-          theme: ThemeData(
-            fontFamily: 'Roboto'
-          ),
-            debugShowCheckedModeBanner: false, home: FutureBuilder(future: _getInitialScreen(), builder: (context,snapshot){
-              if(snapshot.connectionState==ConnectionState.waiting){
+          theme: ThemeData(fontFamily: 'Roboto'),
+          debugShowCheckedModeBanner: false,
+          home: FutureBuilder(
+            future: _getInitialScreen(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
                 return Container(
                   color: Colors.white.withOpacity(
                     0.3,
@@ -80,21 +79,20 @@ class _MyAppState extends State<MyApp> {
                     ),
                   ),
                 );
-              }else if (snapshot.hasError) {
+              } else if (snapshot.hasError) {
                 return const Scaffold(
                   body: Center(child: Text("Error loading app")),
                 );
               } else {
                 return snapshot.data!;
               }
-
-
-        }));
+            },
+          ),
+        );
       },
       designSize: Size(411, 731),
       minTextAdapt: true,
       splitScreenMode: true,
-
     );
   }
 }
