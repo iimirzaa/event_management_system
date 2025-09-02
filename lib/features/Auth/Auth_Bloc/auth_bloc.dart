@@ -36,14 +36,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         return;
       }
 
-      final emailError = AuthValidator.validateEmail(email);
+      final emailError = Validator.validateEmail(email);
       if (emailError != null) {
         emit(ErrorState(errorMsg: emailError));
         return;
       }
 
       // Password validation
-      final passwordError = AuthValidator.validatePassword(password);
+      final passwordError = Validator.validatePassword(password);
       if (passwordError != null) {
         emit(ErrorState(errorMsg: passwordError));
         return;
@@ -76,7 +76,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(ErrorState(errorMsg: "Please select a role"));
         return;
       }
-      final nameerror= AuthValidator.validateUsername(username);
+      final nameerror= Validator.validateUsername(username);
       if (nameerror!=null) {
         emit(ErrorState(errorMsg: "Enter a valid full name (first and last)"));
         return;
@@ -86,14 +86,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           ErrorState(errorMsg: "Username should have at least 3+ character"),
         );
       }
-      final emailError = AuthValidator.validateEmail(email);
+      final emailError = Validator.validateEmail(email);
       if (emailError != null) {
         emit(ErrorState(errorMsg: emailError));
         return;
       }
 
       // Password validation
-      final passwordError = AuthValidator.validatePassword(password);
+      final passwordError = Validator.validatePassword(password);
       if (passwordError != null) {
         emit(ErrorState(errorMsg: passwordError));
         return;
@@ -124,7 +124,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final email=event.email;
       final otp=event.otp;
       emit(LoadingState());
-      final emailError = AuthValidator.validateEmail(email);
+      final emailError = Validator.validateEmail(email);
       if (emailError != null) {
         emit(ErrorState(errorMsg: emailError));
         return;
