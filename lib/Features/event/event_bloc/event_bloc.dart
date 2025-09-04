@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:meta/meta.dart';
 import '../../../Services/validator.dart';
+import '../../../Repository/event_repository.dart';
 
 part 'event_event.dart';
 part 'event_state.dart';
@@ -11,7 +12,12 @@ part 'event_handler.dart';
 
 class EventBloc extends Bloc<EventEvent, EventState> {
   EventBloc() : super(EventInitial()) {
-    on<CreateEventButtonClicked>((event, emit) {
+    List<IconData> icon = [
+      Icons.wifi_off,
+      Icons.error_outline, // 400 - Bad Request
+      Icons.warning_amber_rounded, // 500 - Internal Server Error
+    ];
+    on<CreateEventButtonClicked>((event, emit) async{
       String? eventError=Validator.validateEventName(event.eventName.trim());
       String? capacityError=Validator.validateCapacity(event.capacity.trim());
       String? categoryError=Validator.validateCategories(event.category);
@@ -45,6 +51,22 @@ class EventBloc extends Bloc<EventEvent, EventState> {
 
       if(event.key==true){
         emit(LoadingState());
+        Map<String, dynamic> response = await EventProvider().createEvent({
+          "eventName": event.eventName.trim(),
+          "category": event.category,
+          "service": event.service,
+          "capacity": event.capacity.trim(),
+          "street":event.street.trim(),
+          "town":event.town.trim(),
+          "city":event.city.trim()
+        });
+        final handler = EventHandler();
+        handler.handleEventCreation(
+            response: response,
+            emit: emit,
+            icons: icon,
+
+        );
       }
     });
   }

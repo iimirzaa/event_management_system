@@ -1,11 +1,10 @@
 part of 'event_bloc.dart';
 
 class EventHandler{
-  void handleSignUpResponse({
+  void handleEventCreation({
     required Map<String, dynamic> response,
     required Emitter<EventState> emit,
     required List<IconData> icons,
-    required String email,
   }) {
     if (response['success']) {
       emit(EventCreationSuccessfulState());

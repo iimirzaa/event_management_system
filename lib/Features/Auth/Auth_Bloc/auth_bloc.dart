@@ -2,7 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
-import '../../../providers/auth_repository.dart';
+import '../../../Repository/auth_repository.dart';
 import '../../../Services/token_storage.dart';
 import '../../../Services/validator.dart';
 
