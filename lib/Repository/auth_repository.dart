@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import '../../constants/routes.dart';
+import '../constants/routes.dart';
 
 
 final dio = Dio(

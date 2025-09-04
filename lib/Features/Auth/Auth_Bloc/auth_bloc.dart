@@ -2,9 +2,9 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
-import '../../../providers/Auth_Provider/auth_provider.dart';
-import '../../../services/token_storage.dart';
-import '../../../services/validator.dart';
+import '../../../providers/auth_repository.dart';
+import '../../../Services/token_storage.dart';
+import '../../../Services/validator.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';

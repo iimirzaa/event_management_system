@@ -11,6 +11,8 @@ class CreateEventButtonClicked extends EventEvent{
   final String town;
   final String city;
   final List<XFile> images;
+  final List<String> category;
+  final List<String> service;
   CreateEventButtonClicked({
     required this.key,
     required this.eventName,
@@ -18,6 +20,8 @@ class CreateEventButtonClicked extends EventEvent{
     required this.images,
     required this.street,
     required this.town,
-    required this.city
+    required this.city,
+    required this.service,
+    required this.category
 });
 }

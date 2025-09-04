@@ -35,13 +35,13 @@ class Validator {
   static String? validateCapacity(String capacity){
   final regex = RegExp(r"^(?:[1-9]\d{0,2}|1[0-4]\d{2}|1500)$");
   if(! regex.hasMatch(capacity)){
-  return "Enter a valid Capacity";
+  return "Please! enter Capacity between 1 to 1500";
   }
   return null;
   }
   static String? validateImages(List<XFile> images){
     if(images.isEmpty){
-      return "Lexi is hot";
+      return "Please Select at least one image";
     }
     return null;
   }
@@ -61,8 +61,15 @@ class Validator {
     if(street.isEmpty||town.isEmpty||city.isEmpty){
       return "Please enter a valid location";
     }else{
-      if(int.parse(street)<0){
-        return "Enter a valid street number";
+      final streetRegex = RegExp(r'^[A-Za-z0-9]+(?:\s+[A-Za-z0-9]+)*$');
+      final townRegex = RegExp(r'^[A-Za-z]+(?:[ \-][A-Za-z]+)*$');
+      final cityRegex = RegExp(r'^[A-Za-z]+(?:\s+[A-Za-z]+)*$');
+      if(!streetRegex.hasMatch(street)){
+        return "Please enter a valid Street name";
+      }else if(!cityRegex.hasMatch(city)){
+        return "Please enter a valid City name";
+      }else if(!townRegex.hasMatch(town)){
+        return "Please enter a valid Town name";
       }
     }
     return null;

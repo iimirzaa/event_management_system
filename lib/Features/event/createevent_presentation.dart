@@ -390,6 +390,8 @@ class _CreateEventViewState extends State<CreateEventView> {
                                 street:_streetController.text,
                                 town:_townController.text,
                                 city:_cityController.text,
+                                service: selectedServices,
+                                category: selectedCategories
                               ),
                             );
                           },
