@@ -58,7 +58,14 @@ class Validator {
     return null;
   }
   static String? validateLocation(String street,String town,String city){
-    if(street.length<1||town.length<3||city.length<3)
+    if(street.isEmpty||town.isEmpty||city.isEmpty){
+      return "Please enter a valid location";
+    }else{
+      if(int.parse(street)<0){
+        return "Enter a valid street number";
+      }
+    }
+    return null;
   }
 
 }

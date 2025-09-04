@@ -14,6 +14,7 @@ class EventBloc extends Bloc<EventEvent, EventState> {
       String? eventError=Validator.validateEventName(event.eventName.trim());
       String? capacityError=Validator.validateCapacity(event.capacity.trim());
       String? imageError=Validator.validateImages(event.images);
+      String? locationError=Validator.validateLocation(event.street.trim(), event.town.trim(), event.city.trim());
       if(eventError!=null){
         emit(MessageState(icon: Icons.warning_amber_sharp, errorMessage:eventError));
         return;
@@ -24,6 +25,10 @@ class EventBloc extends Bloc<EventEvent, EventState> {
       }
       if(imageError!=null){
         emit(MessageState(icon: Icons.broken_image_outlined, errorMessage:imageError));
+        return;
+      }
+      if(locationError!=null){
+        emit(MessageState(icon: Icons.broken_image_outlined, errorMessage:locationError));
         return;
       }
 
