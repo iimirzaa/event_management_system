@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:event_management_system/Services/token_storage.dart';
 import '../Constants/routes.dart';
 
 
@@ -12,6 +13,9 @@ final dio = Dio(
 
 class EventProvider {
   Future<Map<String, dynamic>> createEvent(Map<String, dynamic> data) async {
+    final String? token=await TokenStorage.getToken();
+    dio.options.headers['Authorization'] = '$token';
+    dio.options.headers['Content-Type'] = 'application/json';
     try {
       final response = await dio.post('/createEvent', data: data);
 

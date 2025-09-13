@@ -46,14 +46,14 @@ class _MyAppState extends State<MyApp> {
     Map<String, dynamic>? token = await TokenStorage.getDecodedToken();
 
     if (token == null) {
-      return const CreateEventView(); // not logged in
+      return const GetStartedView(); // not logged in
     } else {
       if (token['role'] == 'Attendee') {
         return const AttendeeDashboard();
       } else if (token['role'] == 'Organizer') {
         return const OrganizerDashboard();
       } else {
-        return const CreateEventView(); // fallback
+        return const GetStartedView(); // fallback
       }
     }
   }

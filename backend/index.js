@@ -8,7 +8,7 @@ dotenv.config();
 app.use(express.urlencoded({extended:true}));
 app.use(express.json());
 app.use('/api/auth',auth);
-app.use('/api/event',)
+app.use('/api/event',event)
 app.listen(process.env.PORT,(req,res)=>{
     console.log("Server created Successfully!")
    
