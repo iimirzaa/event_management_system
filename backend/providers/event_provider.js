@@ -4,7 +4,8 @@ import { firestore, auth } from '../firebase/firebase_admin.js';
 import { sendmail } from '../providers/email_provider.js'
 import bcrypt from "bcrypt";
 import firebase from "firebase/compat/app";
-async function  createEvent(eventname,category,service,capacity,street,city,town) {
+async function  createEvent(eventname,category,service,capacity,street,city,town,authorization) {
+    console.log( jwt.decode(authorization));
     
 }
 export {createEvent}
