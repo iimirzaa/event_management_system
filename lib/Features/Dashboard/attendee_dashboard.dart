@@ -1,8 +1,12 @@
 import 'package:event_management_system/CustomWidget/CustomButton.dart';
 import 'package:event_management_system/CustomWidget/CustomCard.dart';
 import 'package:event_management_system/CustomWidget/CustomText.dart';
+import 'package:event_management_system/Features/Dashboard/Dashboard_bloc/dashboard_bloc.dart';
+import 'package:event_management_system/Features/Dashboard/Dashboard_bloc/dashboard_bloc.dart';
+import 'package:event_management_system/Features/event/all_events.dart';
 import 'package:event_management_system/Services/token_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AttendeeDashboard extends StatefulWidget {
@@ -13,8 +17,14 @@ class AttendeeDashboard extends StatefulWidget {
 }
 
 class _AttendeeDashboardState extends State<AttendeeDashboard> {
+
   @override
   Widget build(BuildContext context) {
+    return BlocConsumer<DashboardBloc, DashboardState>(
+  listener: (context, state) {
+    // TODO: implement listener
+  },
+  builder: (context, state) {
     return PopScope(
         canPop: false,
         onPopInvoked: (didPop) {
@@ -245,17 +255,22 @@ class _AttendeeDashboardState extends State<AttendeeDashboard> {
                     ),
                     SizedBox(height: 5.h),
 
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        CustomText(
-                          text: "See all",
-                          color: Color(0xFF1F1C2C),
-                          weight: FontWeight.w500,
-                          size: 20.sp,
-                        ),
-                        Icon(Icons.arrow_forward_ios),
-                      ],
+                    GestureDetector(
+                      onTap: (){
+                        Navigator.push(context,MaterialPageRoute(builder: (_)=>AllEvents()));
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CustomText(
+                            text: "See all",
+                            color: Color(0xFF1F1C2C),
+                            weight: FontWeight.w500,
+                            size: 20.sp,
+                          ),
+                          Icon(Icons.arrow_forward_ios),
+                        ],
+                      ),
                     ),
                     SizedBox(height: 5.h),
                     Row(
@@ -318,7 +333,7 @@ class _AttendeeDashboardState extends State<AttendeeDashboard> {
                       ],
                     ),
                     Container(
-                      height: 150.h,
+                      height: 170.h,
                       width: 400.w,
                       margin: EdgeInsets.symmetric(vertical: 12.h),
                       padding: EdgeInsets.all(16.r),
@@ -338,32 +353,32 @@ class _AttendeeDashboardState extends State<AttendeeDashboard> {
                           children: [
                             // Booking Status
                             Container(
-                              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                              padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 12.w),
                               decoration: BoxDecoration(
                                 color: Colors.orange.shade100,
-                                borderRadius: BorderRadius.circular(8),
+                                borderRadius: BorderRadius.circular(8.r),
                               ),
                               child: Text(
                                 "Pending",   // or "Paid 80%"
                                 style: TextStyle(
-                                  fontSize: 14,
+                                  fontSize: 14.sp,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.orange.shade800,
                                 ),
                               ),
                             ),
-                            SizedBox(height: 12),
+                            SizedBox(height: 12.h),
 
                             // Venue Name
                             Text(
                               "Royal Palace Banquet Hall",   // dynamic venue name
                               style: TextStyle(
-                                fontSize: 16,
+                                fontSize: 16.sp,
                                 fontWeight: FontWeight.w600,
                                 color: Colors.black87,
                               ),
                             ),
-                            SizedBox(height: 6),
+                            SizedBox(height: 6.h),
 
                             // Venue Details
                             Row(
@@ -398,6 +413,9 @@ class _AttendeeDashboardState extends State<AttendeeDashboard> {
                                 ),
                               ),
                             ),
+                            SizedBox(
+                              height: 5.w,
+                            )
                           ],
                         )
 
@@ -430,5 +448,7 @@ class _AttendeeDashboardState extends State<AttendeeDashboard> {
       ),
 
     );
+  },
+);
   }
 }

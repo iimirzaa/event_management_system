@@ -50,11 +50,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       }
       if (event.key == true) {
         emit(LoadingState());
+        print(email);
         Map<String,dynamic> response= await AuthProvider().Login({
           'email':email,
           'password':password,
           'role':role,
         });
+        print(response);
         final handler= Handler();
         handler.handleUserLogin(response: response, emit: emit, icons: icon);
         return;

@@ -25,3 +25,5 @@ class CreateEventButtonClicked extends EventEvent{
     required this.category
 });
 }
+//Attendee Side
+class LoadEvents extends EventEvent{}

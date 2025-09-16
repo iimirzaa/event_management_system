@@ -6,8 +6,10 @@ class EventHandler{
     required Emitter<EventState> emit,
     required List<IconData> icons,
   }) {
+    print(response['success']);
     if (response['success']) {
       emit(EventCreationSuccessfulState());
+      print("state is emitted");
       return;
     }
 

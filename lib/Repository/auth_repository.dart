@@ -44,7 +44,9 @@ class AuthProvider {
   Future<Map<String, dynamic>> Login(Map<String, dynamic> data) async {
 
     try {
+      print(data);
       final response = await dio.post('/login', data: data);
+
       return {
         'success': response.data['success'],
         'message': response.data['message'],

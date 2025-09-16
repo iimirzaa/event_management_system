@@ -40,10 +40,10 @@ class EventBloc extends Bloc<EventEvent, EventState> {
         emit(MessageState(icon: Icons.restaurant, errorMessage:serviceError));
         return;
       }
-      if(imageError!=null){
-        emit(MessageState(icon: Icons.broken_image_outlined, errorMessage:imageError));
-        return;
-      }
+      // if(imageError!=null){
+      //   emit(MessageState(icon: Icons.broken_image_outlined, errorMessage:imageError));
+      //   return;
+      // }
       if(locationError!=null){
         emit(MessageState(icon: Icons.location_off_outlined, errorMessage:locationError));
         return;
@@ -65,9 +65,11 @@ class EventBloc extends Bloc<EventEvent, EventState> {
             response: response,
             emit: emit,
             icons: icon,
-
         );
       }
+    });
+    on<LoadEvents>((event,emit)async{
+         Map<String,dynamic> events=await EventProvider().loadEvents();
     });
   }
 }

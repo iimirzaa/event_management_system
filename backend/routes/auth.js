@@ -39,7 +39,7 @@ auth.post('/login', async (req, res) => {
     }
 
   } catch (e) {
-    res.status(500).status({ success: false, message: "There was error was logging in!" })
+    res.status(500).send({ success: false, message: "There was error was logging in!" })
 
   }
 })

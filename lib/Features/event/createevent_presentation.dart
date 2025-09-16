@@ -67,6 +67,17 @@ class _CreateEventViewState extends State<CreateEventView> {
             Customdialogue(icon: state.icon, text: state.errorMessage ?? ''),
       );
     }
+    if(state is EventCreationSuccessfulState){
+      showDialog(
+      context: context,
+      builder: (_) => Customdialogue(
+        icon: Icons.check_circle,
+        text: "Event Created Successfully",
+        color: Colors.green,
+      ),
+
+    );
+    }
   },
   builder: (context, state) {
     return Stack(

@@ -24,9 +24,9 @@ class _State extends State<CustomInput> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      onTapOutside: (event){
-        Focus.of(context).unfocus();
-      },
+      // onTapOutside: (event){
+      //   Focus.of(context).unfocus();
+      // },
       controller: widget.controller,
       expands: false,
       obscureText: widget.obsecure,
