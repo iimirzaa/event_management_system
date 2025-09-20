@@ -1,8 +1,7 @@
 import 'package:event_management_system/features/Auth/Auth_Bloc/auth_bloc.dart';
-import 'package:event_management_system/features/Dashboard/Dashboard_bloc/dashboard_bloc.dart';
 import 'package:event_management_system/features/Dashboard/attendee_dashboard.dart';
 import 'package:event_management_system/features/Dashboard/organizer_dashboard.dart';
-import 'package:event_management_system/features/event/event_bloc/event_bloc.dart';
+import 'package:event_management_system/Features/event/event_bloc/event_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:event_management_system/features/GetStarted/get_started_view.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../services/token_storage.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:flutter/services.dart';
-
+import 'package:event_management_system/Features/Dashboard/Dashboard_bloc/dashboard_bloc.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(

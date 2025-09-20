@@ -9,7 +9,6 @@ class EventHandler{
     print(response['success']);
     if (response['success']) {
       emit(EventCreationSuccessfulState());
-      print("state is emitted");
       return;
     }
 

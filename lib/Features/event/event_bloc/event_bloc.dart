@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:event_management_system/Services/event_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -69,7 +70,37 @@ class EventBloc extends Bloc<EventEvent, EventState> {
       }
     });
     on<LoadEvents>((event,emit)async{
-         Map<String,dynamic> events=await EventProvider().loadEvents();
+      emit(LoadingState());
+      try {
+        final response = await EventProvider().loadEvents();
+        print('response received');
+        print(response);
+
+        if (response['success'] == true) {
+          print('trying');
+
+          final events = (response['events'] as List)
+              .map((e) => Event.fromMap(e as Map<String, dynamic>))
+              .toList();
+
+
+          emit(EventLoadedState(events: events)); // your custom state
+        } else {
+          emit(MessageState(
+            icon: Icons.warning_amber_sharp,
+            errorMessage: 'Error while loading events',
+          ));
+
+        }
+      } catch (e, st) {
+        print('Error while loading: $e');
+        print(st);
+        emit(MessageState(
+          errorMessage: "Unexpected error: $e",
+          icon: Icons.error_outline,
+        ));
+      }
+
     });
   }
 }

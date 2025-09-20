@@ -15,7 +15,12 @@ class MessageState extends EventState{
 });
 }
 //Organizer Side Event handling
-class EventLoadedState extends EventState{}
+class EventLoadedState extends EventState{
+  final List<dynamic> events;
+  EventLoadedState({
+    required this.events
+});
+}
 class CreateEventButtonState extends EventState{}
 class EventCreationSuccessfulState extends EventState{}
 

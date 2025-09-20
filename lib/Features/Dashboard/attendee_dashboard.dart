@@ -2,7 +2,7 @@ import 'package:event_management_system/CustomWidget/CustomButton.dart';
 import 'package:event_management_system/CustomWidget/CustomCard.dart';
 import 'package:event_management_system/CustomWidget/CustomText.dart';
 import 'package:event_management_system/Features/Dashboard/Dashboard_bloc/dashboard_bloc.dart';
-import 'package:event_management_system/Features/Dashboard/Dashboard_bloc/dashboard_bloc.dart';
+
 import 'package:event_management_system/Features/event/all_events.dart';
 import 'package:event_management_system/Services/token_storage.dart';
 import 'package:flutter/material.dart';

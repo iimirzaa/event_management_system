@@ -56,6 +56,7 @@ class EventProvider {
       return {
         'success': response.data['success'],
         'message': response.data['message'],
+         'events':response.data['events']
       };
     } on DioException catch (e) {
       // Dio-specific error handling

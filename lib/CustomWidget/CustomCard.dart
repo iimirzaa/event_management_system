@@ -1,6 +1,7 @@
 import 'package:event_management_system/CustomWidget/CustomButton.dart';
 import 'package:event_management_system/CustomWidget/CustomText.dart';
-import 'package:event_management_system/features/Dashboard/Dashboard_bloc/dashboard_bloc.dart';
+import 'package:event_management_system/Features/Dashboard/Dashboard_bloc/dashboard_bloc.dart';
+
 import 'package:event_management_system/features/event/eventdetail.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,12 +9,15 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomCard extends StatelessWidget {
   final String title;
+  final String? street;
+  final String ?town;
+  final String ?city;
   final String textButton1;
   final String textButton2;
   const CustomCard({super.key,
   required this.title,
   required this.textButton1,
-  required this.textButton2});
+  required this.textButton2, this.street,  this.town,  this.city});
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +89,7 @@ class CustomCard extends StatelessWidget {
                     Icon(Icons.location_on, size: 18, color: Colors.redAccent),
                     SizedBox(width: 6.w),
                     CustomText(
-                      text: "Edinburgh, Australia",
+                      text: "$street, $town,$city",
                       color: Colors.grey[800]!,
                       weight: FontWeight.w400,
                       size: 16.sp,

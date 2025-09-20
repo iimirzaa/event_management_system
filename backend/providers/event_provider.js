@@ -79,15 +79,21 @@ async function loadEvent(authorization){
 
   
         const userDoc = await firestore.collection("user").doc(uid).get();
-        if(!userDoc.exits){
+        if(!userDoc.exists){
               return ({ success: false, message: "UnAuthorized User" });
         }else{
-       const events= await firestore.collection('events');
+       const snapshot= await firestore.collection('events').get();
+       const events = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+       
        console.log(events);
+           return ({success:true,message:"Events loaded Successfully",events:events});
         }
 
     }catch (e){
         return ({success:false,message:"Error while fetching events"});
     }
 }
-export { createEvent }
+export { createEvent,loadEvent }
