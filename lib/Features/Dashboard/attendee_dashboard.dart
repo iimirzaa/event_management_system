@@ -332,94 +332,95 @@ class _AttendeeDashboardState extends State<AttendeeDashboard> {
                         ),
                       ],
                     ),
-                    Container(
-                      height: 170.h,
-                      width: 400.w,
-                      margin: EdgeInsets.symmetric(vertical: 12.h),
-                      padding: EdgeInsets.all(16.r),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(16.r),
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black12,
-                            offset: Offset(0, 3),
-                            blurRadius: 6,
-                          ),
-                        ],
-                      ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // Booking Status
-                            Container(
-                              padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 12.w),
-                              decoration: BoxDecoration(
-                                color: Colors.orange.shade100,
-                                borderRadius: BorderRadius.circular(8.r),
-                              ),
-                              child: Text(
-                                "Pending",   // or "Paid 80%"
-                                style: TextStyle(
-                                  fontSize: 14.sp,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.orange.shade800,
+                Container(
+                        height: 170.h,
+                        width: 400.w,
+                        margin: EdgeInsets.symmetric(vertical: 5.h),
+                        padding: EdgeInsets.all(12.r),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16.r),
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black12,
+                              offset: Offset(0, 3),
+                              blurRadius: 6,
+                            ),
+                          ],
+                        ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Booking Status
+                              Container(
+                                padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 12.w),
+                                decoration: BoxDecoration(
+                                  color: Colors.orange.shade100,
+                                  borderRadius: BorderRadius.circular(8.r),
+                                ),
+                                child: Text(
+                                  "Pending",   // or "Paid 80%"
+                                  style: TextStyle(
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.orange.shade800,
+                                  ),
                                 ),
                               ),
-                            ),
-                            SizedBox(height: 12.h),
+                              SizedBox(height: 12.h),
 
-                            // Venue Name
-                            Text(
-                              "Royal Palace Banquet Hall",   // dynamic venue name
-                              style: TextStyle(
-                                fontSize: 16.sp,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.black87,
-                              ),
-                            ),
-                            SizedBox(height: 6.h),
-
-                            // Venue Details
-                            Row(
-                              children: [
-                                Icon(Icons.location_on, size: 18, color: Colors.redAccent),
-                                SizedBox(width: 6.w),
-                                CustomText(
-                                  text: "Edinburgh, Australia",
-                                  color: Colors.grey[800]!,
-                                  weight: FontWeight.w400,
-                                  size: 16.sp,
-                                ),
-                              ],
-                            ),
-                            OutlinedButton.icon(
-                              onPressed: () {
-                                // Navigate to customization screen
-                                Navigator.pushNamed(context, "/customize");
-                              },
-                              style: OutlinedButton.styleFrom(
-
-
-                                side: const BorderSide(color: Color(0xFFFF6F61)),
-                                shape: StadiumBorder(),
-                              ),
-                              icon: const Icon(Icons.money, color: Color(0xFFFF6F61)),
-                              label: Text(
-                                "Pay Now",
+                              // Venue Name
+                              Text(
+                                "Royal Palace Banquet Hall",   // dynamic venue name
                                 style: TextStyle(
                                   fontSize: 16.sp,
-                                  color: const Color(0xFFFF6F61),
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black87,
                                 ),
                               ),
-                            ),
-                            SizedBox(
-                              height: 5.w,
-                            )
-                          ],
-                        )
+                              SizedBox(height: 6.h),
 
-                    ),
+                              // Venue Details
+                              Row(
+                                children: [
+                                  Icon(Icons.location_on, size: 18.sp, color: Colors.redAccent),
+                                  SizedBox(width: 6.w),
+                                  CustomText(
+                                    text: "Edinburgh, Australia",
+                                    color: Colors.grey[800]!,
+                                    weight: FontWeight.w400,
+                                    size: 16.sp,
+                                  ),
+                                ],
+                              ),
+                              OutlinedButton.icon(
+                                onPressed: () {
+                                  // Navigate to customization screen
+                                  Navigator.pushNamed(context, "/customize");
+                                },
+                                style: OutlinedButton.styleFrom(
+
+
+                                  side: const BorderSide(color: Color(0xFFFF6F61)),
+                                  shape: StadiumBorder(),
+                                ),
+                                icon: const Icon(Icons.money, color: Color(0xFFFF6F61)),
+                                label: Text(
+                                  "Pay Now",
+                                  style: TextStyle(
+                                    fontSize: 16.sp,
+                                    color: const Color(0xFFFF6F61),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 5.w,
+                              )
+                            ],
+                          )
+
+                      ),
+
                     SizedBox(
                       height: 5.h,
                     ),
