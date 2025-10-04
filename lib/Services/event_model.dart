@@ -7,7 +7,8 @@ class Event {
   final int capacity;               // Max participants
   final String street;              // Address
   final String town;                // Sub-area
-  final String city;                // City
+  final String city;
+  final List<String> url;// City
   final DateTime createdAt;         // Firestore timestamp
 
   Event({
@@ -20,6 +21,7 @@ class Event {
     required this.street,
     required this.town,
     required this.city,
+    required this.url,
     required this.createdAt,
   });
 
@@ -48,6 +50,7 @@ class Event {
       street: map['street'] ?? '',
       town: map['town'] ?? '',
       city: map['city'] ?? '',
+      url:List<String>.from(map['images']??[]),
       createdAt: parsedDate,
     );
   }

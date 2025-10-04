@@ -1,16 +1,20 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:event_management_system/CustomWidget/CustomText.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
 class EventDetail extends StatefulWidget {
-  const EventDetail({super.key});
+  final List<dynamic> event;
+  const EventDetail({super.key,required this.event});
+
 
   @override
   State<EventDetail> createState() => _EventDetailState();
 }
 
 class _EventDetailState extends State<EventDetail> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,18 +41,28 @@ class _EventDetailState extends State<EventDetail> {
                     ClipRRect(
                       borderRadius: BorderRadius.circular(12.r),
                       child: CarouselSlider(
-                        items: [
-                          "assets/images/img.png",
-                          "assets/images/img_1.png",
-                          "assets/images/img_2.png",
-                          "assets/images/img_3.png",
-                        ]
-                            .map(
-                              (img) => Image.asset(
-                            img,
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                          ),
+                        items:widget.event[0].images.map(
+                              (img) => CachedNetworkImage(
+                                imageUrl: img,
+                                fit: BoxFit.cover,
+                                width: 400.w,
+                                height: 200.h, // give fixed height to avoid overflow
+                                placeholder: (context, url) => Container(
+                                  color: Colors.grey[200],
+                                  height: 200.h,
+                                  child: Center(
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      color: Color(0xFFFF6F61),
+                                    ),
+                                  ),
+                                ),
+                                errorWidget: (context, url, error) => Container(
+                                  color: Colors.grey[300],
+                                  height: 200.h,
+                                  child: Icon(Icons.broken_image, size: 40, color: Colors.grey[700]),
+                                ),
+                              ),
                         )
                             .toList(),
                         options: CarouselOptions(
@@ -109,9 +123,7 @@ class _EventDetailState extends State<EventDetail> {
                   child: Wrap(
                     spacing: 8,
                     children: [
-                      _buildChip("Wedding"),
-                      _buildChip("Birthday"),
-                      _buildChip("Corporate"),
+                    ...widget.event[0].category.map((c)=>_buildChip(c)).toList(),
                     ],
                   ),
                 ),
@@ -123,7 +135,7 @@ class _EventDetailState extends State<EventDetail> {
                   icon: Icons.people,
                   title: "Capacity",
                   child: Text(
-                    "500 Guests",
+                    "${widget.event[0].capacity} Guests",
                     style: TextStyle(fontSize: 16.sp, color: Colors.black87),
                   ),
                 ),
@@ -135,7 +147,7 @@ class _EventDetailState extends State<EventDetail> {
                   icon: Icons.location_on,
                   title: "Location",
                   child: Text(
-                    "Lahore, Pakistan",
+                    "${widget.event[0].street},${widget.event[0].town},${widget.event[0].city}",
                     style: TextStyle(fontSize: 16.sp, color: Colors.black87),
                   ),
                 ),
@@ -149,10 +161,7 @@ class _EventDetailState extends State<EventDetail> {
                   child: Wrap(
                     spacing: 8,
                     children: [
-                      _buildChip("Catering"),
-                      _buildChip("Parking"),
-                      _buildChip("Decoration"),
-                      _buildChip("Music"),
+                      ...widget.event[0].services.map((c)=>_buildChip(c)).toList(),
                     ],
                   ),
                 ),

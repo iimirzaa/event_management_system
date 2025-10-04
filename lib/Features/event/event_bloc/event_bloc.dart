@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:dio/dio.dart';
 import 'package:event_management_system/Services/event_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +26,7 @@ class EventBloc extends Bloc<EventEvent, EventState> {
       String? serviceError=Validator.validateServices(event.service);
       String? imageError=Validator.validateImages(event.images);
       String? locationError=Validator.validateLocation(event.street.trim(), event.town.trim(), event.city.trim());
+      final List<MultipartFile> files=[];
       if(eventError!=null){
         emit(MessageState(icon: Icons.warning_amber_sharp, errorMessage:eventError));
         return;
@@ -41,10 +43,10 @@ class EventBloc extends Bloc<EventEvent, EventState> {
         emit(MessageState(icon: Icons.restaurant, errorMessage:serviceError));
         return;
       }
-      // if(imageError!=null){
-      //   emit(MessageState(icon: Icons.broken_image_outlined, errorMessage:imageError));
-      //   return;
-      // }
+      if(imageError!=null){
+        emit(MessageState(icon: Icons.broken_image_outlined, errorMessage:imageError));
+        return;
+      }
       if(locationError!=null){
         emit(MessageState(icon: Icons.location_off_outlined, errorMessage:locationError));
         return;
@@ -52,15 +54,29 @@ class EventBloc extends Bloc<EventEvent, EventState> {
 
       if(event.key==true){
         emit(LoadingState());
-        Map<String, dynamic> response = await EventProvider().createEvent({
+        for (var images in event.images){
+          files.add(
+            await MultipartFile.fromFile(
+              images.path,
+              filename: images.name,
+            ),
+
+          );
+        }
+        FormData formData = FormData.fromMap({
           "eventName": event.eventName.trim(),
           "category": event.category,
           "service": event.service,
           "capacity": event.capacity.trim(),
-          "street":event.street.trim(),
-          "town":event.town.trim(),
-          "city":event.city.trim()
+          "street": event.street.trim(),
+          "town": event.town.trim(),
+          "city": event.city.trim(),
+          "images": files, // multiple files
         });
+
+        Map<String, dynamic> response = await EventProvider().createEvent(
+         formData
+        );
         final handler = EventHandler();
         handler.handleEventCreation(
             response: response,
@@ -69,38 +85,6 @@ class EventBloc extends Bloc<EventEvent, EventState> {
         );
       }
     });
-    on<LoadEvents>((event,emit)async{
-      emit(LoadingState());
-      try {
-        final response = await EventProvider().loadEvents();
-        print('response received');
-        print(response);
 
-        if (response['success'] == true) {
-          print('trying');
-
-          final events = (response['events'] as List)
-              .map((e) => Event.fromMap(e as Map<String, dynamic>))
-              .toList();
-
-
-          emit(EventLoadedState(events: events)); // your custom state
-        } else {
-          emit(MessageState(
-            icon: Icons.warning_amber_sharp,
-            errorMessage: 'Error while loading events',
-          ));
-
-        }
-      } catch (e, st) {
-        print('Error while loading: $e');
-        print(st);
-        emit(MessageState(
-          errorMessage: "Unexpected error: $e",
-          icon: Icons.error_outline,
-        ));
-      }
-
-    });
   }
 }

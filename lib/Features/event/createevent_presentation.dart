@@ -1,8 +1,7 @@
 import 'dart:io';
 import 'package:event_management_system/CustomWidget/CustomText.dart';
 import 'package:event_management_system/CustomWidget/Customdialogue.dart';
-import 'package:event_management_system/CustomWidget/custominput.dart';
-import 'package:event_management_system/features/event/event_bloc/event_bloc.dart';
+import 'package:event_management_system/Features/event/event_bloc/event_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

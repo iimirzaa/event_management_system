@@ -26,6 +26,8 @@ class _LoginViewState extends State<LoginView> {
   final _password_controller = TextEditingController();
   bool notvisible = true;
   final _form_key = GlobalKey<FormState>();
+  List<String> role=['Organizer','Attendee'];
+    String? selectedRole;
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AuthBloc, AuthState>(
@@ -117,54 +119,37 @@ class _LoginViewState extends State<LoginView> {
                                     size: 22.sp,
                                   ),
                                   SizedBox(height: 10.h),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      CustomButton(
-                                        text: "Organizer",
-                                        height: 40.h,
-                                        width: 150.w,
-                                        color:
-                                            state is RoleButtonState &&
-                                                    state.role ==
-                                                        "Organizer" ||
-                                                state is EyeIconState &&
-                                                    state.role == 'Organizer'
-                                            ? Color(0xFFFF6F61)
-                                            : Colors.transparent,
-                                        border: 30,
-                                        press: () {
-                                          context.read<AuthBloc>().add(
-                                            RoleButtonClicked(
-                                              role: "Organizer",
-                                            ),
-                                          );
+                                  Wrap(
+                                    spacing: 50.w,
+                                    children:role.map((role){
+                                      final isSelected=selectedRole==role;
+                                      return FilterChip(
+                                        side: BorderSide(color: Color(0xFFFF6F61)),
+                                        label: Text(role,
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 15.sp
+                                        ),),
+                                        autofocus: true,
+                                        showCheckmark: true,
+                                        backgroundColor: Color(0xFF928dab),
+                                        iconTheme: IconThemeData(
+                                          color: Colors.green
+                                        ),
+                                        clipBehavior: Clip.hardEdge,
+                                        selected: isSelected,
+                                        onSelected: (selected) {
+                                          setState(() {
+                                            if (selected) {
+                                              selectedRole=selected?role:null;
+                                              context.read<AuthBloc>().add(RoleButtonClicked(role: selectedRole??''));
+                                            }
+                                          });
                                         },
-                                      ),
-                                      SizedBox(width: 10.w),
-                                      CustomButton(
-                                        text: "Attendee",
-                                        height: 40.h,
-                                        width: 150.w,
-                                        color:
-                                            state is RoleButtonState &&
-                                                    state.role ==
-                                                        "Attendee" ||
-                                                state is EyeIconState &&
-                                                    state.role == 'Attendee'
-                                            ? Color(0xFFFF6F61)
-                                            : Colors.transparent,
-                                        border: 30,
-                                        press: () {
-                                          context.read<AuthBloc>().add(
-                                            RoleButtonClicked(
-                                              role: "Attendee",
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                    ],
+                                        selectedColor: Colors.redAccent.shade100,
+                                        checkmarkColor: Colors.green,
+                                    );
+                                    }).toList()
                                   ),
                                   SizedBox(height: 15.h),
                                   CustomInput(

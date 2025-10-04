@@ -12,13 +12,17 @@ final dio = Dio(
 );
 
 class EventProvider {
-  Future<Map<String, dynamic>> createEvent(Map<String, dynamic> data) async {
+  Future<Map<String, dynamic>> createEvent(FormData data) async {
     final String? token=await TokenStorage.getToken();
-    dio.options.headers['Authorization'] = '$token';
-    dio.options.headers['Content-Type'] = 'application/json';
+
     try {
-      final response = await dio.post('/createEvent', data: data);
-      print(response.data);
+      final response = await dio.post('/createEvent', data: data,options: Options(
+        headers: {
+          "Authorization":token,
+          "Content-Type": "multipart/form-data",
+        },
+      ),);
+
 
       return {
         'success': response.data['success'],

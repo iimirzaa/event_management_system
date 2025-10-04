@@ -1,30 +1,35 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:event_management_system/CustomWidget/CustomButton.dart';
 import 'package:event_management_system/CustomWidget/CustomText.dart';
 import 'package:event_management_system/Features/Dashboard/Dashboard_bloc/dashboard_bloc.dart';
 
-import 'package:event_management_system/features/event/eventdetail.dart';
+import 'package:event_management_system/Features/event/eventdetail.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomCard extends StatelessWidget {
   final String title;
+  final String url;
   final String? street;
   final String ?town;
   final String ?city;
+  final String? category;
   final String textButton1;
   final String textButton2;
+  final List<dynamic> details;
   const CustomCard({super.key,
+    required this.url,
   required this.title,
   required this.textButton1,
-  required this.textButton2, this.street,  this.town,  this.city});
+  required this.textButton2, this.street,  this.town,this.category,  this.city,required this.details});
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<DashboardBloc, DashboardState>(
   listener: (context, state) {
     if(state is ViewDetailButtonClickedState){
-      Navigator.push(context, MaterialPageRoute(builder: (_)=>EventDetail()));
+      Navigator.push(context, MaterialPageRoute(builder: (_)=>EventDetail(event:state.details)));
     }
   },
   builder: (context, state) {
@@ -51,9 +56,27 @@ class CustomCard extends StatelessWidget {
               topLeft: Radius.circular(16.r),
               topRight: Radius.circular(16.r),
             ),
-            child: Image.asset("assets/images/img.png",
-            fit: BoxFit.contain,
-            width: 400.w,)
+            child: CachedNetworkImage(
+              imageUrl: url,
+              fit: BoxFit.cover,
+              width: 400.w,
+              height: 200.h, // give fixed height to avoid overflow
+              placeholder: (context, url) => Container(
+                color: Colors.grey[200],
+                height: 200.h,
+                child: Center(
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: Color(0xFFFF6F61),
+                  ),
+                ),
+              ),
+              errorWidget: (context, url, error) => Container(
+                color: Colors.grey[300],
+                height: 200.h,
+                child: Icon(Icons.broken_image, size: 40, color: Colors.grey[700]),
+              ),
+            ),
           ),
 
           /// Card Content
@@ -75,7 +98,7 @@ class CustomCard extends StatelessWidget {
                     Icon(Icons.category, size: 18, color: Colors.grey[700]),
                     SizedBox(width: 6.w),
                     CustomText(
-                      text: "Birthday Party",
+                      text: category??'',
                       color: Colors.grey[800]!,
                       weight: FontWeight.w500,
                       size: 16.sp,
@@ -104,7 +127,7 @@ class CustomCard extends StatelessWidget {
                   children: [
                     OutlinedButton.icon(
                       onPressed: () {
-                        context.read<DashboardBloc>().add(ViewDetailButtonClicked());
+                        context.read<DashboardBloc>().add(ViewDetailButtonClicked(details:details));
                       },
                       icon: Icon(Icons.info_outline, color: Color(0xFFFF6F61)),
                       label: Text(
@@ -118,7 +141,9 @@ class CustomCard extends StatelessWidget {
                       ),
                     ),
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed:(){
+
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xFFFF6F61),
                         shape: StadiumBorder(),

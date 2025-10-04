@@ -4,27 +4,94 @@ import 'package:event_management_system/CustomWidget/CustomText.dart';
 import 'package:event_management_system/Features/Dashboard/Dashboard_bloc/dashboard_bloc.dart';
 
 import 'package:event_management_system/Features/event/all_events.dart';
+import 'package:event_management_system/Features/event/eventdetail.dart';
 import 'package:event_management_system/Services/token_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class AttendeeDashboard extends StatefulWidget {
   const AttendeeDashboard({super.key});
+
 
   @override
   State<AttendeeDashboard> createState() => _AttendeeDashboardState();
 }
 
 class _AttendeeDashboardState extends State<AttendeeDashboard> {
+  late List<dynamic> events;
+  @override
+  void initState() {
+    super.initState();
+    context.read<DashboardBloc>().add(LoadEvents());
+  }
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<DashboardBloc, DashboardState>(
   listener: (context, state) {
-    // TODO: implement listener
+
   },
   builder: (context, state) {
+    Widget bodyContent;
+
+    if (state is LoadingState) {
+      // Skeleton loader
+      bodyContent = ListView.builder(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: 5,
+        itemBuilder: (context, index) {
+          return Padding(
+            padding: EdgeInsets.only(bottom: 10.h),
+            child: Skeletonizer(
+              enabled: true,
+              child: CustomCard(
+                title: "Loading...",
+                street: '.........',
+                town: '.........',
+                url: '...........',
+                city:'.........',
+                textButton1: "View Detail",
+                textButton2: "Book Now",
+                details: [],
+              ),
+            ),
+          );
+        },
+      );
+    } else if (state is EventLoadedState) {
+       events = state.events;
+
+      bodyContent = ListView.builder(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: events.length,
+        itemBuilder: (context, index) {
+          final event = events[index];
+          return Padding(
+            padding: EdgeInsets.only(bottom: 10.h),
+            child: Skeletonizer(
+              enabled: false,
+              child: CustomCard(
+                title:event.eventName ?? "No Title",
+                category: event.category[0],
+                street: event.street,
+                url: event.url[0],
+                town: event.town,
+                city:event.city,
+                textButton1: "View Detail",
+                textButton2: "Book Now",
+                details: [event],
+              ),
+            ),
+          );
+        },
+      );
+    } else {
+      bodyContent = const Center(child: Text("Something went wrong"));
+    }
     return PopScope(
         canPop: false,
         onPopInvoked: (didPop) {
@@ -248,16 +315,12 @@ class _AttendeeDashboardState extends State<AttendeeDashboard> {
                       ],
                     ),
                     SizedBox(height: 5.h),
-                    CustomCard(
-                      title: "Sunset Marquee",
-                      textButton1: "View Detail",
-                      textButton2: "Book Now",
-                    ),
+                    bodyContent,
                     SizedBox(height: 5.h),
 
                     GestureDetector(
                       onTap: (){
-                        Navigator.push(context,MaterialPageRoute(builder: (_)=>AllEvents()));
+                        Navigator.push(context,MaterialPageRoute(builder: (_)=>AllEvents(events: events,)));
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -295,8 +358,11 @@ class _AttendeeDashboardState extends State<AttendeeDashboard> {
                     SizedBox(height: 5.h),
                     CustomCard(
                       title: "Sunset Marquee",
+
+                      url:"https://res.cloudinary.com/dtvniftzh/image/upload/v1759470702/event_images/qnr3xezashw4vixicxmr.jpg",
                       textButton1: "View Detail",
                       textButton2: "Cancel",
+                      details: [],
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,

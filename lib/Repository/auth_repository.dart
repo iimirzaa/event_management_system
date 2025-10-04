@@ -72,7 +72,7 @@ class AuthProvider {
 
   Future<Map<String, dynamic>> sendOTP(Map<String, dynamic> data) async {
     try {
-      final response = await dio.post('/sendOtp', data: data);
+      final response = await dio.post('/sendOtp', data: data,);
       return {
         'success': response.data['success'],
         'message': response.data['message'],

@@ -1,6 +1,6 @@
 import 'package:event_management_system/CustomWidget/BottomNavigationBar.dart';
-import 'package:event_management_system/features/Dashboard/Dashboard_bloc/dashboard_bloc.dart';
-import 'package:event_management_system/features/event/createevent_presentation.dart';
+import 'package:event_management_system/Features/Dashboard/Dashboard_bloc/dashboard_bloc.dart';
+import 'package:event_management_system/Features/event/createevent_presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../Services/token_storage.dart';
