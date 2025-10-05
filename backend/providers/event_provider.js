@@ -92,7 +92,7 @@ async function loadEvent(authorization) {
                 ...doc.data()
             }));
 
-            console.log(events);
+         
             return ({ success: true, message: "Events loaded Successfully", events: events });
         }
 
@@ -100,4 +100,33 @@ async function loadEvent(authorization) {
         return ({ success: false, message: "Error while fetching events" });
     }
 }
-export { createEvent, loadEvent }
+async function loadOrganizerEvent(authorization) {
+    try {
+        const token = jwt.verify(authorization, process.env.SECRETKEY);
+        const uid = token.uid;
+
+
+        const userDoc = await firestore.collection("user").doc(uid).get();
+        if (!userDoc.exists) {
+            return ({ success: false, message: "UnAuthorized User" });
+        } else {
+            const docRef= await firestore.collection('user').doc(uid).collection('data').doc('events').get();
+            const docData=docRef.data();
+
+            // const events = snapshot.docs.map(doc => ({
+            //     id: doc.id,
+            //     ...doc.data()
+            // }));
+
+            
+            return ({ success: true, message: "Organizer Events loaded Successfully", events: docData });
+        }
+
+    } catch (e) {
+        console.log(e);
+        return ({ success: false, message: "Error while fetching Organizer events" });
+    }
+}
+
+
+export { createEvent, loadEvent,loadOrganizerEvent }

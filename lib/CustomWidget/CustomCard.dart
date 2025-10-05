@@ -29,6 +29,7 @@ class CustomCard extends StatelessWidget {
     return BlocConsumer<DashboardBloc, DashboardState>(
   listener: (context, state) {
     if(state is ViewDetailButtonClickedState){
+      print(details);
       Navigator.push(context, MaterialPageRoute(builder: (_)=>EventDetail(event:state.details)));
     }
   },

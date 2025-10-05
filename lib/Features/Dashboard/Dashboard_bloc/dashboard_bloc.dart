@@ -13,10 +13,6 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     on<ViewDetailButtonClicked>((event, emit) {
       emit(ViewDetailButtonClickedState(details:event.details));
     });
-    //Organizer Events Handling
-    on<CreateEventButtonClicked>((event,emit){
-      emit(CreateEventButtonState());
-    });
     on<LoadEvents>((event,emit)async{
       emit(LoadingState());
       try {
@@ -47,5 +43,40 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       }
 
     });
+    //Organizer Events Handling
+    on<CreateEventButtonClicked>((event,emit){
+      emit(CreateEventButtonState());
+    });
+    on<LoadOrganizerEvents>((event,emit)async{
+      emit(LoadingState());
+      try {
+        final response = await EventProvider().loadOrganizerEvents();
+
+        if (response['success'] == true) {
+
+          final List<dynamic> eventList = response['events']['events'];
+             final events= eventList.map((e) => Event.fromMap(e as Map<String, dynamic>))
+              .toList();
+            print(events);
+
+          emit(OrganizerEventLoadedState(events: events)); // your custom state
+        } else {
+          emit(MessageState(
+            icon: Icons.warning_amber_sharp,
+            errorMessage: 'Error while loading events',
+          ));
+
+        }
+      } catch (e, st) {
+        print('Error while loading: $e');
+        print(st);
+        emit(MessageState(
+          errorMessage: "Unexpected error: $e",
+          icon: Icons.error_outline,
+        ));
+      }
+
+    });
+
   }
 }

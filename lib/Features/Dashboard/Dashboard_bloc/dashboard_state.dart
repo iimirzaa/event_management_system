@@ -4,15 +4,6 @@ part of 'dashboard_bloc.dart';
 sealed class DashboardState {}
 
 final class DashboardInitial extends DashboardState {}
-//Attendee Dashboard States
-class ViewDetailButtonClickedState extends DashboardState{
-  final List<dynamic> details;
-  ViewDetailButtonClickedState({
-    required this.details
-  });
-}
-//Organizer Dashboard States
-class CreateEventButtonState extends DashboardState{}
 class LoadingState extends DashboardState{}
 class MessageState extends DashboardState{
   final IconData icon;
@@ -22,10 +13,26 @@ class MessageState extends DashboardState{
     required this.errorMessage
   });
 }
-//Organizer Side Event handling
+//Attendee Dashboard States
+class ViewDetailButtonClickedState extends DashboardState{
+  final List<dynamic> details;
+  ViewDetailButtonClickedState({
+    required this.details
+  });
+}
 class EventLoadedState extends DashboardState{
   final List<dynamic> events;
   EventLoadedState({
     required this.events
   });
 }
+//Organizer Dashboard States
+class CreateEventButtonState extends DashboardState{}
+class OrganizerEventLoadedState extends DashboardState{
+  final List<dynamic> events;
+  OrganizerEventLoadedState({
+    required this.events
+  });
+}
+
+

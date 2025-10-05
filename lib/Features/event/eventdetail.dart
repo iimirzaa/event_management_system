@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:event_management_system/CustomWidget/CustomText.dart';
+import 'package:event_management_system/Services/token_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -19,6 +20,11 @@ class _EventDetailState extends State<EventDetail> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: true,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(bottom: Radius.circular(25.r)),
+        ),
+
         iconTheme: IconThemeData(
           color: Colors.blueGrey
         ),
@@ -173,7 +179,9 @@ class _EventDetailState extends State<EventDetail> {
 
                 SizedBox(height: 30.h),
 
-                // 🔹 Action Buttons (Book / Customize)
+                // 🔹
+                // Action Buttons (Book / Customize)
+                TokenStorage.getRole()=="Organizer"?
                 Row(
                   children: [
                     Expanded(
@@ -221,7 +229,31 @@ class _EventDetailState extends State<EventDetail> {
                       ),
                     ),
                   ],
-                ),
+                ): OutlinedButton.icon(
+
+                    onPressed: () {
+                      // Navigate to customization screen
+                      Navigator.pushNamed(context, "/customize");
+                    },
+                    style: OutlinedButton.styleFrom(
+                      minimumSize: Size(400.w, 40.h),
+
+                      padding: EdgeInsets.symmetric(vertical: 14.h),
+                      side: const BorderSide(color: Color(0xFFFF6F61)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                    ),
+                    icon: const Icon(Icons.update, color: Color(0xFFFF6F61)),
+                    label: Text(
+                      "Update",
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        color: const Color(0xFFFF6F61),
+                      ),
+                    ),
+                  ),
+
               ],
             ),
           ),

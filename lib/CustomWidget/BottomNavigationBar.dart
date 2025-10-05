@@ -3,7 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 Widget bottomAppBar(){
   return BottomAppBar(
     color: Color(0xFF1F1C2C),
-    notchMargin: 8.0,
+    notchMargin: 5.0,
+    height: 40.h,
     elevation: 4,
     shape: CircularNotchedRectangle(),
     child: Row(

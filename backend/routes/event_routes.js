@@ -1,5 +1,5 @@
 import express from 'express';
-import { createEvent, loadEvent } from '../providers/event_provider.js';
+import { createEvent, loadEvent,loadOrganizerEvent } from '../providers/event_provider.js';
 import { upload } from '../middleware/multer_middleware.js';
 import { UploadOnCloudinary } from '../providers/cloudinary_provider.js';
 const event = express.Router();
@@ -40,6 +40,21 @@ event.get('/loadEvent', async (req, res) => {
     console.log("Load Events called");
     const response = await loadEvent(req.headers['authorization']);
     console.log(response);
+    if (response.success) {
+      res.status(200).send({ success: response.success, message: response.message, events: response.events })
+    } else {
+      res.status(400).send({ success: response.success, message: response.message })
+    }
+
+  } catch (e) {
+    res.status(500).send({ success: false, message: "Error while fetching events" })
+  }
+})
+event.get('/loadOrganizerEvent', async (req, res) => {
+  try {
+    console.log("Load Organizer Events called");
+    const response = await loadOrganizerEvent(req.headers['authorization']);
+    console.log(response.events);
     if (response.success) {
       res.status(200).send({ success: response.success, message: response.message, events: response.events })
     } else {

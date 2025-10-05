@@ -9,7 +9,9 @@ ViewDetailButtonClicked({
   required this.details
 });
 }
+class LoadEvents extends DashboardEvent{}
+
 //Organizer Dashboard Events
 class CreateEventButtonClicked extends DashboardEvent{}
-class LoadEvents extends DashboardEvent{}
+class LoadOrganizerEvents extends DashboardEvent{}
 
