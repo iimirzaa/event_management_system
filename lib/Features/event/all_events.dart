@@ -66,7 +66,7 @@ class AllEvents extends StatelessWidget {
                     url: event.url[index],
                     textButton1: "View Detail",
                     textButton2: "Book Now",
-                    details: [],
+                    details: [event],
                   ),
                 ),
               );

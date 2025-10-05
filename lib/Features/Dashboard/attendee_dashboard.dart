@@ -41,7 +41,7 @@ class _AttendeeDashboardState extends State<AttendeeDashboard> {
       bodyContent = ListView.builder(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
-        itemCount: 5,
+        itemCount: 1,
         itemBuilder: (context, index) {
           return Padding(
             padding: EdgeInsets.only(bottom: 10.h),
@@ -67,7 +67,7 @@ class _AttendeeDashboardState extends State<AttendeeDashboard> {
       bodyContent = ListView.builder(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
-        itemCount: events.length,
+        itemCount: 1,
         itemBuilder: (context, index) {
           final event = events[index];
           return Padding(
@@ -83,24 +83,48 @@ class _AttendeeDashboardState extends State<AttendeeDashboard> {
                 city:event.city,
                 textButton1: "View Detail",
                 textButton2: "Book Now",
-                details: [event],
+                details: [events],
               ),
             ),
           );
         },
       );
     } else {
-      bodyContent = const Center(child: Text("Something went wrong"));
+      bodyContent =  Center(child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text("Something went wrong",style: TextStyle(
+            color: Colors.redAccent[100],
+            fontSize: 17.sp,
+            fontWeight: FontWeight.w500
+          ),),
+          SizedBox(
+            width: 5.w,
+          ),
+          GestureDetector(
+            onTap: ()=>context.read<DashboardBloc>().add(LoadEvents()),
+            child: Icon(Icons.refresh,
+            color: Colors.green,),
+          )
+        ],
+      ));
     }
-    return PopScope(
-        canPop: false,
-        onPopInvoked: (didPop) {
-          if (!didPop) {
-            // Close the app when back is pressed
-            Navigator.of(context)
-                .maybePop(); // this won't pop because canPop = false
-          }
-        },
+    return WillPopScope(
+      onWillPop: () async {
+        // Prevent exiting the dashboard (e.g., require confirmation)
+        final shouldExit = await showDialog<bool>(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Exit App'),
+            content: Text('Do you really want to exit?'),
+            actions: [
+              TextButton(onPressed: () => Navigator.pop(context, false), child: Text('No')),
+              TextButton(onPressed: () => Navigator.pop(context, true), child: Text('Yes')),
+            ],
+          ),
+        );
+        return shouldExit ?? false;
+      },
 
       child: Scaffold(
         appBar: AppBar(

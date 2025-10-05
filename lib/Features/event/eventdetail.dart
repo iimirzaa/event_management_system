@@ -18,6 +18,17 @@ class _EventDetailState extends State<EventDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        iconTheme: IconThemeData(
+          color: Colors.blueGrey
+        ),
+           title: Text("${widget.event[0].eventName}",
+           style:  TextStyle(// Title
+             color: const Color(0xFFFF6F61),
+             fontWeight: FontWeight.w600,
+             fontSize: 32.sp,
+           ),),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -25,15 +36,9 @@ class _EventDetailState extends State<EventDetail> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Title
-                CustomText(
-                  text: "Sunset Marquee",
-                  color: const Color(0xFFFF6F61),
-                  weight: FontWeight.w700,
-                  size: 32.sp,
-                ),
 
-                SizedBox(height: 16.h),
+
+                SizedBox(height: 8.h),
 
                 // 🔹 Image Carousel with Buttons
                 Stack(
@@ -41,7 +46,7 @@ class _EventDetailState extends State<EventDetail> {
                     ClipRRect(
                       borderRadius: BorderRadius.circular(12.r),
                       child: CarouselSlider(
-                        items:widget.event[0].images.map(
+                        items:widget.event[0].url.map<Widget>(
                               (img) => CachedNetworkImage(
                                 imageUrl: img,
                                 fit: BoxFit.cover,
@@ -63,8 +68,8 @@ class _EventDetailState extends State<EventDetail> {
                                   child: Icon(Icons.broken_image, size: 40, color: Colors.grey[700]),
                                 ),
                               ),
-                        )
-                            .toList(),
+                        ).toList(),
+
                         options: CarouselOptions(
                           height: 300.h,
                           viewportFraction: 1,
@@ -161,7 +166,7 @@ class _EventDetailState extends State<EventDetail> {
                   child: Wrap(
                     spacing: 8,
                     children: [
-                      ...widget.event[0].services.map((c)=>_buildChip(c)).toList(),
+                      ...widget.event[0].service.map((c)=>_buildChip(c)).toList(),
                     ],
                   ),
                 ),

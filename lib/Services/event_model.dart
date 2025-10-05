@@ -3,7 +3,9 @@ class Event {
   final String eventId;             // Collection/type marker
   final String uid;                 // Organizer/User ID
   final String eventName;           // Event name
-  final List<String> category;      // Multiple categories
+  final List<String> category;
+
+  final List<String> service;      // Multiple categories
   final int capacity;               // Max participants
   final String street;              // Address
   final String town;                // Sub-area
@@ -17,6 +19,7 @@ class Event {
     required this.uid,
     required this.eventName,
     required this.category,
+    required this.service,
     required this.capacity,
     required this.street,
     required this.town,
@@ -44,6 +47,8 @@ class Event {
       uid: map['uid'] ?? '',
       eventName: map['eventname'] ?? '',
       category: List<String>.from(map['category'] ?? []),
+
+      service: List<String>.from(map['service'] ?? []),
       capacity: (map['capacity'] ?? 0) is int
           ? map['capacity']
           : int.tryParse(map['capacity'].toString()) ?? 0,
