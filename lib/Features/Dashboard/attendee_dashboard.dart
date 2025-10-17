@@ -83,7 +83,7 @@ class _AttendeeDashboardState extends State<AttendeeDashboard> {
                 city:event.city,
                 textButton1: "View Detail",
                 textButton2: "Book Now",
-                details: [events],
+                details: [event],
               ),
             ),
           );

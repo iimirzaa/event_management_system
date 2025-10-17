@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:event_management_system/CustomWidget/CustomText.dart';
 import 'package:event_management_system/Services/token_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -181,78 +180,86 @@ class _EventDetailState extends State<EventDetail> {
 
                 // 🔹
                 // Action Buttons (Book / Customize)
-                TokenStorage.getRole()=="Organizer"?
-                Row(
-                  children: [
-                    Expanded(
-                      child: ElevatedButton.icon(
-                        onPressed: () {
-                          // Navigate to booking screen
-                          Navigator.pushNamed(context, "/booking");
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFFF6F61),
-                          padding: EdgeInsets.symmetric(vertical: 14.h),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12.r),
-                          ),
-                        ),
-                        icon: const Icon(Icons.event_available, color: Colors.white),
-                        label: Text(
-                          "Book Venue",
-                          style: TextStyle(fontSize: 16.sp, color: Colors.white),
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 12.w),
-                    Expanded(
-                      child: OutlinedButton.icon(
-                        onPressed: () {
-                          // Navigate to customization screen
-                          Navigator.pushNamed(context, "/customize");
-                        },
-                        style: OutlinedButton.styleFrom(
-                          padding: EdgeInsets.symmetric(vertical: 14.h),
-                          side: const BorderSide(color: Color(0xFFFF6F61)),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12.r),
-                          ),
-                        ),
-                        icon: const Icon(Icons.build, color: Color(0xFFFF6F61)),
-                        label: Text(
-                          "Customize",
-                          style: TextStyle(
-                            fontSize: 16.sp,
-                            color: const Color(0xFFFF6F61),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ): OutlinedButton.icon(
+                FutureBuilder<String?>(
+                  future: TokenStorage.getRole(),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
 
-                    onPressed: () {
-                      // Navigate to customization screen
-                      Navigator.pushNamed(context, "/customize");
-                    },
-                    style: OutlinedButton.styleFrom(
-                      minimumSize: Size(400.w, 40.h),
+                    final role = snapshot.data;
 
-                      padding: EdgeInsets.symmetric(vertical: 14.h),
-                      side: const BorderSide(color: Color(0xFFFF6F61)),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.r),
+                    return role == 'Attendee'
+                        ? Row(
+                      children: [
+                        Expanded(
+                          child: ElevatedButton.icon(
+                            onPressed: () {
+                              Navigator.pushNamed(context, "/booking");
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFFFF6F61),
+                              padding: EdgeInsets.symmetric(vertical: 14.h),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12.r),
+                              ),
+                            ),
+                            icon: const Icon(Icons.event_available, color: Colors.white),
+                            label: Text(
+                              "Book Venue",
+                              style: TextStyle(fontSize: 16.sp, color: Colors.white),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 12.w),
+                        Expanded(
+                          child: OutlinedButton.icon(
+                            onPressed: () {
+                              Navigator.pushNamed(context, "/customize");
+                            },
+                            style: OutlinedButton.styleFrom(
+                              padding: EdgeInsets.symmetric(vertical: 14.h),
+                              side: const BorderSide(color: Color(0xFFFF6F61)),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12.r),
+                              ),
+                            ),
+                            icon: const Icon(Icons.build, color: Color(0xFFFF6F61)),
+                            label: Text(
+                              "Customize",
+                              style: TextStyle(
+                                fontSize: 16.sp,
+                                color: const Color(0xFFFF6F61),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                        : OutlinedButton.icon(
+                      onPressed: () {
+                        Navigator.pushNamed(context, "/customize");
+                      },
+                      style: OutlinedButton.styleFrom(
+                        minimumSize: Size(400.w, 40.h),
+                        padding: EdgeInsets.symmetric(vertical: 14.h),
+                        side: const BorderSide(color: Color(0xFFFF6F61)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
                       ),
-                    ),
-                    icon: const Icon(Icons.update, color: Color(0xFFFF6F61)),
-                    label: Text(
-                      "Update",
-                      style: TextStyle(
-                        fontSize: 16.sp,
-                        color: const Color(0xFFFF6F61),
+                      icon: const Icon(Icons.update, color: Color(0xFFFF6F61)),
+                      label: Text(
+                        "Update",
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                          color: const Color(0xFFFF6F61),
+                        ),
                       ),
-                    ),
-                  ),
+                    );
+                  },
+                ),
+
 
               ],
             ),

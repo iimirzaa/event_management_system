@@ -10,7 +10,7 @@ const UploadOnCloudinary=async (LocalFilePath)=>{
     console.log(LocalFilePath)
     try {
         if(!LocalFilePath){
-            retrun ({success:false,message:"File Path not found"});
+            return ({success:false,message:"File Path not found"});
         }
         const response=await cloudinary.uploader.upload(LocalFilePath,({
             resource_type:"image",

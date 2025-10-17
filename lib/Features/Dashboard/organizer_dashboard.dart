@@ -3,6 +3,7 @@ import 'package:event_management_system/CustomWidget/CustomCard.dart';
 import 'package:event_management_system/CustomWidget/CustomText.dart';
 import 'package:event_management_system/Features/Dashboard/Dashboard_bloc/dashboard_bloc.dart';
 import 'package:event_management_system/Features/event/createevent_presentation.dart';
+import 'package:event_management_system/Features/event/eventdetail.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skeletonizer/skeletonizer.dart';

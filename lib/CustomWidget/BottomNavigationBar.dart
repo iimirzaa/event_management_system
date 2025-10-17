@@ -13,7 +13,9 @@ Widget bottomAppBar(){
         Icon(Icons.home,color: Colors.white,size: 30.sp,),
         Icon(Icons.event,color: Colors.white,size: 30.sp,),
         Icon(Icons.notifications,color: Colors.white,size: 30.sp,),
-        Icon(Icons.person,color: Colors.white,size: 30.sp,),
+        GestureDetector(
+            onTap: (){},
+            child: Icon(Icons.person,color: Colors.white,size: 30.sp,)),
 
 
       ],

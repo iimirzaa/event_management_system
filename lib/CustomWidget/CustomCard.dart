@@ -1,9 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:event_management_system/CustomWidget/CustomButton.dart';
 import 'package:event_management_system/CustomWidget/CustomText.dart';
 import 'package:event_management_system/Features/Dashboard/Dashboard_bloc/dashboard_bloc.dart';
-
 import 'package:event_management_system/Features/event/eventdetail.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -26,14 +25,8 @@ class CustomCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<DashboardBloc, DashboardState>(
-  listener: (context, state) {
-    if(state is ViewDetailButtonClickedState){
-      print(details);
-      Navigator.push(context, MaterialPageRoute(builder: (_)=>EventDetail(event:state.details)));
-    }
-  },
-  builder: (context, state) {
+
+
     return Container(
       width: 400.w,
       margin: EdgeInsets.symmetric(vertical: 12.h,),
@@ -128,8 +121,9 @@ class CustomCard extends StatelessWidget {
                   children: [
                     OutlinedButton.icon(
                       onPressed: () {
-                        context.read<DashboardBloc>().add(ViewDetailButtonClicked(details:details));
+                        Navigator.push(context, MaterialPageRoute(builder: (_)=>EventDetail(event:details)));
                       },
+
                       icon: Icon(Icons.info_outline, color: Color(0xFFFF6F61)),
                       label: Text(
                         textButton1,
@@ -166,7 +160,7 @@ class CustomCard extends StatelessWidget {
         ],
       ),
     );
-  },
-);
   }
-}
+
+  }
+
