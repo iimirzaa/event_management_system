@@ -25,6 +25,10 @@ class TokenStorage{
     final decoded = await getDecodedToken();
     return decoded?['role'];
   }
+  static Future<String?> getEmail() async {
+    final decoded = await getDecodedToken();
+    return decoded?['email'];
+  }
   static Future<String?> getName()async{
     final decoded=await getDecodedToken();
     return decoded? ['name'];

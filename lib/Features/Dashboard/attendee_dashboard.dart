@@ -1,3 +1,4 @@
+import 'package:event_management_system/CustomWidget/BottomNavigationBar.dart';
 import 'package:event_management_system/CustomWidget/CustomButton.dart';
 import 'package:event_management_system/CustomWidget/CustomCard.dart';
 import 'package:event_management_system/CustomWidget/CustomText.dart';
@@ -529,13 +530,14 @@ class _AttendeeDashboardState extends State<AttendeeDashboard> {
                     SizedBox(
                       height: 10.h,
                     ),
-                    BottomAppBar()
+
                   ],
                 ),
               ),
             ),
           ),
         ),
+          bottomNavigationBar: bottomAppBar(context)
       ),
 
     );

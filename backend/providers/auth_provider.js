@@ -61,7 +61,8 @@ async function login(email, password, role) {
                 const payload = {
                     uid: userDoc.id,
                     role:userData.role,
-                    name:userData.fullname
+                    name:userData.fullname,
+                    email:userData.email,
 
                 }
                 const token =  jwt.sign(payload, process.env.SECRETKEY, {

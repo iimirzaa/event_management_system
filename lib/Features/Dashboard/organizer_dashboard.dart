@@ -204,7 +204,7 @@ class _OrganizerDashboardState extends State<OrganizerDashboard> {
             ),
             floatingActionButtonLocation: FloatingActionButtonLocation
                 .centerDocked,
-            bottomNavigationBar: bottomAppBar()
+            bottomNavigationBar: bottomAppBar(context)
         );
       },
     );

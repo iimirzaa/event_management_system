@@ -1,6 +1,9 @@
+import 'package:event_management_system/Features/Profile/profile_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-Widget bottomAppBar(){
+Widget bottomAppBar(
+    BuildContext context
+    ){
   return BottomAppBar(
     color: Color(0xFF1F1C2C),
     notchMargin: 5.0,
@@ -13,9 +16,9 @@ Widget bottomAppBar(){
         Icon(Icons.home,color: Colors.white,size: 30.sp,),
         Icon(Icons.event,color: Colors.white,size: 30.sp,),
         Icon(Icons.notifications,color: Colors.white,size: 30.sp,),
-        GestureDetector(
-            onTap: (){},
-            child: Icon(Icons.person,color: Colors.white,size: 30.sp,)),
+        GestureDetector(onTap:(){
+          Navigator.push(context, MaterialPageRoute(builder: (_)=>ProfileView()));
+        },child: Icon(Icons.person,color: Colors.white,size: 30.sp,)),
 
 
       ],
