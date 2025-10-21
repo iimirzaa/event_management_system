@@ -6,15 +6,16 @@ import 'package:carousel_slider/carousel_slider.dart';
 
 class EventDetail extends StatefulWidget {
   final List<dynamic> event;
-  const EventDetail({super.key,required this.event});
-
+  const EventDetail({super.key, required this.event});
 
   @override
   State<EventDetail> createState() => _EventDetailState();
 }
 
 class _EventDetailState extends State<EventDetail> {
-
+  List<String> selectedCategory = [];
+  List<String> selectedService = [];
+  final TextEditingController _capacityController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,15 +25,16 @@ class _EventDetailState extends State<EventDetail> {
           borderRadius: BorderRadius.vertical(bottom: Radius.circular(25.r)),
         ),
 
-        iconTheme: IconThemeData(
-          color: Colors.blueGrey
+        iconTheme: IconThemeData(color: Colors.blueGrey),
+        title: Text(
+          "${widget.event[0].eventName}",
+          style: TextStyle(
+            // Title
+            color: const Color(0xFFFF6F61),
+            fontWeight: FontWeight.w600,
+            fontSize: 32.sp,
+          ),
         ),
-           title: Text("${widget.event[0].eventName}",
-           style:  TextStyle(// Title
-             color: const Color(0xFFFF6F61),
-             fontWeight: FontWeight.w600,
-             fontSize: 32.sp,
-           ),),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -41,8 +43,6 @@ class _EventDetailState extends State<EventDetail> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-
-
                 SizedBox(height: 8.h),
 
                 // 🔹 Image Carousel with Buttons
@@ -51,12 +51,14 @@ class _EventDetailState extends State<EventDetail> {
                     ClipRRect(
                       borderRadius: BorderRadius.circular(12.r),
                       child: CarouselSlider(
-                        items:widget.event[0].url.map<Widget>(
+                        items: widget.event[0].url
+                            .map<Widget>(
                               (img) => CachedNetworkImage(
                                 imageUrl: img,
                                 fit: BoxFit.cover,
                                 width: 400.w,
-                                height: 200.h, // give fixed height to avoid overflow
+                                height: 200
+                                    .h, // give fixed height to avoid overflow
                                 placeholder: (context, url) => Container(
                                   color: Colors.grey[200],
                                   height: 200.h,
@@ -70,10 +72,15 @@ class _EventDetailState extends State<EventDetail> {
                                 errorWidget: (context, url, error) => Container(
                                   color: Colors.grey[300],
                                   height: 200.h,
-                                  child: Icon(Icons.broken_image, size: 40, color: Colors.grey[700]),
+                                  child: Icon(
+                                    Icons.broken_image,
+                                    size: 40,
+                                    color: Colors.grey[700],
+                                  ),
                                 ),
                               ),
-                        ).toList(),
+                            )
+                            .toList(),
 
                         options: CarouselOptions(
                           height: 300.h,
@@ -125,34 +132,6 @@ class _EventDetailState extends State<EventDetail> {
                 ),
 
                 SizedBox(height: 20.h),
-
-                //  Categories
-                _buildSectionCard(
-                  icon: Icons.category,
-                  title: "Categories",
-                  child: Wrap(
-                    spacing: 8,
-                    children: [
-                    ...widget.event[0].category.map((c)=>_buildChip(c)).toList(),
-                    ],
-                  ),
-                ),
-
-                SizedBox(height: 16.h),
-
-                // Capacity
-                _buildSectionCard(
-                  icon: Icons.people,
-                  title: "Capacity",
-                  child: Text(
-                    "${widget.event[0].capacity} Guests",
-                    style: TextStyle(fontSize: 16.sp, color: Colors.black87),
-                  ),
-                ),
-
-                SizedBox(height: 16.h),
-
-                //  Location
                 _buildSectionCard(
                   icon: Icons.location_on,
                   title: "Location",
@@ -164,16 +143,162 @@ class _EventDetailState extends State<EventDetail> {
 
                 SizedBox(height: 16.h),
 
-                //  Services
+                //  Categories
                 _buildSectionCard(
-                  icon: Icons.room_service,
-                  title: "Services Available",
+                  icon: Icons.category,
+                  title: "Select Category",
                   child: Wrap(
                     spacing: 8,
                     children: [
-                      ...widget.event[0].service.map((c)=>_buildChip(c)).toList(),
+                      ...widget.event[0].category.map((category) {
+                        final isSelected = selectedCategory.contains(category);
+
+                        return _buildChip(
+                          isSelected,
+                          category,
+                          selectedCategory,
+                        );
+                      }).toList(),
                     ],
                   ),
+                ),
+
+                SizedBox(height: 16.h),
+
+                // Capacity
+                _buildSectionCard(
+                  icon: Icons.people,
+                  title: "Enter Capacity",
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            "Maximum Capacity:",
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          SizedBox(width: 10.w),
+                          Text(
+                            "${widget.event[0].capacity} Guests",
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              color: Colors.black87,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 10.h),
+                      TextFormField(
+                        controller: _capacityController,
+                        cursorColor: Color(0xFFFF6F61),
+                        onTapOutside: (event) {
+                          Focus.of(context).unfocus();
+                        },
+                        decoration: InputDecoration(
+                          constraints: BoxConstraints(
+                            maxHeight: 40.h,
+                            minHeight: 40.h,
+                          ),
+                          hintText: "Enter required capacity",
+                          hintStyle: TextStyle(
+                            color: Colors.grey.shade800,
+                            fontSize: 14.sp,
+                          ),
+
+                          contentPadding: EdgeInsets.symmetric(
+                            vertical: 14.h,
+                            horizontal: 14.w,
+                          ),
+                          filled: true,
+                          fillColor: Colors.grey.shade50,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12.r),
+                            borderSide: BorderSide.none,
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12.r),
+                            borderSide: BorderSide(color: Colors.grey.shade300),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12.r),
+                            borderSide: const BorderSide(
+                              color: Color(0xFFFF6F61),
+                              width: 2,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 8.h),
+                    ],
+                  ),
+                ),
+
+                SizedBox(height: 16.h),
+
+                //  Services
+                _buildSectionCard(
+                  icon: Icons.room_service,
+                  title: "Select Services",
+                  child: Wrap(
+                    spacing: 8,
+                    children: [
+                      ...widget.event[0].service.map((service) {
+                        final isSelected = selectedService.contains(service);
+
+                        return _buildChip(isSelected, service, selectedService);
+                      }).toList(),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 16.h),
+                _buildSectionCard(
+                  icon: Icons.details,
+                  title: "Additional Requirements",
+                  child: TextFormField(
+                    controller: _capacityController,
+                    cursorColor: const Color(0xFFFF6F61),
+                    maxLength: 500,
+                    maxLines: 6, // allows multi-line input
+                    onTapOutside: (event) => FocusScope.of(context).unfocus(),
+                    decoration: InputDecoration(
+                      hintText: "Write event details here...",
+                      hintStyle: TextStyle(
+                        color: Colors.grey.shade500,
+                        fontSize: 14.sp,
+                      ),
+                      alignLabelWithHint: true,
+                      filled: true,
+                      fillColor: Colors.grey.shade100,
+                      contentPadding: EdgeInsets.symmetric(
+                        vertical: 16.h,
+                        horizontal: 14.w,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(14.r),
+                        borderSide: BorderSide.none,
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(14.r),
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(14.r),
+                        borderSide: const BorderSide(
+                          color: Color(0xFFFF6F61),
+                          width: 2,
+                        ),
+                      ),
+                      counterText: "", // hides maxLength counter for cleaner look
+                    ),
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      color: Colors.grey.shade800,
+                    ),
+                  ),
+
                 ),
 
                 SizedBox(height: 30.h),
@@ -189,78 +314,59 @@ class _EventDetailState extends State<EventDetail> {
 
                     final role = snapshot.data;
 
-                    return role == 'Attendee'
-                        ? Row(
-                      children: [
-                        Expanded(
-                          child: ElevatedButton.icon(
-                            onPressed: () {
-                              Navigator.pushNamed(context, "/booking");
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFFFF6F61),
-                              padding: EdgeInsets.symmetric(vertical: 14.h),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12.r),
-                              ),
-                            ),
-                            icon: const Icon(Icons.event_available, color: Colors.white),
-                            label: Text(
-                              "Book Venue",
-                              style: TextStyle(fontSize: 16.sp, color: Colors.white),
-                            ),
+                    if (role == 'Attendee') {
+                      return ElevatedButton.icon(
+                        onPressed: () {
+                          Navigator.pushNamed(context, "/booking");
+                        },
+                        style: ElevatedButton.styleFrom(
+                          fixedSize: Size(400.w, 50.h),
+                          backgroundColor: const Color(0xFFFF6F61),
+                          padding: EdgeInsets.symmetric(vertical: 14.h),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.r),
                           ),
                         ),
-                        SizedBox(width: 12.w),
-                        Expanded(
-                          child: OutlinedButton.icon(
-                            onPressed: () {
-                              Navigator.pushNamed(context, "/customize");
-                            },
-                            style: OutlinedButton.styleFrom(
-                              padding: EdgeInsets.symmetric(vertical: 14.h),
-                              side: const BorderSide(color: Color(0xFFFF6F61)),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12.r),
-                              ),
-                            ),
-                            icon: const Icon(Icons.build, color: Color(0xFFFF6F61)),
-                            label: Text(
-                              "Customize",
-                              style: TextStyle(
-                                fontSize: 16.sp,
-                                color: const Color(0xFFFF6F61),
-                              ),
-                            ),
+                        icon: const Icon(
+                          Icons.event_available,
+                          color: Colors.white,
+                        ),
+                        label: Text(
+                          "Book Venue",
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                            color: Colors.white,
                           ),
                         ),
-                      ],
-                    )
-                        : OutlinedButton.icon(
-                      onPressed: () {
-                        Navigator.pushNamed(context, "/customize");
-                      },
-                      style: OutlinedButton.styleFrom(
-                        minimumSize: Size(400.w, 40.h),
-                        padding: EdgeInsets.symmetric(vertical: 14.h),
-                        side: const BorderSide(color: Color(0xFFFF6F61)),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12.r),
+                      );
+                    } else {
+                      return OutlinedButton.icon(
+                        onPressed: () {
+                          Navigator.pushNamed(context, "/customize");
+                        },
+                        style: OutlinedButton.styleFrom(
+                          minimumSize: Size(400.w, 40.h),
+                          padding: EdgeInsets.symmetric(vertical: 14.h),
+                          side: const BorderSide(color: Color(0xFFFF6F61)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.r),
+                          ),
                         ),
-                      ),
-                      icon: const Icon(Icons.update, color: Color(0xFFFF6F61)),
-                      label: Text(
-                        "Update",
-                        style: TextStyle(
-                          fontSize: 16.sp,
-                          color: const Color(0xFFFF6F61),
+                        icon: const Icon(
+                          Icons.update,
+                          color: Color(0xFFFF6F61),
                         ),
-                      ),
-                    );
+                        label: Text(
+                          "Update",
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                            color: const Color(0xFFFF6F61),
+                          ),
+                        ),
+                      );
+                    }
                   },
                 ),
-
-
               ],
             ),
           ),
@@ -313,21 +419,22 @@ class _EventDetailState extends State<EventDetail> {
   }
 
   // 🔹 Custom Chip Style
-  Widget _buildChip(String label) {
-    return Chip(
-      label: Text(
-        label,
-        style: TextStyle(
-          fontSize: 14.sp,
-          fontWeight: FontWeight.w500,
-          color: const Color(0xFFFF6F61),
-        ),
-      ),
-      backgroundColor: const Color(0xFFFF6F61).withOpacity(0.1),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20.r),
-        side: BorderSide(color: const Color(0xFFFF6F61)),
-      ),
+  Widget _buildChip(bool isSelected, String category, List<String> list) {
+    return FilterChip(
+      side: BorderSide(color: Color(0xFFFF6F61)),
+      label: Text(category),
+      selected: isSelected,
+      onSelected: (selected) {
+        setState(() {
+          if (selected) {
+            list.add(category);
+          } else {
+            list.remove(category);
+          }
+        });
+      },
+      selectedColor: Colors.redAccent.shade100,
+      checkmarkColor: Colors.green,
     );
   }
 }

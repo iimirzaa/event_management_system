@@ -25,3 +25,4 @@ class CreateEventButtonState extends EventState{}
 class EventCreationSuccessfulState extends EventState{}
 
 //Attendee Side Event handling
+class BookEventButtonState extends EventState{}

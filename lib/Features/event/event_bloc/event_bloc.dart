@@ -19,42 +19,47 @@ class EventBloc extends Bloc<EventEvent, EventState> {
       Icons.error_outline, // 400 - Bad Request
       Icons.warning_amber_rounded, // 500 - Internal Server Error
     ];
-    on<CreateEventButtonClicked>((event, emit) async{
-      String? eventError=Validator.validateEventName(event.eventName.trim());
-      String? capacityError=Validator.validateCapacity(event.capacity.trim());
-      String? categoryError=Validator.validateCategories(event.category);
-      String? serviceError=Validator.validateServices(event.service);
-      String? imageError=Validator.validateImages(event.images);
-      String? locationError=Validator.validateLocation(event.street.trim(), event.town.trim(), event.city.trim());
-      final List<MultipartFile> files=[];
-      if(eventError!=null){
-        emit(MessageState(icon: Icons.warning_amber_sharp, errorMessage:eventError));
+    on<CreateEventButtonClicked>((event, emit) async {
+      String? eventError = Validator.validateEventName(event.eventName.trim());
+      String? capacityError = Validator.validateCapacity(event.capacity.trim());
+      String? categoryError = Validator.validateCategories(event.category);
+      String? serviceError = Validator.validateServices(event.service);
+      String? imageError = Validator.validateImages(event.images);
+      String? locationError = Validator.validateLocation(
+          event.street.trim(), event.town.trim(), event.city.trim());
+      final List<MultipartFile> files = [];
+      if (eventError != null) {
+        emit(MessageState(
+            icon: Icons.warning_amber_sharp, errorMessage: eventError));
         return;
       }
-      if(capacityError!=null){
-        emit(MessageState(icon: Icons.group_off, errorMessage:capacityError));
+      if (capacityError != null) {
+        emit(MessageState(icon: Icons.group_off, errorMessage: capacityError));
         return;
       }
-      if(categoryError!=null){
-        emit(MessageState(icon: Icons.category_outlined, errorMessage:categoryError));
+      if (categoryError != null) {
+        emit(MessageState(
+            icon: Icons.category_outlined, errorMessage: categoryError));
         return;
       }
-      if(serviceError!=null){
-        emit(MessageState(icon: Icons.restaurant, errorMessage:serviceError));
+      if (serviceError != null) {
+        emit(MessageState(icon: Icons.restaurant, errorMessage: serviceError));
         return;
       }
-      if(imageError!=null){
-        emit(MessageState(icon: Icons.broken_image_outlined, errorMessage:imageError));
+      if (imageError != null) {
+        emit(MessageState(
+            icon: Icons.broken_image_outlined, errorMessage: imageError));
         return;
       }
-      if(locationError!=null){
-        emit(MessageState(icon: Icons.location_off_outlined, errorMessage:locationError));
+      if (locationError != null) {
+        emit(MessageState(
+            icon: Icons.location_off_outlined, errorMessage: locationError));
         return;
       }
 
-      if(event.key==true){
+      if (event.key == true) {
         emit(LoadingState());
-        for (var images in event.images){
+        for (var images in event.images) {
           files.add(
             await MultipartFile.fromFile(
               images.path,
@@ -75,16 +80,18 @@ class EventBloc extends Bloc<EventEvent, EventState> {
         });
 
         Map<String, dynamic> response = await EventProvider().createEvent(
-         formData
+            formData
         );
         final handler = EventHandler();
         handler.handleEventCreation(
-            response: response,
-            emit: emit,
-            icons: icon,
+          response: response,
+          emit: emit,
+          icons: icon,
         );
       }
     });
-
+    on<BookEventButtonCLicked>((event, emit) async {
+      emit(BookEventButtonState());
+    });
   }
 }

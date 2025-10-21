@@ -26,4 +26,4 @@ class CreateEventButtonClicked extends EventEvent{
 });
 }
 //Attendee Side
-
+class BookEventButtonCLicked extends EventEvent{}
