@@ -91,6 +91,30 @@ class EventBloc extends Bloc<EventEvent, EventState> {
       }
     });
     on<BookEventButtonCLicked>((event, emit) async {
+      String? eventError = Validator.validateEventDetail(event.eventDetail.trim());
+      String? capacityError = Validator.validateCapacity(event.capacity.trim());
+      String? categoryError = Validator.validateCategories(event.category);
+      String? serviceError = Validator.validateServices(event.service);
+      if (eventError != null) {
+        emit(MessageState(
+            icon: Icons.warning_amber_sharp, errorMessage: eventError));
+        return;
+      }
+      if (capacityError != null) {
+        emit(MessageState(icon: Icons.group_off, errorMessage: capacityError));
+        return;
+      }
+      if (categoryError != null) {
+        emit(MessageState(
+            icon: Icons.category_outlined, errorMessage: categoryError));
+        return;
+      }
+      if (serviceError != null) {
+        emit(MessageState(icon: Icons.restaurant, errorMessage: serviceError));
+        return;
+      }
+      emit(LoadingState());
+
       emit(BookEventButtonState());
     });
   }

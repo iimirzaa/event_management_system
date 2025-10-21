@@ -35,7 +35,7 @@ class _CustomdialogueState extends State<Customdialogue> {
 
 
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12.r),
+          borderRadius: BorderRadius.circular(1.r),
           color: Color(0xFFFAFAF5),
           boxShadow: [
             BoxShadow(
@@ -76,7 +76,7 @@ class _CustomdialogueState extends State<Customdialogue> {
                 press: () {
                   Navigator.of(context, rootNavigator: true).pop();
                 },
-                border: 10.r,
+                border: 1.r,
               ),
               SizedBox(
                 height: 10.h,

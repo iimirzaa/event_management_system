@@ -1,6 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:event_management_system/CustomWidget/Customdialogue.dart';
+import 'package:event_management_system/Features/event/event_bloc/event_bloc.dart';
 import 'package:event_management_system/Services/token_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
@@ -16,8 +19,21 @@ class _EventDetailState extends State<EventDetail> {
   List<String> selectedCategory = [];
   List<String> selectedService = [];
   final TextEditingController _capacityController = TextEditingController();
+
+  final TextEditingController _detailController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    return BlocConsumer<EventBloc, EventState>(
+  listener: (context, state) {
+    if (state is MessageState) {
+      showDialog(
+        context: context,
+        builder: (_) =>
+            Customdialogue(icon: state.icon, text: state.errorMessage ?? ''),
+      );
+    }
+  },
+  builder: (context, state) {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: true,
@@ -258,7 +274,7 @@ class _EventDetailState extends State<EventDetail> {
                   icon: Icons.details,
                   title: "Additional Requirements",
                   child: TextFormField(
-                    controller: _capacityController,
+                    controller: _detailController,
                     cursorColor: const Color(0xFFFF6F61),
                     maxLength: 500,
                     maxLines: 6, // allows multi-line input
@@ -317,7 +333,13 @@ class _EventDetailState extends State<EventDetail> {
                     if (role == 'Attendee') {
                       return ElevatedButton.icon(
                         onPressed: () {
-                          Navigator.pushNamed(context, "/booking");
+                          context.read<EventBloc>().add(BookEventButtonCLicked(
+                            eventId: widget.event[0].id,
+                            eventDetail:_detailController.text,
+                            capacity: _capacityController.text,
+                            category: selectedCategory,
+                            service: selectedService
+                          ));
                         },
                         style: ElevatedButton.styleFrom(
                           fixedSize: Size(400.w, 50.h),
@@ -373,6 +395,8 @@ class _EventDetailState extends State<EventDetail> {
         ),
       ),
     );
+  },
+);
   }
 
   // 🔹 Section Card Widget

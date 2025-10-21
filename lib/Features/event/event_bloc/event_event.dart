@@ -26,4 +26,18 @@ class CreateEventButtonClicked extends EventEvent{
 });
 }
 //Attendee Side
-class BookEventButtonCLicked extends EventEvent{}
+class BookEventButtonCLicked extends EventEvent{
+  final String eventId;
+  final String eventDetail;
+  final List<String> service;
+  final List<String> category;
+  final String capacity;
+  BookEventButtonCLicked({
+    required this.eventId,
+    required this.eventDetail,
+    required this.service,
+    required this.category,
+    required this.capacity
+});
+
+}
