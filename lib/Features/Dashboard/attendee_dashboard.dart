@@ -25,6 +25,7 @@ class _AttendeeDashboardState extends State<AttendeeDashboard> {
   @override
   void initState() {
     super.initState();
+    print("attendee load called");
     context.read<DashboardBloc>().add(LoadEvents());
   }
 

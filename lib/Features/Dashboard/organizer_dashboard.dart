@@ -22,6 +22,7 @@ class _OrganizerDashboardState extends State<OrganizerDashboard> {
   @override @override
   void initState() {
    super.initState();
+   print("organizer load called");
    context.read<DashboardBloc>().add(LoadOrganizerEvents());
   }
   @override

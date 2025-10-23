@@ -27,7 +27,7 @@ async function createEvent(eventname, category, service, capacity, street, town,
                 if (!doc.exists) {
                     console.log("No docunment found");
                     transaction.set(eventReference, {
-                        events: [{ eventname, category, capacity, street, town, city, service,images:imageUrls, createdAt: new Date() }],
+                        events: [{ eventname, category, capacity, street, town, city, service, images: imageUrls, createdAt: new Date() }],
                     });
                     await firestore.collection('events').doc().set({
                         eventId: doc.id,
@@ -37,7 +37,7 @@ async function createEvent(eventname, category, service, capacity, street, town,
                         capacity: capacity,
                         street: street,
                         town: town,
-                        service:service,
+                        service: service,
                         city: city,
                         images: imageUrls,
                         createdAt: new Date()
@@ -56,7 +56,7 @@ async function createEvent(eventname, category, service, capacity, street, town,
                         capacity: capacity,
                         street: street,
                         town: town,
-                        service:service,
+                        service: service,
                         city: city,
                         images: imageUrls,
                         createdAt: new Date()
@@ -92,7 +92,7 @@ async function loadEvent(authorization) {
                 ...doc.data()
             }));
 
-         
+
             return ({ success: true, message: "Events loaded Successfully", events: events });
         }
 
@@ -110,15 +110,15 @@ async function loadOrganizerEvent(authorization) {
         if (!userDoc.exists) {
             return ({ success: false, message: "UnAuthorized User" });
         } else {
-            const docRef= await firestore.collection('user').doc(uid).collection('data').doc('events').get();
-            const docData=docRef.data();
+            const docRef = await firestore.collection('user').doc(uid).collection('data').doc('events').get();
+            const docData = docRef.data();
 
             // const events = snapshot.docs.map(doc => ({
             //     id: doc.id,
             //     ...doc.data()
             // }));
 
-            
+
             return ({ success: true, message: "Organizer Events loaded Successfully", events: docData });
         }
 
@@ -127,6 +127,66 @@ async function loadOrganizerEvent(authorization) {
         return ({ success: false, message: "Error while fetching Organizer events" });
     }
 }
+async function bookEvent(eventId, category, service, capacity, details, authorization) {
+    try {
+        const token = jwt.verify(authorization, process.env.SECRETKEY);
+        const uid = token.uid;
+        const userDoc = await firestore.collection("user").doc(uid).get();
+        console.log(userDoc.uid);
+        console.log(token['uid'])
+        console.log(userDoc);
+        if (!userDoc.exists) {
+            return ({ success: false, message: "UnAuthorized User" });
+        } else {
+            const eventReference = await firestore.collection('user').doc(token.uid).collection('data').doc('bookedEvents');
+            await firestore.runTransaction(async (transaction) => {
+                const doc = await transaction.get(eventReference);
+                if (!doc.exists) {
+                    console.log("No docunment found");
+                    transaction.set(eventReference, {
+                        bookedEvents: [{ eventId, category, capacity, service, details, createdAt: new Date() }],
+                    });
+                    await firestore.collection('bookedEvents').doc().set({
+                        
+                        uid: uid,
+                        eventId: eventId,
+                        category: category,
+                        capacity: capacity,
+                        service: service,
+                        details: details,
+                        createdAt: new Date()
+
+                    })
+                } else {
+                    const currentEvents = doc.data().bookedEvents || [];
+                    currentEvents.push({ eventId, category, capacity, service, details, createdAt: new Date() });
+
+                    transaction.update(eventReference, { bookedEvents: currentEvents });
+                    await firestore.collection('bookedEvents').doc().set({
+                        uid: uid,
+                        eventId: eventId,
+                        category: category,
+                        capacity: capacity,
+
+                        service: service,
+                        details: details,
+
+                        createdAt: new Date()
+
+                    })
+                }
+
+            })
+            return ({ success: true, message: "Event booked Successfully" });
+        }
 
 
-export { createEvent, loadEvent,loadOrganizerEvent }
+    } catch (e) {
+        console.log(e);
+        retrun({ success: false, message: 'There was an error while booking event' });
+    }
+
+
+}
+
+export { createEvent, loadEvent, loadOrganizerEvent,bookEvent }

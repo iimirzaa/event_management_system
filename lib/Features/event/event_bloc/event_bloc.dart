@@ -115,6 +115,24 @@ class EventBloc extends Bloc<EventEvent, EventState> {
       }
       emit(LoadingState());
 
+      Map<String,dynamic> response=await EventProvider().bookEvent(
+
+        {
+          'eventId':event.eventId,
+          'category':event.category,
+          'service':event.service,
+          'capacity':event.capacity,
+          'details':event.eventDetail
+
+        }
+      );
+      final handler = EventHandler();
+      handler.handleEventBooking(
+        response: response,
+        emit: emit,
+        icons: icon,
+      );
+
       emit(BookEventButtonState());
     });
   }
