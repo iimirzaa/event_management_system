@@ -31,12 +31,14 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   Future<Widget> _getInitialScreen() async {
     Map<String, dynamic>? token = await TokenStorage.getDecodedToken();
+    print(token);
+    int currentTime=DateTime.now().millisecondsSinceEpoch~/1000;
     if (token == null) {
       return const GetStartedView();
     } else {
-      if (token['role'] == 'Attendee') {
+      if (token['role'] == 'Attendee'&& token['exp']>currentTime) {
         return const AttendeeDashboard();
-      } else if (token['role'] == 'Organizer') {
+      } else if (token['role'] == 'Organizer'&& token['exp']>currentTime) {
         return const OrganizerDashboard();
       } else {
         return const GetStartedView();

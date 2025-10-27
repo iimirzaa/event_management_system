@@ -60,17 +60,20 @@ async function login(email, password, role) {
             if (isMatch && userData.role == role && userData.isverified == true) {
                 const payload = {
                     uid: userDoc.id,
-                    role:userData.role,
-                    name:userData.fullname,
-                    email:userData.email,
-
+                    role: userData.role,
+                    name: userData.fullname,
+                    email: userData.email,
                 }
-                const token =  jwt.sign(payload, process.env.SECRETKEY, {
+                const token = jwt.sign(payload, process.env.SECRETKEY, {
                     algorithm: "HS512",
                     expiresIn: "7d",
 
                 })
-                return ({ success: true, message: "Login Successful!" ,token:token})
+                const decoded = jwt.decode(token);
+
+                console.log("exp (seconds):", decoded.exp);
+                console.log("exp (date):", new Date(decoded.exp * 1000))
+                return ({ success: true, message: "Login Successful!", token: token })
             } else if (userData.isverified == false) {
                 return ({ success: false, message: "Kindly verify your email via OTP" })
             }
