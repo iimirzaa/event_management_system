@@ -1,7 +1,9 @@
 import 'package:event_management_system/Features/GetStarted/get_started_view.dart';
+import 'package:event_management_system/Features/Profile/edit_profile_view.dart';
+import 'package:event_management_system/Features/Profile/profile_bloc.dart';
 import 'package:event_management_system/Services/token_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ProfileView extends StatefulWidget {
@@ -14,6 +16,11 @@ class ProfileView extends StatefulWidget {
 class _ProfileViewState extends State<ProfileView> {
   @override
   Widget build(BuildContext context) {
+    return BlocConsumer<ProfileBloc, ProfileState>(
+  listener: (context, state) {
+    // TODO: implement listener
+  },
+  builder: (context, state) {
     return Scaffold(
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
@@ -178,7 +185,9 @@ class _ProfileViewState extends State<ProfileView> {
                     _buildProfileOption(
                       icon: Icons.person,
                       title: "Edit Profile",
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (_)=>EditProfileView()));
+                      },
                     ),
                     _buildProfileOption(
                       icon: Icons.settings,
@@ -207,6 +216,8 @@ class _ProfileViewState extends State<ProfileView> {
         ),
       ),
     );
+  },
+);
   }
 
   Widget _buildProfileOption({

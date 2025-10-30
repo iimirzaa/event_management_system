@@ -1,3 +1,4 @@
+import 'package:event_management_system/Features/Profile/profile_bloc.dart';
 import 'package:event_management_system/features/Auth/Auth_Bloc/auth_bloc.dart';
 import 'package:event_management_system/features/Dashboard/attendee_dashboard.dart';
 import 'package:event_management_system/features/Dashboard/organizer_dashboard.dart';
@@ -58,6 +59,8 @@ class _MyAppState extends State<MyApp> {
             BlocProvider<AuthBloc>(create: (_) => AuthBloc()),
             BlocProvider<DashboardBloc>(create: (_) => DashboardBloc()),
             BlocProvider<EventBloc>(create: (_) => EventBloc()),
+            BlocProvider<ProfileBloc>(create: (_) => ProfileBloc()),
+
           ],
           child: MaterialApp(
             theme: ThemeData(fontFamily: 'Roboto'),
