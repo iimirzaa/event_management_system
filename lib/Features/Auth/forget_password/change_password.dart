@@ -1,3 +1,5 @@
+import 'package:event_management_system/CustomWidget/Customdialogue.dart';
+import 'package:event_management_system/Features/Auth/Login/login_view.dart';
 import 'package:event_management_system/Scaffold_Theme/scaffold_gradient.dart';
 import 'package:event_management_system/features/Auth/Otp/send_otp.dart';
 import 'package:flutter/material.dart';
@@ -10,21 +12,44 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import '../Auth_Bloc/auth_bloc.dart';
 
 class ChangePasswordView extends StatefulWidget {
-  const ChangePasswordView({super.key});
+  final String previous;
+  const ChangePasswordView({super.key,required this.previous});
 
   @override
   State<ChangePasswordView> createState() => _ChangePasswordView();
 }
 
 class _ChangePasswordView extends State<ChangePasswordView> {
-  final _form_key = GlobalKey<FormState>();
-  final TextEditingController _emailcontroller = TextEditingController();
+  final _formkey = GlobalKey<FormState>();
+  bool visibility = true;
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPassword = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AuthBloc, AuthState>(
-      listener: (context, state) {
-        if (state is SendOtpSuccessfulState) {
-          Navigator.push(context, MaterialPageRoute(builder: (_) => SendOtp(email: _emailcontroller.text.trim(),)));
+      listener: (context, state) async{
+        if (state is ForgetPasswordState && widget.previous=='signup') {
+          await showDialog(
+          context: context,
+          builder: (_) => Customdialogue(
+            icon: Icons.check_circle,
+            text: "Sign up Successful!",
+            color: Colors.green,
+          ),
+          );
+
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => LoginView()),
+          );
+        }else{
+          Navigator.pushReplacement(context,MaterialPageRoute(builder: (_)=> ChangePasswordView(previous: widget.previous,)));
+
+        }
+        if (state is EyeIconSignUpState) {
+          setState(() {
+            visibility = state.visibilty;
+          });
         }
       },
       builder: (context, state) {
@@ -54,7 +79,7 @@ class _ChangePasswordView extends State<ChangePasswordView> {
                           child: Padding(
                             padding: EdgeInsets.all(20.0.r),
                             child: Form(
-                              key: _form_key,
+                              key: _formkey,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
@@ -65,9 +90,35 @@ class _ChangePasswordView extends State<ChangePasswordView> {
                                     size: 40.sp,
                                   ),
                                   SizedBox(height: 10.h),
-                                  CustomInput(hint: "Enter new Password",icon: Icons.visibility_off_outlined,),
+                                  CustomInput(
+                                    hint: "Enter new Password",
+                                    controller: _passwordController,
+                                    icon: visibility
+                                        ? Icons.visibility_off
+                                        : Icons.visibility,
+                                    obsecure: visibility,
+                                    onTap: () => context.read<AuthBloc>().add(
+                                      EyeIconSignUpClicked(
+                                        visibilty: visibility,
+                                      ),
+                                    ),
+                                  ),
                                   SizedBox(height: 10.h),
-                                  CustomInput(hint: "Confirm Password",icon: Icons.visibility_off_outlined),
+                                  CustomInput(
+                                    hint: "Confirm Password",
+                                    controller: _confirmPassword,
+                                    icon: visibility
+                                        ? Icons.visibility_off
+                                        : Icons.visibility,
+                                    obsecure: visibility,
+                                    onTap: () {
+                                      context.read<AuthBloc>().add(
+                                        EyeIconSignUpClicked(
+                                          visibilty: visibility,
+                                        ),
+                                      );
+                                    },
+                                  ),
                                   SizedBox(height: 10.h),
                                   if (state is ErrorState) ...[
                                     CustomText(
@@ -76,9 +127,7 @@ class _ChangePasswordView extends State<ChangePasswordView> {
                                       weight: FontWeight.w400,
                                     ),
                                   ],
-                                  SizedBox(
-                                    height: 5.h,
-                                  ),
+                                  SizedBox(height: 5.h),
 
                                   CustomButton(
                                     text: "Change Password",
@@ -87,10 +136,11 @@ class _ChangePasswordView extends State<ChangePasswordView> {
                                     color: Color(0xFFFF6F61),
                                     press: () {
                                       context.read<AuthBloc>().add(
-                                        SendOtpClicked(
-                                          key: _form_key.currentState!
+                                        ChangePasswordClickedEvent(
+                                          key: _formkey.currentState!
                                               .validate(),
-                                          email: _emailcontroller.text,
+                                          password: _passwordController.text,
+                                          cofirmpassword: _confirmPassword.text
                                         ),
                                       );
                                     },
@@ -121,7 +171,6 @@ class _ChangePasswordView extends State<ChangePasswordView> {
                 ),
               ),
           ],
-
         );
       },
     );

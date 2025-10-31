@@ -61,7 +61,7 @@ class _SignupViewState extends State<SignupView> {
 
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (_) => SendOtp(email: state.email??'',)),
+            MaterialPageRoute(builder: (_) => SendOtp(email: state.email??'',previous:'signup')),
           );
         }
       },

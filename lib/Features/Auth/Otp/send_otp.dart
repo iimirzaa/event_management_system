@@ -1,4 +1,5 @@
 import 'package:event_management_system/CustomWidget/Customdialogue.dart';
+import 'package:event_management_system/Features/Auth/forget_password/change_password.dart';
 import 'package:event_management_system/Scaffold_Theme/scaffold_gradient.dart';
 import 'package:flutter/material.dart';
 import 'package:event_management_system/CustomWidget/CustomButton.dart';
@@ -11,7 +12,8 @@ import '../Auth_Bloc/auth_bloc.dart';
 
 class SendOtp extends StatefulWidget {
   final String email;
-  const SendOtp({super.key, required this.email});
+  final String previous;
+  const SendOtp({super.key, required this.email,required this.previous});
 
   @override
   State<SendOtp> createState() => _SendOtpState();
@@ -53,7 +55,7 @@ class _SendOtpState extends State<SendOtp> {
   Widget build(BuildContext context) {
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) async {
-        if (state is VerificationSuccessful) {
+        if (state is VerificationSuccessful && widget.previous=='signup') {
           await showDialog(
             context: context,
             builder: (_) => Customdialogue(
@@ -67,6 +69,9 @@ class _SendOtpState extends State<SendOtp> {
             context,
             MaterialPageRoute(builder: (_) => LoginView()),
           );
+        }else{
+          Navigator.pushReplacement(context,MaterialPageRoute(builder: (_)=> ChangePasswordView(previous: widget.previous,)));
+
         }
         if(state is BackendErrorState){
           showDialog(context: context, builder: (_)=>Customdialogue(icon: state.icon, text: state.errorMsg??''));

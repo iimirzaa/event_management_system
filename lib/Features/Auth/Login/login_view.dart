@@ -67,7 +67,7 @@ class _LoginViewState extends State<LoginView> {
           );
         }
         if(state is ForgetPasswordState){
-          Navigator.push(context, MaterialPageRoute(builder: (_)=>EmailView()));
+          Navigator.push(context, MaterialPageRoute(builder: (_)=>EmailView(previous:'login')));
         }
       },
       builder: (context, state) {

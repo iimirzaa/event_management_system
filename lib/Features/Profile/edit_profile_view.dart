@@ -65,8 +65,15 @@ class _EditProfileViewState extends State<EditProfileView> {
                           icon: Icons.remove_red_eye_outlined,
                           title: "Change Password",
                           onTap: () {
-                            Navigator.push(context, MaterialPageRoute(builder:(_)=>BlocProvider(create: (_)=>AuthBloc(),child: ChangePasswordView(),)
-                            ));
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => BlocProvider(
+                                  create: (_) => AuthBloc(),
+                                  child: EmailView(previous: 'home'),
+                                ),
+                              ),
+                            );
                           },
                         ),
                       ],

@@ -72,3 +72,13 @@ class SendOtpClicked extends AuthEvent{
 
 }
 class ForgetPasswordGestureClicked extends AuthEvent{}
+class ChangePasswordClickedEvent extends AuthEvent{
+  final bool key;
+  final String password;
+  final String cofirmpassword;
+  ChangePasswordClickedEvent({
+    required this.key,
+    required this.password,
+    required this.cofirmpassword,
+});
+}

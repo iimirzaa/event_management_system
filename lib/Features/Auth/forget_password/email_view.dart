@@ -14,7 +14,8 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import '../Auth_Bloc/auth_bloc.dart';
 
 class EmailView extends StatefulWidget {
-  const EmailView({super.key});
+  final String previous;
+  const EmailView({super.key,required this.previous});
 
   @override
   State<EmailView> createState() => _EmailViewState();
@@ -28,7 +29,7 @@ class _EmailViewState extends State<EmailView> {
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is SendOtpSuccessfulState) {
-          Navigator.push(context, MaterialPageRoute(builder: (_) => SendOtp(email: _emailcontroller.text.trim(),)));
+          Navigator.push(context, MaterialPageRoute(builder: (_) => SendOtp(email: _emailcontroller.text.trim(),previous:'forgetpassword')));
         }
       },
       builder: (context, state) {
