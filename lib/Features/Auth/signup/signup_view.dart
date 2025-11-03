@@ -2,9 +2,9 @@ import 'package:event_management_system/CustomWidget/CustomButton.dart';
 import 'package:event_management_system/CustomWidget/CustomText.dart';
 import 'package:event_management_system/CustomWidget/Customdialogue.dart';
 import 'package:event_management_system/CustomWidget/custominput.dart';
+import 'package:event_management_system/Features/Auth/Otp/verify_otp_presentation.dart';
 import 'package:event_management_system/Scaffold_Theme/scaffold_gradient.dart';
 import 'package:event_management_system/features/Auth/Login/login_view.dart';
-import 'package:event_management_system/features/Auth/Otp/send_otp.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -61,7 +61,7 @@ class _SignupViewState extends State<SignupView> {
 
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (_) => SendOtp(email: state.email??'',previous:'signup')),
+            MaterialPageRoute(builder: (_) => VerifyOtp(email: state.email??'',previous:'signup')),
           );
         }
       },

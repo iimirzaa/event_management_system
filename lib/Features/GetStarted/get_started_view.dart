@@ -1,8 +1,10 @@
 import 'package:event_management_system/CustomWidget/CustomButton.dart';
 import 'package:event_management_system/CustomWidget/CustomText.dart';
+import 'package:event_management_system/Features/Auth/Auth_Bloc/auth_bloc.dart';
 import 'package:event_management_system/Scaffold_Theme/scaffold_gradient.dart';
-import 'package:event_management_system/features/Auth/Login/login_view.dart';
+import 'package:event_management_system/Features/Auth/Login/login_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class GetStartedView extends StatefulWidget {
@@ -59,7 +61,11 @@ class _GetStartedViewState extends State<GetStartedView> {
                     press: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (_) => LoginView()),
+                        MaterialPageRoute(builder: (_) =>
+                            BlocProvider(
+                              create: (context) => AuthBloc(),
+                              child: LoginView(),
+                            )),
                       );
                     },
                   ),

@@ -42,8 +42,6 @@ class SignUpSuccessfulState extends AuthState{
 class LoginSuccessful extends AuthState{
 }
 class VerificationSuccessful extends AuthState{
-
-
 }
 
 class LoginGestureState extends AuthState {}
@@ -51,4 +49,5 @@ class LoginGestureState extends AuthState {}
 class SignUpState extends AuthState {}
 class SignUpButtonState extends AuthState {}
 class ForgetPasswordState extends AuthState{}
+class ForgetPasswordNavigationState extends AuthState{}
 class SendOtpSuccessfulState extends AuthState{}

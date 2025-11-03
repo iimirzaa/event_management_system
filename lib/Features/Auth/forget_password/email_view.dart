@@ -1,21 +1,18 @@
+import 'package:event_management_system/Features/Auth/Auth_Bloc/auth_bloc.dart';
+import 'package:event_management_system/Features/Auth/Otp/verify_otp_presentation.dart';
 import 'package:event_management_system/Scaffold_Theme/scaffold_gradient.dart';
-import 'package:event_management_system/features/Auth/Otp/send_otp.dart';
 import 'package:flutter/material.dart';
 import 'package:event_management_system/CustomWidget/CustomButton.dart';
 import 'package:event_management_system/CustomWidget/CustomText.dart';
 import 'package:event_management_system/CustomWidget/custominput.dart';
-import 'package:event_management_system/Scaffold_Theme/scaffold_gradient.dart';
-import 'package:event_management_system/features/Auth/forget_password/email_view.dart';
-import 'package:event_management_system/features/Auth/signup/signup_view.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import '../Auth_Bloc/auth_bloc.dart';
+
 
 class EmailView extends StatefulWidget {
   final String previous;
-  const EmailView({super.key,required this.previous});
+  const EmailView({super.key, required this.previous});
 
   @override
   State<EmailView> createState() => _EmailViewState();
@@ -29,7 +26,18 @@ class _EmailViewState extends State<EmailView> {
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is SendOtpSuccessfulState) {
-          Navigator.push(context, MaterialPageRoute(builder: (_) => SendOtp(email: _emailcontroller.text.trim(),previous:'forgetpassword')));
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => BlocProvider(
+                create: (context) => AuthBloc(),
+                child: VerifyOtp(
+                  email: _emailcontroller.text.trim(),
+                  previous: 'forgetpassword',
+                ),
+              ),
+            ),
+          );
         }
       },
       builder: (context, state) {
@@ -72,7 +80,7 @@ class _EmailViewState extends State<EmailView> {
                                   SizedBox(height: 10.h),
                                   CustomText(
                                     text:
-                                    "Please enter your email address to get your OTP.",
+                                        "Please enter your email address to get your OTP.",
                                     color: Colors.white54,
                                     size: 20.sp,
                                     weight: FontWeight.w600,
@@ -80,7 +88,10 @@ class _EmailViewState extends State<EmailView> {
 
                                   SizedBox(height: 10.h),
 
-                                  CustomInput(hint: "Enter your Email"),
+                                  CustomInput(
+                                    hint: "Enter your Email",
+                                    controller: _emailcontroller,
+                                  ),
                                   SizedBox(height: 10.h),
                                   if (state is ErrorState) ...[
                                     CustomText(
@@ -89,9 +100,7 @@ class _EmailViewState extends State<EmailView> {
                                       weight: FontWeight.w400,
                                     ),
                                   ],
-                                  SizedBox(
-                                    height: 5.h,
-                                  ),
+                                  SizedBox(height: 5.h),
 
                                   CustomButton(
                                     text: "Send OTP",
@@ -134,7 +143,6 @@ class _EmailViewState extends State<EmailView> {
                 ),
               ),
           ],
-
         );
       },
     );

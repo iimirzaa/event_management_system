@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import jwt from "jsonwebtoken";
 import { firestore, auth } from '../firebase/firebase_admin.js';
 import { sendmail } from '../providers/email_provider.js'
-import bcrypt from "bcrypt";
+import bcrypt, { hash } from "bcrypt";
 import firebase from "firebase/compat/app";
 async function SignUp(username, email, password, role) {
     try {
@@ -87,11 +87,23 @@ async function login(email, password, role) {
 }
 async function sendotp(email) {
     try {
-        await sendmail(email);
-        return ({ success: true, message: "OTP sent successfully" })
+        const existinguser = await firestore.collection('user').where('email', '==', email).get();
+        if (existinguser.empty) {
+            return ({
+                success: false, message: "User not found"
+            });
+        } else {
+            const otp = await sendmail(email);
+            await firestore.collection('user').doc(existinguser.docs[0].id).update({
+                otp: otp,
+                otp_expires_at: new Date(Date.now() + 5 * 60 * 1000)
+            })
+            return ({ success: true, message: "OTP sent to email successfully" })
+        }
     } catch (e) {
         return ({ success: false, message: "There was error while sending otp" })
     }
+
 }
 async function verifyotp(email, otp) {
     try {
@@ -100,13 +112,14 @@ async function verifyotp(email, otp) {
             return ({ success: false, message: "User not found" })
         }
         const userDoc = existinguser.docs[0];
+        console.log(userDoc);
         const userData = userDoc.data();
         const now = new Date();
         if (userData.otp == otp && userData.otp_expires_at.toDate() > now) {
             await firestore.collection('user').doc(userDoc.id).update({
                 isverified: true
             });
-            return ({ success: true, message: "OTP verified successfully!\nLogin to access your Account" })
+            return ({ success: true, message: "OTP verified successfully!" })
         } else {
             console.log('failed')
             return ({ success: false, message: "Incorrect OTP!\nor Timeout" })
@@ -117,4 +130,42 @@ async function verifyotp(email, otp) {
     }
 
 }
-export { SignUp, sendotp, verifyotp, login }
+async function changePassword(email, password, authorization) {
+    try {
+        const hashedpassword = await bcrypt.hash(password, 12);
+        if (authorization && authorization !== '') {
+            const token = jwt.verify(authorization, process.env.SECRETKEY);
+            const uid = token.uid;
+            const userDoc = await firestore.collection('user').doc(uid).get();
+            if (!userDoc.exists) {
+                return ({ success: false, message: "User not found" });
+            }
+            await firestore.collection('user').doc(uid).update({
+                hashedpassword: hashedpassword
+            });
+            return ({ success: true, message: 'Password has been changed' });
+
+
+
+        } else {
+            console.log('starting to find doc');
+            const existinguser = await firestore.collection('user').where('email', '==', email).get();
+            console.log(existinguser.docs[0]);
+            if (!existinguser.docs[0].data().isverified) {
+
+                return ({ success: false, message: 'Please Complete Sign Up process!' });
+            }
+            await firestore.collection('user').doc(existinguser.docs[0].id).update({
+                hashedpassword: hashedpassword
+            });
+
+            return ({ success: true, message: 'Password has been changed' });
+        }
+    }
+
+    catch (e) {
+        console.log(e);
+        return ({ success: false, message: "There was error during password changing" })
+    }
+}
+export { SignUp, sendotp, verifyotp, login, changePassword }

@@ -148,20 +148,48 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     });
     on<ForgetPasswordGestureClicked>((event, emit) {
-      emit(ForgetPasswordState());
+      emit(ForgetPasswordNavigationState());
     });
     on<SendOtpClicked>((event, emit) async {
       String email = event.email.trim();
-      if (event.key == true) {
-        emit(LoadingState());
-        await AuthProvider().sendOTP({"email": email});
-      }
+      print(email);
 
-      final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-      if (!emailRegex.hasMatch(email)) {
-        emit(ErrorState(errorMsg: "Enter a valid email address"));
+      emit(LoadingState());
+      final emailError = Validator.validateEmail(email);
+      if (emailError != null) {
+        emit(ErrorState(errorMsg: emailError));
         return;
       }
+      if (event.key == true) {
+
+        Map<String, dynamic> response=await AuthProvider().sendOTP({"email": email});
+        final handler=Handler();
+        handler.handleSendOtp(response: response, emit: emit, icons: icon);
+      }
+    });
+    on<ChangePasswordClickedEvent>((event,emit)async{
+      String email=event.email.trim();
+      final password = event.password.trim();
+      final confirmPassword = event.cofirmpassword.trim();
+      final passwordError = Validator.validatePassword(password);
+      if (passwordError != null) {
+        emit(ErrorState(errorMsg: passwordError));
+        return;
+      }
+      if (password != confirmPassword) {
+        emit(ErrorState(errorMsg: "Password did not match!"));
+        return;
+      }
+      if(event.key==true){
+        emit(LoadingState());
+        Map<String,dynamic> response= await AuthProvider().changePassword({
+          'email':email,
+          'password':password
+        });
+        Handler handler=Handler();
+        handler.handleChangePassword(response: response, emit: emit, icons: icon);
+      }
+
     });
   }
 }

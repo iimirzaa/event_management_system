@@ -10,16 +10,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import '../Auth_Bloc/auth_bloc.dart';
 
-class SendOtp extends StatefulWidget {
+class VerifyOtp extends StatefulWidget {
   final String email;
   final String previous;
-  const SendOtp({super.key, required this.email,required this.previous});
+  const VerifyOtp({super.key, required this.email,required this.previous});
 
   @override
-  State<SendOtp> createState() => _SendOtpState();
+  State<VerifyOtp> createState() => _VerifyOtpState();
 }
 
-class _SendOtpState extends State<SendOtp> {
+class _VerifyOtpState extends State<VerifyOtp> {
   final List<TextEditingController> _controller = List.generate(
     4,
     (_) => TextEditingController(),
@@ -69,8 +69,8 @@ class _SendOtpState extends State<SendOtp> {
             context,
             MaterialPageRoute(builder: (_) => LoginView()),
           );
-        }else{
-          Navigator.pushReplacement(context,MaterialPageRoute(builder: (_)=> ChangePasswordView(previous: widget.previous,)));
+        }else if(state is VerificationSuccessful && (widget.previous=='home'||  widget.previous=='forgetpassword')){
+          Navigator.pushReplacement(context,MaterialPageRoute(builder: (_)=> BlocProvider(create: (_)=>AuthBloc(),child:ChangePasswordView(email:widget.email,previous: widget.previous,) ,)));
 
         }
         if(state is BackendErrorState){

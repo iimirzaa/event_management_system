@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
+import 'package:event_management_system/Services/token_storage.dart';
 import '../constants/routes.dart';
-
 
 final dio = Dio(
   BaseOptions(
@@ -42,15 +42,13 @@ class AuthProvider {
   }
 
   Future<Map<String, dynamic>> Login(Map<String, dynamic> data) async {
-
     try {
-      print(data);
       final response = await dio.post('/login', data: data);
 
       return {
         'success': response.data['success'],
         'message': response.data['message'],
-        'token':response.data['token']
+        'token': response.data['token'],
       };
     } on DioException catch (e) {
       if (e.type == DioExceptionType.connectionTimeout) {
@@ -72,7 +70,7 @@ class AuthProvider {
 
   Future<Map<String, dynamic>> sendOTP(Map<String, dynamic> data) async {
     try {
-      final response = await dio.post('/sendOtp', data: data,);
+      final response = await dio.post('/sendOtp', data: data);
       return {
         'success': response.data['success'],
         'message': response.data['message'],
@@ -100,6 +98,40 @@ class AuthProvider {
       print(data);
       final response = await dio.post('/verifyOtp', data: data);
       print(response.data);
+      return {
+        'success': response.data['success'],
+        'message': response.data['message'],
+      };
+    } on DioException catch (e) {
+      if (e.type == DioExceptionType.connectionTimeout) {
+        return {'success': false, 'message': 'Connection timeout'};
+      } else if (e.type == DioExceptionType.receiveTimeout) {
+        return {'success': false, 'message': 'Receive timeout'};
+      } else if (e.type == DioExceptionType.badResponse) {
+        final statusCode = e.response?.statusCode ?? 0;
+        final message = e.response?.data?['message'] ?? 'Unexpected error';
+        return {'success': false, 'message': '$message'};
+      } else if (e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.unknown) {
+        return {'success': false, 'message': 'No internet connection'};
+      }
+      return {'success': false, 'message': 'Unexpected error occurred'};
+    } catch (e) {
+      return {'success': false, 'message': 'Something went wrong'};
+    }
+  }
+
+  Future<Map<String, dynamic>> changePassword(Map<String, dynamic> data) async {
+    try {
+      final String? token = await TokenStorage.getToken();
+      final response = await dio.post(
+        '/changePassword',
+        data: data,
+        options: Options(
+          headers: {"Authorization": token, "Content-Type": "application/json"},
+        ),
+      );
+     print(response);
       return {
         'success': response.data['success'],
         'message': response.data['message'],

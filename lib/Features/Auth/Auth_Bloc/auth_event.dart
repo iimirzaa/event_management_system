@@ -61,11 +61,11 @@ class VerifyOtpClicked extends AuthEvent{
 
 }
 class SendOtpClicked extends AuthEvent{
-  final bool key;
+  final bool? key;
   final String email;
 
   SendOtpClicked({
-    required this.key,
+    this.key,
     required this.email,
 
   });
@@ -74,10 +74,12 @@ class SendOtpClicked extends AuthEvent{
 class ForgetPasswordGestureClicked extends AuthEvent{}
 class ChangePasswordClickedEvent extends AuthEvent{
   final bool key;
+  final String email;
   final String password;
   final String cofirmpassword;
   ChangePasswordClickedEvent({
     required this.key,
+    required this.email,
     required this.password,
     required this.cofirmpassword,
 });

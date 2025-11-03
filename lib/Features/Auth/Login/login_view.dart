@@ -2,7 +2,7 @@ import 'package:event_management_system/CustomWidget/CustomButton.dart';
 import 'package:event_management_system/CustomWidget/CustomText.dart';
 import 'package:event_management_system/CustomWidget/custominput.dart';
 import 'package:event_management_system/Scaffold_Theme/scaffold_gradient.dart';
-import 'package:event_management_system/features/Auth/forget_password/email_view.dart';
+import 'package:event_management_system/Features/Auth/forget_password/email_view.dart';
 import 'package:event_management_system/features/Auth/signup/signup_view.dart';
 import 'package:event_management_system/features/Dashboard/attendee_dashboard.dart';
 import 'package:event_management_system/features/Dashboard/organizer_dashboard.dart';
@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import '../Auth_Bloc/auth_bloc.dart';
+import 'package:event_management_system/Features/Auth/Auth_Bloc/auth_bloc.dart';
 import'../../../CustomWidget/Customdialogue.dart';
 import '../../../Services/token_storage.dart';
 
@@ -66,8 +66,11 @@ class _LoginViewState extends State<LoginView> {
                 Customdialogue(icon: state.icon, text: state.errorMsg ?? ''),
           );
         }
-        if(state is ForgetPasswordState){
-          Navigator.push(context, MaterialPageRoute(builder: (_)=>EmailView(previous:'login')));
+        if(state is ForgetPasswordNavigationState){
+          Navigator.push(context, MaterialPageRoute(builder: (_)=>BlocProvider(
+  create: (context) => AuthBloc(),
+  child: EmailView(previous:'login'),
+)));
         }
       },
       builder: (context, state) {

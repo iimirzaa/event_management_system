@@ -1,5 +1,5 @@
 
-import { SignUp, sendotp, verifyotp, login } from '../providers/auth_provider.js'
+import { SignUp, sendotp, verifyotp, login,changePassword } from '../providers/auth_provider.js'
 import express from 'express';
 
 const auth = express.Router();
@@ -44,7 +44,8 @@ auth.post('/login', async (req, res) => {
   }
 })
 auth.post('/sendOtp', async (req, res) => {
-  const { email } = req.email;
+  const { email } = req.body;
+
   if (!email || email === "") {
     res.status(400).send({ message: "Invalid Email address" })
   } else {
@@ -78,6 +79,23 @@ auth.post('/verifyOtp', async (req, res) => {
   } catch (e) {
     res.status(500).send({ success: false, message: "There was error while verifying OTP" })
   }
+})
+auth.post('/changePassword',async(req,res)=>{
+  try{
+    const {email,password}=req.body;
+    const authorization=req.headers['authorization'];
+    console.log(email);
+    const response= await changePassword(email,password,authorization);
+     if (response.success) {
+      res.status(200).send({ success: response.success, message: response.message });
+    } else {
+      res.status(401).send({ success: response.success, message: response.message })
+    }
+
+  } catch (e) {
+    res.status(500).send({ success: false, message: "There was error while changing Password" })
+  }
+
 })
 export default auth;
 
