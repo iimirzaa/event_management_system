@@ -1,5 +1,6 @@
 import 'package:event_management_system/Features/GetStarted/get_started_view.dart';
 import 'package:event_management_system/Features/Profile/edit_profile_view.dart';
+import 'package:event_management_system/Features/Profile/feedback_view.dart';
 import 'package:event_management_system/Features/Profile/profile_bloc.dart';
 import 'package:event_management_system/Services/token_storage.dart';
 import 'package:flutter/material.dart';
@@ -197,7 +198,9 @@ class _ProfileViewState extends State<ProfileView> {
                     _buildProfileOption(
                       icon: Icons.help_outline,
                       title: "Help & Support",
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (_)=>FeedbackView()));
+                      },
                     ),
                     _buildProfileOption(
                       icon: Icons.logout,

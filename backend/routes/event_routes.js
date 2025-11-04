@@ -39,9 +39,9 @@ event.get('/loadEvent', async (req, res) => {
   try {
     console.log("Load Events called");
     const response = await loadEvent(req.headers['authorization']);
-    console.log(response);
+ 
     if (response.success) {
-      res.status(200).send({ success: response.success, message: response.message, events: response.events })
+      res.status(200).send({ success: response.success, message: response.message, events: response.events ,bookedEvents:response.bookedEvents})
     } else {
       res.status(400).send({ success: response.success, message: response.message })
     }

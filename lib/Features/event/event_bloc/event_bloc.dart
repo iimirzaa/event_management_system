@@ -1,6 +1,5 @@
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
-import 'package:event_management_system/Services/event_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';

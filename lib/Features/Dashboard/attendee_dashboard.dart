@@ -1,11 +1,10 @@
+import 'package:event_management_system/CustomWidget/BookedEventsSection.dart';
 import 'package:event_management_system/CustomWidget/BottomNavigationBar.dart';
 import 'package:event_management_system/CustomWidget/CustomButton.dart';
 import 'package:event_management_system/CustomWidget/CustomCard.dart';
 import 'package:event_management_system/CustomWidget/CustomText.dart';
 import 'package:event_management_system/Features/Dashboard/Dashboard_bloc/dashboard_bloc.dart';
-
 import 'package:event_management_system/Features/event/all_events.dart';
-import 'package:event_management_system/Features/event/eventdetail.dart';
 import 'package:event_management_system/Services/token_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,7 +20,8 @@ class AttendeeDashboard extends StatefulWidget {
 }
 
 class _AttendeeDashboardState extends State<AttendeeDashboard> {
-  late List<dynamic> events;
+  late List<dynamic> events=[];
+  late List<dynamic> bookedEvents=[];
   @override
   void initState() {
     super.initState();
@@ -65,6 +65,8 @@ class _AttendeeDashboardState extends State<AttendeeDashboard> {
       );
     } else if (state is EventLoadedState) {
        events = state.events;
+       bookedEvents=state.bookedEvents;
+
 
       bodyContent = ListView.builder(
         shrinkWrap: true,
@@ -129,9 +131,13 @@ class _AttendeeDashboardState extends State<AttendeeDashboard> {
       },
 
       child: Scaffold(
+          backgroundColor: Colors.grey[100],
         appBar: AppBar(
           centerTitle: true,
-          backgroundColor: Colors.blueGrey,
+          shape:  RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(bottom: Radius.circular(25.r)),
+          ),
+          backgroundColor: const Color(0xFFFF6F61),
           title: FutureBuilder<String?>(future: TokenStorage.getName(), builder: (context,snapshot){
             if(snapshot.connectionState==ConnectionState.waiting){
               return Text("Welcome ...",
@@ -153,18 +159,7 @@ class _AttendeeDashboardState extends State<AttendeeDashboard> {
           })
 
           ,
-          flexibleSpace: Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Color(0xFF1f1c2c),
-                  Color(0xFF928dab),
-                ], // white → light gray
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-            ),
-          ),
+
         ),
         body: SafeArea(
           child: SingleChildScrollView(
@@ -373,7 +368,7 @@ class _AttendeeDashboardState extends State<AttendeeDashboard> {
                           width: 10.w,
                         ),
                         CustomText(
-                          text: "My Events",
+                          text: "My Booked Events",
                           color: Color(0xFFFF6F61),
                           weight: FontWeight.w500,
                           size: 20.sp,
@@ -382,25 +377,9 @@ class _AttendeeDashboardState extends State<AttendeeDashboard> {
                     ),
 
                     SizedBox(height: 5.h),
-                    CustomCard(
-                      title: "Sunset Marquee",
-
-                      url:"https://res.cloudinary.com/dtvniftzh/image/upload/v1759470702/event_images/qnr3xezashw4vixicxmr.jpg",
-                      textButton1: "View Detail",
-                      textButton2: "Cancel",
-                      details: [],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        CustomText(
-                          text: "See all",
-                          color: Color(0xFF1F1C2C),
-                          weight: FontWeight.w500,
-                          size: 20.sp,
-                        ),
-                        Icon(Icons.arrow_forward_ios),
-                      ],
+                    BookedEventsSection(
+                      isLoading: state is LoadingState,
+                      bookedEvents: bookedEvents,
                     ),
                     SizedBox(
                       height: 10.h,

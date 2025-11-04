@@ -58,11 +58,11 @@ class EventProvider {
     dio.options.headers['Content-Type'] = 'application/json';
     try {
       final response = await dio.get('/loadEvent');
-
       return {
         'success': response.data['success'],
         'message': response.data['message'],
         'events': response.data['events'],
+        'bookedEvents':response.data['bookedEvents']
       };
     } on DioException catch (e) {
       // Dio-specific error handling

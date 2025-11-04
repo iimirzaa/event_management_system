@@ -111,6 +111,7 @@ class _OrganizerDashboardState extends State<OrganizerDashboard> {
           ));
         }
         return Scaffold(
+          backgroundColor: Colors.grey[100],
             appBar: AppBar(
               automaticallyImplyLeading: true,
               shape:  RoundedRectangleBorder(
@@ -118,7 +119,7 @@ class _OrganizerDashboardState extends State<OrganizerDashboard> {
               ),
 
               centerTitle: true,
-              backgroundColor: Colors.blueGrey,
+              backgroundColor: const Color(0xFFFF6F61),
               title: FutureBuilder<String?>(
                 future: TokenStorage.getName(),
                 builder: (context, snapshot) {
@@ -149,18 +150,6 @@ class _OrganizerDashboardState extends State<OrganizerDashboard> {
                     );
                   }
                 },
-              ),
-              flexibleSpace: Container(
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Color(0xFF1f1c2c),
-                      Color(0xFF928dab),
-                    ], // white → light gray
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                ),
               ),
             ),
             body: SafeArea(

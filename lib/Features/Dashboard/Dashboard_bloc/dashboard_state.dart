@@ -22,8 +22,10 @@ class ViewDetailButtonClickedState extends DashboardState{
 }
 class EventLoadedState extends DashboardState{
   final List<dynamic> events;
+  final List<dynamic> bookedEvents;
   EventLoadedState({
-    required this.events
+    required this.events,
+    required this.bookedEvents
   });
 }
 //Organizer Dashboard States

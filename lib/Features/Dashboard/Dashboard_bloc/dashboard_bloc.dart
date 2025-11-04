@@ -19,13 +19,14 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
         final response = await EventProvider().loadEvents();
 
         if (response['success'] == true) {
-
+          final List<dynamic> data=response['bookedEvents'];
+          print("Your data is :+ $data");
           final events = (response['events'] as List)
               .map((e) => Event.fromMap(e as Map<String, dynamic>))
               .toList();
 
 
-          emit(EventLoadedState(events: events)); // your custom state
+          emit(EventLoadedState(events: events,bookedEvents:data)); // your custom state
         } else {
           emit(MessageState(
             icon: Icons.warning_amber_sharp,
