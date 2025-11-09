@@ -81,20 +81,21 @@ class _FeedbackViewState extends State<FeedbackView> {
         minimumSize: Size(400.w, 40.h),
         padding: EdgeInsets.symmetric(vertical: 14.h),
         side: const BorderSide(color: Colors.green),
+        backgroundColor: Colors.green.shade400,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.r),
         ),
       ),
       icon:  Icon(
         Icons.done,
-        color: Colors.green,
+        color: Colors.white,
         size: 18.sp,
       ),
       label: Text(
         "Submit",
         style: TextStyle(
           fontSize: 18.sp,
-          color:  Colors.green,
+          color:  Colors.white,
         ),
       ),
     )

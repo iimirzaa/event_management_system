@@ -50,17 +50,19 @@ class _EventDetailState extends State<EventDetail> {
       children: [
         Scaffold(
           appBar: AppBar(
-            automaticallyImplyLeading: true,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.vertical(bottom: Radius.circular(25.r)),
             ),
+            backgroundColor: const Color(0xFFFF6F61),
+            automaticallyImplyLeading: true,
 
-            iconTheme: IconThemeData(color: Colors.blueGrey),
+
+            iconTheme: IconThemeData(color: Colors.white),
             title: Text(
               "${widget.event[0].eventName}",
               style: TextStyle(
                 // Title
-                color: const Color(0xFFFF6F61),
+                color:Colors.white,
                 fontWeight: FontWeight.w600,
                 fontSize: 32.sp,
               ),
