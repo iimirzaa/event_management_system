@@ -20,13 +20,31 @@ class AttendeeDashboard extends StatefulWidget {
 }
 
 class _AttendeeDashboardState extends State<AttendeeDashboard> {
+
   late List<dynamic> events=[];
   late List<dynamic> bookedEvents=[];
+   late List<dynamic> foundEvents;
   @override
   void initState() {
     super.initState();
-    print("attendee load called");
+    foundEvents=events;
     context.read<DashboardBloc>().add(LoadEvents());
+  }void searchEvents(String keyword) {
+    List<dynamic> results = [];
+
+    if (keyword.isEmpty) {
+      results = events;
+    } else {
+      results = events.where((event) {
+        final title = event.eventName.toLowerCase();
+        final input = keyword.toLowerCase();
+        return title.contains(input);
+      }).toList();
+    }
+
+    setState(() {
+      foundEvents = results;
+    });
   }
 
   @override
@@ -66,14 +84,18 @@ class _AttendeeDashboardState extends State<AttendeeDashboard> {
     } else if (state is EventLoadedState) {
        events = state.events;
        bookedEvents=state.bookedEvents;
+       if (foundEvents.isEmpty) {
+         foundEvents = events;
+       }
 
 
-      bodyContent = ListView.builder(
+
+       bodyContent = ListView.builder(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
-        itemCount: 1,
+        itemCount: foundEvents.length ?? 0,
         itemBuilder: (context, index) {
-          final event = events[index];
+          final event = foundEvents[index];
           return Padding(
             padding: EdgeInsets.only(bottom: 10.h),
             child: Skeletonizer(
@@ -172,6 +194,7 @@ class _AttendeeDashboardState extends State<AttendeeDashboard> {
                     SizedBox(height: 10.h),
                     Form(
                       child: TextFormField(
+                        onChanged:(value)=> searchEvents(value.trim()),
                         onTapOutside: (event) {
                           FocusScope.of(context).unfocus();
                         },
