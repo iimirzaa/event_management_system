@@ -3,7 +3,7 @@ import 'package:event_management_system/CustomWidget/CustomCard.dart';
 import 'package:event_management_system/CustomWidget/CustomText.dart';
 import 'package:event_management_system/Features/Dashboard/Dashboard_bloc/dashboard_bloc.dart';
 import 'package:event_management_system/Features/event/createevent_presentation.dart';
-import 'package:event_management_system/Features/event/eventdetail.dart';
+import 'package:event_management_system/Features/event/event_book_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -49,6 +49,7 @@ class _OrganizerDashboardState extends State<OrganizerDashboard> {
                 child: Skeletonizer(
                   enabled: true,
                   child: CustomCard(
+                    user: 'Org',
                     title: "Loading...",
                     street: '.........',
                     town: '.........',
@@ -76,6 +77,7 @@ class _OrganizerDashboardState extends State<OrganizerDashboard> {
                 child: Skeletonizer(
                   enabled: false,
                   child: CustomCard(
+                    user: 'Org',
                     title:event.eventName ?? "No Title",
                     category: event.category[0],
                     street: event.street,

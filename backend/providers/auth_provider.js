@@ -49,7 +49,7 @@ async function SignUp(username, email, password, role) {
     }
 
 }
-async function login(email, password, role) {
+async function login(email, password, role, device_model) {
     try {
         const user = await firestore.collection('user').where('email', '==', email).get();
         if (!user.empty) {
@@ -68,11 +68,15 @@ async function login(email, password, role) {
                     algorithm: "HS512",
                     expiresIn: "7d",
 
-                })
-                const decoded = jwt.decode(token);
-
-                console.log("exp (seconds):", decoded.exp);
-                console.log("exp (date):", new Date(decoded.exp * 1000))
+                });
+                const now = new Date();
+                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+                const dateStr = now.toLocaleString('en-US', options);
+                const notifiref = firestore.collection('user').doc(userDoc.id).collection('Notification');
+                notifiref.add({
+                    message: "This account was logged in using " + device_model + " on " + dateStr,
+                    created_at: new Date().toISOString(),
+                });
                 return ({ success: true, message: "Login Successful!", token: token })
             } else if (userData.isverified == false) {
                 return ({ success: false, message: "Kindly verify your email via OTP" })
@@ -143,6 +147,14 @@ async function changePassword(email, password, authorization) {
             await firestore.collection('user').doc(uid).update({
                 hashedpassword: hashedpassword
             });
+            const now = new Date();
+                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+                const dateStr = now.toLocaleString('en-US', options);
+                const notifiref = firestore.collection('user').doc(userDoc.id).collection('Notification');
+                notifiref.add({
+                    message: "Password was changed on "+dateStr+" If you did not changed it kindly change your password",
+                    created_at: new Date().toISOString(),
+                });
             return ({ success: true, message: 'Password has been changed' });
 
 

@@ -1,7 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:event_management_system/CustomWidget/CustomText.dart';
 import 'package:event_management_system/Features/Dashboard/Dashboard_bloc/dashboard_bloc.dart';
-import 'package:event_management_system/Features/event/eventdetail.dart';
+import 'package:event_management_system/Features/event/event_detail_view.dart';
+import 'package:event_management_system/Features/event/event_book_view.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,10 +18,12 @@ class CustomCard extends StatelessWidget {
   final String textButton1;
   final String textButton2;
   final List<dynamic> details;
+  final String ?user;
   const CustomCard({super.key,
     required this.url,
   required this.title,
   required this.textButton1,
+     this.user,
   required this.textButton2, this.street,  this.town,this.category,  this.city,required this.details});
 
   @override
@@ -29,7 +32,12 @@ class CustomCard extends StatelessWidget {
 
     return GestureDetector(
       onTap: (){
-        Navigator.push(context,MaterialPageRoute(builder: (_)=>EventDetail(event: details)));
+        if(user=="Org"){
+          Navigator.push(context,MaterialPageRoute(builder: (_)=>EventUpdateView(event: details)));
+        }else {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (_) => EventDetail(event: details)));
+        }
       },
       child: Container(
         width: 400.w,

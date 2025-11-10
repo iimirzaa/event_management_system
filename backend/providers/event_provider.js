@@ -64,7 +64,15 @@ async function createEvent(eventname, category, service, capacity, street, town,
                     })
                 }
 
-            })
+            });
+            const now = new Date();
+                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+                const dateStr = now.toLocaleString('en-US', options);
+                const notifiref = firestore.collection('user').doc(userDoc.id).collection('Notification');
+                notifiref.add({
+                    message: `An event ${eventname} was created on ${dateStr}`,
+                    created_at: new Date().toISOString(),
+                });
             return ({ success: true, message: "Event Created Successfully" });
         }
 
@@ -225,6 +233,14 @@ async function bookEvent(eventId, category, service, capacity, details, authoriz
                     transaction.update(eventReference, { bookedEvents: currentEvents });
                 }
             });
+            const now = new Date();
+                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+                const dateStr = now.toLocaleString('en-US', options);
+                const notifiref = firestore.collection('user').doc(userDoc.id).collection('Notification');
+                notifiref.add({
+                    message: `An event ${eventId} was booked  on  ${dateStr}`,
+                    created_at: new Date().toISOString(),
+                });
 
             return ({ success: true, message: "Event booked Successfully" });
         }
@@ -234,6 +250,32 @@ async function bookEvent(eventId, category, service, capacity, details, authoriz
         return ({ success: false, message: 'There was an error while booking event' });
     }
 }
+async function loadNotifications(authorization) {
+    try {
+        const token = jwt.verify(authorization, process.env.SECRETKEY);
+        const uid = token.uid;
 
+        const userDoc = await firestore.collection("user").doc(uid).get();
+        if (!userDoc.exists) {
+             
+            return ({ success: false, message: "UnAuthorized User" });
+        } else {
+            console.log("fetching")
+            const snapshot= await firestore.collection('user').doc(uid).collection('Notification').get();
+         
+            const notifications= snapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            }));
+     
 
-export { createEvent, loadEvent, loadOrganizerEvent, bookEvent }
+            return ({ success: true, message: "Organizer Events loaded Successfully", notifications: notifications});
+        }
+
+    } catch (e) {
+        console.log(e);
+        return ({ success: false, message: "Error while fetching Organizer events" });
+    }
+}
+
+export { createEvent, loadEvent, loadOrganizerEvent, bookEvent,loadNotifications }

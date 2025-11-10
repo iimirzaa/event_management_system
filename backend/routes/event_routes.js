@@ -1,5 +1,5 @@
 import express from 'express';
-import { createEvent, loadEvent,loadOrganizerEvent,bookEvent } from '../providers/event_provider.js';
+import { createEvent, loadEvent,loadOrganizerEvent,bookEvent,loadNotifications } from '../providers/event_provider.js';
 import { upload } from '../middleware/multer_middleware.js';
 import { UploadOnCloudinary } from '../providers/cloudinary_provider.js';
 const event = express.Router();
@@ -81,6 +81,22 @@ event.post('/bookEvent', async (req, res) => {
   } catch (e) {
     console.log(e);
     res.status(500).send({ success: false, message: "Error while booking events" })
+  }
+});
+event.get('/loadNotification', async (req, res) => {
+  try {
+    console.log("Load Notification called");
+    const response = await loadNotifications(req.headers['authorization']);
+    console.log(response);
+ 
+    if (response.success) {
+      res.status(200).send({ success: response.success, message: response.message, notifications: response.notifications});
+    } else {
+      res.status(400).send({ success: response.success, message: response.message })
+    }
+
+  } catch (e) {
+    res.status(500).send({ success: false, message: "Error while fetching events" })
   }
 })
 export default event;

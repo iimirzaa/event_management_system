@@ -6,12 +6,27 @@ import '../../../Repository/auth_repository.dart';
 import '../../../Services/token_storage.dart';
 import '../../../Services/validator.dart';
 
+import 'dart:io';
+import 'package:device_info_plus/device_info_plus.dart';
 part 'auth_event.dart';
 part 'auth_state.dart';
 part 'handler.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   String? role;
+  Future<String> getDeviceModel() async {
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+
+    if (Platform.isAndroid) {
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      return androidInfo.model ?? "Unknown Android Device";
+    } else if (Platform.isIOS) {
+      IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+      return iosInfo.name ?? "Unknown iOS Device";
+    } else {
+      return "Unknown Device";
+    }
+  }
   List<IconData> icon = [
     Icons.wifi_off,
     Icons.error_outline, // 400 - Bad Request
@@ -31,6 +46,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<LoginButtonClicked>((event, emit)async {
       final email = event.email.trim();
       final password = event.password.trim();
+      String deviceModel = await getDeviceModel();
       if (role == null || role!.isEmpty) {
         emit(ErrorState(errorMsg: "Please select a role"));
         return;
@@ -55,6 +71,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           'email':email,
           'password':password,
           'role':role,
+          'device_model': deviceModel,
         });
         print(response);
         final handler= Handler();

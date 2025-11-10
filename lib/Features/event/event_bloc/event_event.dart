@@ -41,3 +41,4 @@ class BookEventButtonCLicked extends EventEvent{
 });
 
 }
+class LoadNotifications extends EventEvent{}

@@ -26,12 +26,12 @@ auth.post('/signUp', async (req, res) => {
 
 })
 auth.post('/login', async (req, res) => {
-  const { email, password, role } = req.body;
+  const { email, password, role,device_model } = req.body;
   console.log(req.body);
   if (email === '', password === '', role === '') {
     res.status(400).send({ success: false, message: "Invalid Credentials" })
   } try {
-    const response = await login(email, password, role);
+    const response = await login(email, password, role,device_model);
     if (response.success) {
       res.status(200).send({ success: true, message: response.message,token:response.token });
     } else {

@@ -26,3 +26,9 @@ class EventSuccessfulState extends EventState{}
 
 //Attendee Side Event handling
 class BookEventButtonState extends EventState{}
+class NotificationLoadedState extends EventState{
+  final List<dynamic> notification;
+  NotificationLoadedState({
+    required this.notification
+});
+}

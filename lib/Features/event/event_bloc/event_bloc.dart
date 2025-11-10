@@ -134,5 +134,12 @@ class EventBloc extends Bloc<EventEvent, EventState> {
 
       emit(BookEventButtonState());
     });
+    on<LoadNotifications>((event,emit)async{
+      emit(LoadingState());
+      Map<String,dynamic> response=await EventProvider().loadNotifications();
+      final List<dynamic> notifications=response['notifications'];
+      print(notifications);
+      emit(NotificationLoadedState(notification: notifications));
+    });
   }
 }

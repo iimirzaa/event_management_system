@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:event_management_system/Services/token_storage.dart';
 import '../constants/routes.dart';
 
+
 final dio = Dio(
   BaseOptions(
     baseUrl: auth_base_url,
@@ -43,6 +44,7 @@ class AuthProvider {
 
   Future<Map<String, dynamic>> Login(Map<String, dynamic> data) async {
     try {
+
       final response = await dio.post('/login', data: data);
 
       return {
