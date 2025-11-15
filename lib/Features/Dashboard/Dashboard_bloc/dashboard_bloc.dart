@@ -1,7 +1,9 @@
 import 'package:bloc/bloc.dart';
+import 'package:dio/dio.dart';
 import 'package:event_management_system/Repository/event_repository.dart';
 import 'package:event_management_system/Services/event_model.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:meta/meta.dart';
 
 part 'dashboard_event.dart';
@@ -35,8 +37,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 
         }
       } catch (e, st) {
-        print('Error while loading: $e');
-        print(st);
+
         emit(MessageState(
           errorMessage: "Unexpected error: $e",
           icon: Icons.error_outline,
@@ -58,7 +59,6 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
           final List<dynamic> eventList = response['events']['events'];
              final events= eventList.map((e) => Event.fromMap(e as Map<String, dynamic>))
               .toList();
-            print(events);
 
           emit(OrganizerEventLoadedState(events: events)); // your custom state
         } else {
@@ -68,15 +68,35 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
           ));
 
         }
-      } catch (e, st) {
-        print('Error while loading: $e');
-        print(st);
+      } catch (e) {
         emit(MessageState(
           errorMessage: "Unexpected error: $e",
           icon: Icons.error_outline,
         ));
       }
 
+    });
+    on<SaveProfilePicClicked>((event,emit)async{
+      emit(ProfileLoadingState());
+      if(event.img==null){
+        emit(MessageState(
+          icon: Icons.warning_amber_sharp,
+          errorMessage: 'Please select a profile pic',
+        ));
+      }
+      MultipartFile file = await MultipartFile.fromFile(
+        event.img!.path,
+        filename: event.img!.name,
+        contentType:DioMediaType('image', 'jpeg'),
+      );
+
+      FormData data = FormData.fromMap({
+        'profilePic': file,
+      });
+      Map<String,dynamic> response=await EventProvider().uploadProfilePic(data);
+      if(response['success']){
+        emit(ProfilePicUploaded());
+      }
     });
 
   }

@@ -91,6 +91,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final email = event.email.trim();
       final password = event.password.trim();
       final confirmpassword = event.cofirmpassword.trim();
+      print(username);
       if (role == null || role!.isEmpty) {
         emit(ErrorState(errorMsg: "Please select a role"));
         return;

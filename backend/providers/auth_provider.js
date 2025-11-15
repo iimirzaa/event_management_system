@@ -34,6 +34,7 @@ async function SignUp(username, email, password, role) {
             fullname: username,
             email: email,
             role: role,
+            hasprofilepic:false,
             hashedpassword: hashedpassword,
             otp: otp,
             isverified: false,
@@ -180,4 +181,33 @@ async function changePassword(email, password, authorization) {
         return ({ success: false, message: "There was error during password changing" })
     }
 }
-export { SignUp, sendotp, verifyotp, login, changePassword }
+async function getProfileInfo(authorization){
+    try{
+     if (authorization && authorization !== '') {
+            const token = jwt.verify(authorization, process.env.SECRETKEY);
+            const uid = token.uid;
+            const userDocref = await firestore.collection('user').doc(uid).get();
+            if (!userDocref.exists) {
+                return ({ success: false, message: "User not found" });
+            }
+          
+           
+            const userData = userDocref.data();
+            const info={
+                hasProfilePic:userData.hasprofilepic,
+                url:userData.profilePic
+            }
+            console.log(info);
+            return ({success:true,message:"Profile info loaded",profileData:info});
+        }else{
+        
+            return ({success:false,message:"Unauthorized Request"});
+        }
+    }catch(e){
+         console.log(e);
+        return ({ success: false, message: "There was error" })
+    }
+            
+   
+}
+export { SignUp, sendotp, verifyotp, login, changePassword,getProfileInfo }

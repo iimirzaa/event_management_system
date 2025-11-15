@@ -5,6 +5,7 @@ sealed class DashboardState {}
 
 final class DashboardInitial extends DashboardState {}
 class LoadingState extends DashboardState{}
+class ProfileLoadingState extends DashboardState{}
 class MessageState extends DashboardState{
   final IconData icon;
   final String errorMessage;
@@ -36,5 +37,5 @@ class OrganizerEventLoadedState extends DashboardState{
     required this.events
   });
 }
-
+class ProfilePicUploaded extends DashboardState{}
 

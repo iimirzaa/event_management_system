@@ -1,5 +1,5 @@
 import express from 'express';
-import { createEvent, loadEvent,loadOrganizerEvent,bookEvent,loadNotifications } from '../providers/event_provider.js';
+import { createEvent, loadEvent,loadOrganizerEvent,bookEvent,loadNotifications,uploadProfilePic } from '../providers/event_provider.js';
 import { upload } from '../middleware/multer_middleware.js';
 import { UploadOnCloudinary } from '../providers/cloudinary_provider.js';
 const event = express.Router();
@@ -98,5 +98,25 @@ event.get('/loadNotification', async (req, res) => {
   } catch (e) {
     res.status(500).send({ success: false, message: "Error while fetching events" })
   }
-})
+});
+event.post('/uploadProfilePic',upload.single('profilePic') ,async (req, res) => {
+  try {
+    var url;
+    if(req.file){
+      url=await UploadOnCloudinary(req.file.path);
+    }
+   
+    const response = await uploadProfilePic(url,req.headers['authorization']);
+    console.log(response);
+    if (response.success) {
+      res.status(200).send({ success: response.success})
+    } else {
+      res.status(400).send({ success: response.success, message: response.message })
+    }
+
+  } catch (e) {
+    console.log(e);
+    res.status(500).send({ success: false, message: "Error while booking events" })
+  }
+});
 export default event;

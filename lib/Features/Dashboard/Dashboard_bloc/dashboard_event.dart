@@ -14,4 +14,10 @@ class LoadEvents extends DashboardEvent{}
 //Organizer Dashboard Events
 class CreateEventButtonClicked extends DashboardEvent{}
 class LoadOrganizerEvents extends DashboardEvent{}
+class SaveProfilePicClicked extends DashboardEvent{
+  final XFile? img;
+  SaveProfilePicClicked({
+    required this.img
+});
+}
 

@@ -4,12 +4,12 @@ import 'package:event_management_system/CustomWidget/Customdialogue.dart';
 import 'package:event_management_system/CustomWidget/custominput.dart';
 import 'package:event_management_system/Features/Auth/Otp/verify_otp_presentation.dart';
 import 'package:event_management_system/Scaffold_Theme/scaffold_gradient.dart';
-import 'package:event_management_system/features/Auth/Login/login_view.dart';
+import 'package:event_management_system/Features/Auth/Login/login_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import '../Auth_Bloc/auth_bloc.dart';
+import 'package:event_management_system/Features/Auth/Auth_Bloc/auth_bloc.dart';
 
 class SignupView extends StatefulWidget {
   const SignupView({super.key});
@@ -28,6 +28,8 @@ class _SignupViewState extends State<SignupView> {
   final _confirm_controller = TextEditingController();
   bool notvisiblesignup = true;
   final _form_key = GlobalKey<FormState>();
+  List<String> role=['Organizer','Attendee'];
+  String? selectedRole;
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AuthBloc, AuthState>(
@@ -46,7 +48,10 @@ class _SignupViewState extends State<SignupView> {
         if (state is LoginGestureState) {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (_) => LoginView()),
+            MaterialPageRoute(builder: (_) => BlocProvider(
+  create: (context) => AuthBloc(),
+  child: LoginView(),
+)),
           );
         }
         if (state is BackendErrorState) {
@@ -114,54 +119,37 @@ class _SignupViewState extends State<SignupView> {
                                       size: 22.sp,
                                     ),
                                     SizedBox(height: 10.h),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        CustomButton(
-                                          text: "Organizer",
-                                          height: 40.h,
-                                          width: 150.w,
-                                          color:
-                                              state is RoleButtonState &&
-                                                      state.role ==
-                                                          "Organizer" ||
-                                                  state is EyeIconSignUpState &&
-                                                      state.role == 'Organizer'
-                                              ? Color(0xFFFF6F61)
-                                              : Colors.transparent,
-                                          border: 30,
-                                          press: () {
-                                            context.read<AuthBloc>().add(
-                                              RoleButtonClicked(
-                                                role: "Organizer",
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                        SizedBox(width: 10.w),
-                                        CustomButton(
-                                          text: "Attendee",
-                                          height: 40.h,
-                                          width: 150.w,
-                                          color:
-                                              state is RoleButtonState &&
-                                                      state.role ==
-                                                          "Attendee" ||
-                                                  state is EyeIconSignUpState &&
-                                                      state.role == 'Attendee'
-                                              ? Color(0xFFFF6F61)
-                                              : Colors.transparent,
-                                          border: 30,
-                                          press: () {
-                                            context.read<AuthBloc>().add(
-                                              RoleButtonClicked(
-                                                role: "Attendee",
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                      ],
+                                    Wrap(
+                                        spacing: 50.w,
+                                        children:role.map((role){
+                                          final isSelected=selectedRole==role;
+                                          return FilterChip(
+                                            side: BorderSide(color: Color(0xFFFF6F61)),
+                                            label: Text(role,
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 15.sp
+                                              ),),
+                                            autofocus: true,
+                                            showCheckmark: true,
+                                            backgroundColor: Color(0xFF928dab),
+                                            iconTheme: IconThemeData(
+                                                color: Colors.green
+                                            ),
+                                            clipBehavior: Clip.hardEdge,
+                                            selected: isSelected,
+                                            onSelected: (selected) {
+                                              setState(() {
+                                                if (selected) {
+                                                  selectedRole=selected?role:null;
+                                                  context.read<AuthBloc>().add(RoleButtonClicked(role: selectedRole??''));
+                                                }
+                                              });
+                                            },
+                                            selectedColor: Colors.redAccent.shade100,
+                                            checkmarkColor: Colors.green,
+                                          );
+                                        }).toList()
                                     ),
                                     SizedBox(height: 15.h),
                                     CustomInput(
@@ -223,7 +211,8 @@ class _SignupViewState extends State<SignupView> {
                                       width: 320.w,
                                       color: Color(0xFFFF6F61),
                                       border: 12,
-                                      press: () {
+                                      press: (){
+
                                         context.read<AuthBloc>().add(
                                           SignUpButtonClicked(
                                             key: _form_key.currentState!

@@ -1,13 +1,17 @@
-import 'package:event_management_system/CustomWidget/BottomNavigationBar.dart';
+import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:event_management_system/CustomWidget/CustomCard.dart';
 import 'package:event_management_system/CustomWidget/CustomText.dart';
 import 'package:event_management_system/Features/Dashboard/Dashboard_bloc/dashboard_bloc.dart';
+import 'package:event_management_system/Features/Profile/profile_view.dart';
 import 'package:event_management_system/Features/event/createevent_presentation.dart';
-import 'package:event_management_system/Features/event/event_book_view.dart';
+import 'package:event_management_system/Features/event/notification_view.dart';
+import 'package:event_management_system/Repository/auth_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-import '../../Services/token_storage.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class OrganizerDashboard extends StatefulWidget {
@@ -19,10 +23,137 @@ class OrganizerDashboard extends StatefulWidget {
 
 class _OrganizerDashboardState extends State<OrganizerDashboard> {
   late List<dynamic> events;
+  late  bool? hasProfilePic;
+   String? url;
+  XFile ?profilePic;
+  final ImagePicker picker=ImagePicker();
+
+  Future<void> chooseFromGalley()async{
+
+    XFile? pickedFile=await picker.pickImage(source:ImageSource.gallery);
+    if(pickedFile != null) {
+      setState(() {
+        profilePic = pickedFile;
+      });
+    }
+    if(mounted) {
+      Navigator.pop(context);
+      checkProfilePic();
+    }
+
+  }
+  Future<void> takePhoto()async{
+    XFile? pickedFile=await picker.pickImage(source:ImageSource.camera);
+    if(pickedFile != null) {
+      setState(() {
+        profilePic = pickedFile;
+      });
+    }
+    if(mounted) {
+      Navigator.pop(context);
+      checkProfilePic();
+    }
+  }
+
+@override
+  void dispose() {
+    super.dispose();
+  }
+
+  Future<void> checkProfilePic() async {
+    Map <String ,dynamic> response =await AuthProvider().getUserInfo();
+
+
+    if(response['success']==true){
+
+      final profileInfo=response['profileData'];
+      final result=profileInfo['hasProfilePic'];
+      final profileUrl=profileInfo['url'];
+      if(profileUrl!=null) {
+        final storage = FlutterSecureStorage();
+        await storage.write(key: 'profilePicUrl', value: profileUrl);
+        url = (await storage.read(key: 'profilePicUrl'))!;
+      }
+      setState(() {
+        hasProfilePic = result;
+      });
+    }else{
+      return;
+    }
+
+
+
+
+    if (hasProfilePic == false || hasProfilePic == null) {
+      // show dialog safely after build
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        showDialog(
+          context: context,
+          builder: (_) => AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8.r),
+            ),
+            title:profilePic==null? const Text("Profile Incomplete",style: TextStyle(
+              color: Color(0xFFFF6F61),
+              fontWeight: FontWeight.w500
+            ),):Text("Photo Selected",style: TextStyle(
+                color: Color(0xFFFF6F61),
+                fontWeight: FontWeight.w500
+            ),),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                profilePic==null?const Text(
+                  "Please upload a profile picture to continue.",textAlign: TextAlign.start,
+                ):Text("Save Profile Picture",textAlign: TextAlign.left),
+                SizedBox(
+                  height: 5.h,
+                ),
+                CircleAvatar(
+                    radius: 50.sp,
+                    backgroundColor: Colors.grey[200],
+                    backgroundImage: profilePic != null
+                        ? FileImage(File(profilePic!.path))
+                        : const AssetImage('assets/images/img_4.png') as ImageProvider,
+                  ),
+
+              ],
+            ),
+             actions: profilePic==null?
+             [
+
+              TextButton(
+                onPressed:chooseFromGalley,
+                child:  Text("Choose from Gallery",style: TextStyle(
+                    color: Colors.deepOrange[400]
+                ),),
+              ),
+              TextButton(
+                onPressed:takePhoto,
+                child:  Text("Take now",style: TextStyle(
+                    color: Colors.deepOrange[400]
+                ),),
+              )]:[TextButton(onPressed: (){
+               context.read<DashboardBloc>().add(SaveProfilePicClicked(img: profilePic));
+               Navigator.pop(context);
+             }, child: Text("Save",style: TextStyle(
+                 color: Colors.deepOrange[400]
+             ),))
+
+            ]
+          ),
+        );
+      });
+    }
+  }
+
+
+
+
   @override @override
   void initState() {
    super.initState();
-   print("organizer load called");
+   checkProfilePic();
    context.read<DashboardBloc>().add(LoadOrganizerEvents());
   }
   @override
@@ -32,8 +163,22 @@ class _OrganizerDashboardState extends State<OrganizerDashboard> {
         if(state is CreateEventButtonState){
           Navigator.push(context, MaterialPageRoute(builder: (_)=>CreateEventView()));
         }
+        if (state is ProfileLoadingState) {
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (_) => const Center(child: CircularProgressIndicator(color: Color(0xFFFF6F61),)),
+          );
+        }
 
       },
+       buildWhen: (previous,current){
+        if(current is ProfileLoadingState||current is ProfilePicUploaded){
+          return false;
+        }else{
+          return true;
+        }
+       },
       builder: (context, state) {
         Widget bodyContent;
 
@@ -122,37 +267,43 @@ class _OrganizerDashboardState extends State<OrganizerDashboard> {
 
               centerTitle: true,
               backgroundColor: const Color(0xFFFF6F61),
-              title: FutureBuilder<String?>(
-                future: TokenStorage.getName(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Text(
-                      "Welcome ...",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    );
-                  } else if (snapshot.hasError) {
-                    return Text(
-                      "Error",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    );
-                  } else {
-                    return Text(
-                      // "Welcome ${snapshot.data}",
-                      "Welcome ${snapshot.data}",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    );
-                  }
-                },
+              title: Text(
+                'EventEase',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
+              actions: [
+                GestureDetector(
+                  onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (_)=>NotificationView()));
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: CircleAvatar(
+                      radius: 18.h,
+                      backgroundColor: Colors.white,
+                      child: Icon(Icons.notifications_none, color: Colors.redAccent),
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (_)=>ProfileView()));
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 12), child:CircleAvatar(
+                    radius: 18.h, // half of height/width
+                    backgroundImage: url != null
+                        ? CachedNetworkImageProvider(url!)
+                        : const AssetImage('assets/images/img_4.png') as ImageProvider,
+                    backgroundColor: Colors.grey[200], // optional placeholder color
+                  )
+
+                  ),
+                ),
+              ],
             ),
             body: SafeArea(
               child: SingleChildScrollView(
@@ -177,7 +328,25 @@ class _OrganizerDashboardState extends State<OrganizerDashboard> {
                         ),
                       ],
                     ),
-                    bodyContent
+                    bodyContent,
+                    Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 16,
+                          backgroundColor: const Color(0xFFFF6F61).withOpacity(0.2),
+                          child: Icon(Icons.home_work_outlined, color: const Color(0xFFFF6F61), size: 20),
+                        ),
+                        SizedBox(
+                          width: 10.w,
+                        ),
+                        CustomText(
+                          text: "Bookings",
+                          color: Color(0xFFFF6F61),
+                          weight: FontWeight.w500,
+                          size: 20.sp,
+                        ),
+                      ],
+                    ),
                   ])),
                 ),
               ),
@@ -194,10 +363,10 @@ class _OrganizerDashboardState extends State<OrganizerDashboard> {
                 size: 35.sp,
                 opticalSize: 30,),
             ),
-            floatingActionButtonLocation: FloatingActionButtonLocation
-                .centerDocked,
-            bottomNavigationBar: bottomAppBar(context)
+            floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+
         );
+
       },
     );
   }

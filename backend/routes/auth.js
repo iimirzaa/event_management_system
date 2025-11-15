@@ -1,5 +1,5 @@
 
-import { SignUp, sendotp, verifyotp, login,changePassword } from '../providers/auth_provider.js'
+import { SignUp, sendotp, verifyotp, login,changePassword,getProfileInfo } from '../providers/auth_provider.js'
 import express from 'express';
 
 const auth = express.Router();
@@ -95,6 +95,23 @@ auth.post('/changePassword',async(req,res)=>{
   } catch (e) {
     res.status(500).send({ success: false, message: "There was error while changing Password" })
   }
+
+})
+auth.get('/profile',async (req,res)=>{
+  try{
+    console.log('called');
+  const authorization=req.headers['authorization'];
+  const response= await getProfileInfo(authorization);
+     if (response.success) {
+      res.status(200).send({ success: response.success, message: response.message,profileData:response.profileData });
+    } else {
+      res.status(401).send({ success: response.success, message: response.message })
+    }
+
+  }catch(e){
+        res.status(500).send({ success: false, message: "There was error while getting profile info" })
+  }
+
 
 })
 export default auth;

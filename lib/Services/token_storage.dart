@@ -33,4 +33,8 @@ class TokenStorage{
     final decoded=await getDecodedToken();
     return decoded? ['name'];
   }
+  static Future<bool?> getProfilePic() async {
+    final decoded = await getDecodedToken();
+    return decoded?['hasprofilepic'];
+  }
 }

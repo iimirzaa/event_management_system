@@ -89,22 +89,11 @@ class _CreateEventViewState extends State<CreateEventView> {
             weight: FontWeight.w600,
             size: 25.sp,
           ),
-          backgroundColor: Colors.blueGrey,
+          backgroundColor: Color(0xFFFF6F61),
           elevation: 0,
           centerTitle: true,
           iconTheme: const IconThemeData(color: Colors.white),
-          flexibleSpace: Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Color(0xFF1f1c2c),
-                  Color(0xFF928dab),
-                ], // white → light gray
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-            ),
-          ),
+
         ),
         body: SafeArea(
             child: SingleChildScrollView(
